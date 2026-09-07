@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>रिजल्ट | गणित सेतु</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.today-result-wrap{max-width:720px;margin:0 auto;padding:16px}
+.today-head{background:linear-gradient(135deg,#1268d6,#2486e8);color:#fff;border-radius:18px;padding:20px 18px;box-shadow:0 8px 22px rgba(18,104,214,.16)}
+.today-head h1{font-size:22px;margin:0 0 6px}.today-head p{margin:0;font-size:13px;opacity:.94}
+.today-card{background:#fff;border:1px solid #dbe7f4;border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 5px 18px rgba(20,60,100,.06)}
+.today-label{font-size:13px;font-weight:700;margin-bottom:8px;display:block}
+#testSelect{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbdbea;border-radius:11px;font-size:15px;background:#fff;color:#18324d}
+.today-note{background:#eaf3ff;border:1px solid #cfe2fb;border-radius:12px;padding:11px;font-size:12px;line-height:1.5;color:#315a83;margin-top:10px}
+.today-result{border:1px solid #dbe7f4;border-radius:13px;padding:13px;margin-top:12px}
+.today-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.today-title b{font-size:15px}.today-score{font-weight:800;color:#1268d6;white-space:nowrap}
+.today-meta{font-size:12px;color:#6c7d90;margin-top:5px}
+.today-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+.today-stat{background:#f5f9ff;border-radius:10px;padding:9px 5px;text-align:center}.today-stat b{display:block;font-size:15px}.today-stat small{display:block;color:#6c7d90;font-size:10px;margin-top:3px}
+.today-empty{text-align:center;color:#6c7d90;padding:18px 8px;font-size:13px}
+@media(max-width:420px){.today-result-wrap{padding:12px}.today-head h1{font-size:20px}.today-stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="simple-header">
+  <a href="home.html">← होम</a>
+  <div class="mini-brand">📊 मेरे रिजल्ट</div>
+</header>
+<main class="today-result-wrap">
+<section class="today-head">
+  <h1>📋 मेरे परिणाम</h1>
+  <p>आज के टेस्ट का परिणाम देखें</p>
+</section>
+<section class="today-card">
+  <label class="today-label" for="testSelect">📝 Test Type चुनें</label>
+  <select id="testSelect">
+    <option value="course_progress">कोर्स टेस्ट</option>
+    <option value="chapter_practice">अध्याय टेस्ट</option>
+    <option value="daily">Practice Test</option>
+  </select>
+  <div class="today-note">यहाँ केवल आज के परिणाम दिखाए जाएंगे। जिस टेस्ट को आज नहीं दिया है, उसका परिणाम उपलब्ध नहीं होगा।</div>
+</section>
+<section class="today-card">
+  <div id="resultList"><div class="today-empty">परिणाम लोड हो रहा है...</div></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/results.js"></script>
+</body>
+</html>

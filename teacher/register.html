@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>शिक्षक पंजीकरण | गणित सेतु</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="auth-page">
+<main class="auth-card">
+  <div class="brand">
+    <div class="logo-mark">GS</div>
+    <div><h1>गणित सेतु</h1><p>शिक्षक पंजीकरण</p></div>
+  </div>
+
+  <section class="form-box">
+    <h2>नया शिक्षक पंजीकरण</h2>
+    <p class="muted">अपनी जानकारी भरकर शिक्षक खाता बनाएं</p>
+
+    <label>पूरा नाम</label>
+    <input id="fullName" placeholder="अपना पूरा नाम दर्ज करें" autocomplete="name">
+
+    <label>मोबाइल नंबर</label>
+    <input id="mobile" inputmode="numeric" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर" autocomplete="tel">
+
+    <label>6 अंकों का पासवर्ड बनाएं</label>
+    <input id="teacherPassword" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="केवल 6 अंक" autocomplete="new-password">
+
+    <label>विद्यालय का नाम</label>
+    <input id="schoolName" placeholder="विद्यालय का नाम दर्ज करें">
+
+    <label>UDISE / DISE Code</label>
+    <input id="schoolDiseCode" inputmode="numeric" maxlength="11" placeholder="11 अंकों का UDISE / DISE Code दर्ज करें">
+
+    <label>जिला</label>
+    <input id="district" placeholder="जिला दर्ज करें">
+
+    <label>ब्लॉक</label>
+    <input id="block" placeholder="ब्लॉक दर्ज करें">
+
+    <button class="primary-btn" id="registerBtn" type="button">पंजीकरण करें</button>
+
+    <p id="registerStatus" class="muted" style="margin-top:12px;"></p>
+    <p class="auth-switch">पहले से खाता है? <a href="index.html">लॉगिन करें</a></p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/teacher-auth.js"></script>
+</body>
+</html>

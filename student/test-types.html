@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>टेस्ट दें | गणित सेतु</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+:root{--blue:#1268d6;--blue2:#eaf3ff;--text:#18324d;--muted:#6c7d90;--border:#dbe7f4}
+body{margin:0;background:#f5f9ff;color:var(--text);font-family:Arial,"Noto Sans Devanagari",sans-serif;padding-bottom:88px}
+.test-wrap{max-width:720px;margin:0 auto;padding:16px}
+.test-head{background:linear-gradient(135deg,#1268d6,#2486e8);color:#fff;border-radius:18px;padding:20px 18px;box-shadow:0 8px 22px rgba(18,104,214,.16)}
+.test-head h1{font-size:22px;margin:0 0 6px}.test-head p{margin:0;font-size:13px;opacity:.94}
+.test-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 5px 18px rgba(20,60,100,.06)}
+.test-label{font-size:13px;font-weight:700;margin:0 0 12px}
+.test-type-list{display:grid;gap:10px}
+.type-card{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);background:#fff;border:1px solid var(--border);border-radius:13px;padding:13px;transition:transform .15s ease,box-shadow .15s ease}
+.type-card:active{transform:scale(.99)}
+.type-icon{width:42px;height:42px;flex:0 0 42px;border-radius:11px;background:var(--blue2);display:flex;align-items:center;justify-content:center;font-size:22px}
+.type-content{min-width:0;flex:1}.type-content h2{font-size:15px;margin:0 0 4px}.type-content p{font-size:12px;color:var(--muted);margin:0;line-height:1.45}
+.type-arrow{font-size:20px;color:var(--blue);font-weight:700}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:999;background:#fff;border-top:1px solid #dce7f2;box-shadow:0 -5px 18px rgba(20,60,100,.08);padding:7px 8px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.bottom-nav a{text-decoration:none;color:#647487;text-align:center;font-size:11px;font-weight:700;padding:5px 2px;border-radius:11px;min-width:0}
+.bottom-nav a span{display:block;font-size:21px;line-height:23px;margin-bottom:2px}.bottom-nav a.active{color:var(--blue);background:#eef5ff}
+@media(max-width:380px){.test-wrap{padding:12px}.test-head h1{font-size:20px}.bottom-nav a{font-size:10px}.bottom-nav a span{font-size:19px}}
+
+.instruction-box{margin-top:14px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 5px 18px rgba(20,60,100,.06)}
+.instruction-title{font-size:16px;font-weight:800;margin:0 0 12px}
+.instruction-item{border:1px solid #e1eaf3;border-radius:13px;padding:13px;margin-top:10px;background:#fbfdff}
+.instruction-item h3{font-size:14px;margin:0 0 5px;line-height:1.4}
+.instruction-item .en{font-size:11px;color:var(--muted);font-weight:700;margin-left:4px}
+.instruction-item p{font-size:12.5px;color:#526579;line-height:1.6;margin:0}
+.instruction-item strong{color:var(--blue)}
+</style>
+</head>
+<body>
+<main class="test-wrap">
+<section class="test-head">
+<h1>📝 टेस्ट दें</h1>
+<p>अपनी तैयारी के अनुसार टेस्ट चुनें</p>
+</section>
+
+<section class="test-card">
+<p class="test-label">📚 टेस्ट का प्रकार चुनें</p>
+<div class="test-type-list">
+
+<a href="course-test.html" class="type-card">
+<span class="type-icon">📚</span>
+<span class="type-content">
+<h2>अध्याय-वार टेस्ट</h2>
+<p>Chapter-wise Test</p>
+</span>
+<span class="type-arrow">›</span>
+</a>
+
+<a href="chapter-test.html" class="type-card">
+<span class="type-icon">🎯</span>
+<span class="type-content">
+<h2>अध्याय चुनकर टेस्ट</h2>
+<p>Chapter Selection Test</p>
+</span>
+<span class="type-arrow">›</span>
+</a>
+
+<a href="daily-question.html" class="type-card">
+<span class="type-icon">✏️</span>
+<span class="type-content">
+<h2>अभ्यास टेस्ट</h2>
+<p>Practice Test</p>
+</span>
+<span class="type-arrow">›</span>
+</a>
+
+</div>
+</section>
+
+<section class="instruction-box">
+<p class="instruction-title">📌 तीनों टेस्ट के बारे में जरूरी जानकारी</p>
+
+<div class="instruction-item">
+  <h3>1. अध्याय-वार टेस्ट <span class="en">Chapter-wise Test</span></h3>
+  <p><strong>यह टेस्ट सभी विद्यार्थियों के लिए अनिवार्य है।</strong> इसमें पाठ्यक्रम के अनुसार अध्याय-वार तैयारी की जाँच होगी। इस टेस्ट का परिणाम <strong>Leaderboard</strong> में भी प्रदर्शित किया जाएगा, इसलिए प्रत्येक विद्यार्थी को यह टेस्ट अवश्य देना चाहिए।</p>
+</div>
+
+<div class="instruction-item">
+  <h3>2. अध्याय चुनकर टेस्ट <span class="en">Chapter Selection Test</span></h3>
+  <p>इसमें विद्यार्थी अपनी आवश्यकता के अनुसार किसी उपलब्ध अध्याय का चयन करके टेस्ट दे सकता है। इसका उपयोग किसी विशेष अध्याय की तैयारी और समझ को जाँचने के लिए करें।</p>
+</div>
+
+<div class="instruction-item">
+  <h3>3. अभ्यास टेस्ट <span class="en">Practice Test</span></h3>
+  <p>यह अभ्यास और समस्या-समाधान के लिए है। प्रश्नों को ध्यान से हल करें और अपनी तैयारी को बेहतर बनाने के लिए इसका नियमित अभ्यास करें।</p>
+</div>
+
+<div class="instruction-item">
+  <h3>💡 कौन-सा टेस्ट दें?</h3>
+  <p>सबसे पहले <strong>अध्याय-वार टेस्ट</strong> अवश्य दें। इसके बाद जिस अध्याय में अधिक अभ्यास की जरूरत हो, उसके लिए <strong>अध्याय चुनकर टेस्ट</strong> दें और अपनी समस्या-समाधान क्षमता बढ़ाने के लिए <strong>अभ्यास टेस्ट</strong> करें।</p>
+</div>
+</section>
+
+</main>
+
+<nav class="bottom-nav">
+<a href="home.html"><span>🏠</span>होम</a>
+<a href="leaderboard.html"><span>🏆</span>रैंकिंग</a>
+<a href="pragati.html"><span>📈</span>प्रगति</a>
+<a href="profile.html"><span>👤</span>प्रोफाइल</a>
+</nav>
+</body>
+</html>
