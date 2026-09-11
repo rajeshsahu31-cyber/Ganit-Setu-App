@@ -74,7 +74,7 @@ if (!student) {
 
 
 /* =========================================
-   Student Name
+   Student की जानकारी दिखाएं
 ========================================= */
 
 const studentName =
@@ -85,30 +85,24 @@ const studentInfo =
 
 
 if (studentName) {
-
   studentName.textContent =
     student.full_name || 'विद्यार्थी';
-
 }
 
 
 if (studentInfo) {
-
   studentInfo.textContent =
     '🆔 ' +
     (student.student_id || '—') +
-
     ' • 📘 कक्षा ' +
     (student.class_level || '—') +
-
     ' • 🏫 ' +
     (student.school_name || '—');
-
 }
 
 
 /* =========================================
-   Student Photo
+   Profile Photo
 ========================================= */
 
 const photoBox =
@@ -137,14 +131,19 @@ if (photoBox) {
 /* =========================================
    Student Results
 
-   IMPORTANT:
    test_attempts पर RLS enabled है।
 
-   इसलिए direct test_attempts SELECT नहीं।
+   इसलिए direct SELECT नहीं करेंगे।
 
-   Existing SECURITY DEFINER RPC:
+   SECURITY DEFINER RPC:
    get_ganit_student_results()
 ========================================= */
+
+console.log(
+  'Loading results for student:',
+  student.student_id
+);
+
 
 const {
   data: rpcResults,
@@ -162,8 +161,14 @@ if (rpcError) {
 }
 
 
+console.log(
+  'Student Results:',
+  rpcResults
+);
+
+
 /* =========================================
-   RPC Result को Frontend Attempts Format में बदलें
+   RPC Result को Frontend Format में बदलें
 ========================================= */
 
 const attempts =
@@ -239,20 +244,17 @@ const submittedAttempts =
   attempts.filter(function (attempt) {
 
     return (
-      String(attempt.status || '').toLowerCase() ===
-      'submitted'
-    )
-    ||
+      String(
+        attempt.status || ''
+      ).toLowerCase() === 'submitted'
+    ) ||
     !!attempt.submitted_at;
 
   });
 
 
 /* =========================================
-   Class Safety Filter
-
-   Student Class 9 → केवल Class 9
-   Student Class 10 → केवल Class 10
+   केवल उसी Class के Tests
 ========================================= */
 
 const validAttempts =
@@ -264,11 +266,21 @@ const validAttempts =
 
 
     return (
-      Number(attempt.tests.class_level) ===
-      Number(student.class_level)
+      Number(
+        attempt.tests.class_level
+      ) ===
+      Number(
+        student.class_level
+      )
     );
 
   });
+
+
+console.log(
+  'Valid Student Results:',
+  validAttempts
+);
 
 
 /* =========================================
@@ -287,13 +299,19 @@ let bestPercentage = 0;
 validAttempts.forEach(function (attempt) {
 
   const percentage =
-    Number(attempt.percentage || 0);
+    Number(
+      attempt.percentage || 0
+    );
 
 
-  totalPercentage += percentage;
+  totalPercentage +=
+    percentage;
 
 
-  if (percentage > bestPercentage) {
+  if (
+    percentage >
+    bestPercentage
+  ) {
 
     bestPercentage =
       percentage;
@@ -314,13 +332,21 @@ const averagePercentage =
 ========================================= */
 
 const totalTestsElement =
-  document.getElementById('totalTests');
+  document.getElementById(
+    'totalTests'
+  );
+
 
 const averagePercentageElement =
-  document.getElementById('averagePercentage');
+  document.getElementById(
+    'averagePercentage'
+  );
+
 
 const bestPercentageElement =
-  document.getElementById('bestPercentage');
+  document.getElementById(
+    'bestPercentage'
+  );
 
 
 if (totalTestsElement) {
@@ -334,7 +360,8 @@ if (totalTestsElement) {
 if (averagePercentageElement) {
 
   averagePercentageElement.textContent =
-    averagePercentage.toFixed(1) + '%';
+    averagePercentage.toFixed(1) +
+    '%';
 
 }
 
@@ -342,7 +369,8 @@ if (averagePercentageElement) {
 if (bestPercentageElement) {
 
   bestPercentageElement.textContent =
-    bestPercentage.toFixed(1) + '%';
+    bestPercentage.toFixed(1) +
+    '%';
 
 }
 
@@ -351,7 +379,9 @@ if (bestPercentageElement) {
    Result List
 ========================================= */
 
-renderResults(validAttempts);
+renderResults(
+  validAttempts
+);
 ```
 
 } catch (error) {
@@ -364,13 +394,21 @@ console.error(
 
 
 const studentName =
-  document.getElementById('studentName');
+  document.getElementById(
+    'studentName'
+  );
+
 
 const studentInfo =
-  document.getElementById('studentInfo');
+  document.getElementById(
+    'studentInfo'
+  );
+
 
 const resultList =
-  document.getElementById('resultList');
+  document.getElementById(
+    'resultList'
+  );
 
 
 if (studentName) {
@@ -416,11 +454,15 @@ console.error(
 Results Render करें
 ========================================= */
 
-function renderResults(attempts) {
+function renderResults(
+attempts
+) {
 
 ```
 const resultList =
-  document.getElementById('resultList');
+  document.getElementById(
+    'resultList'
+  );
 
 
 if (!resultList) {
@@ -441,7 +483,6 @@ if (!attempts.length) {
   `;
 
   return;
-
 }
 
 
@@ -457,23 +498,39 @@ resultList.innerHTML =
 
 
     const score =
-      Number(attempt.score || 0);
+      Number(
+        attempt.score || 0
+      );
 
 
     const totalMarks =
-      Number(attempt.total_marks || 0);
+      Number(
+        attempt.total_marks || 0
+      );
 
 
     const percentage =
-      Number(attempt.percentage || 0);
+      Number(
+        attempt.percentage || 0
+      );
 
 
     const correct =
-      Number(attempt.correct_answers || 0);
+      Number(
+        attempt.correct_answers || 0
+      );
 
 
     const wrong =
-      Number(attempt.wrong_answers || 0);
+      Number(
+        attempt.wrong_answers || 0
+      );
+
+
+    const unattempted =
+      Number(
+        attempt.unattempted || 0
+      );
 
 
     const date =
@@ -501,6 +558,10 @@ resultList.innerHTML =
             &nbsp; | &nbsp;
 
             ❌ गलत: ${wrong}
+
+            &nbsp; | &nbsp;
+
+            ⭕ छोड़े: ${unattempted}
 
           </small>
 
@@ -537,7 +598,9 @@ resultList.innerHTML =
 Date Format
 ========================================= */
 
-function formatDate(value) {
+function formatDate(
+value
+) {
 
 ```
 if (!value) {
@@ -570,10 +633,14 @@ try {
 Initials
 ========================================= */
 
-function getInitials(name) {
+function getInitials(
+name
+) {
 
 ```
-return String(name || 'GS')
+return String(
+  name || 'GS'
+)
   .trim()
   .split(/\s+/)
   .map(function (word) {
@@ -592,20 +659,34 @@ return String(name || 'GS')
 HTML Escape
 ========================================= */
 
-function escapeHtml(value) {
+function escapeHtml(
+value
+) {
 
 ```
-return String(value ?? '')
-
-  .replace(/&/g, '&amp;')
-
-  .replace(/</g, '&lt;')
-
-  .replace(/>/g, '&gt;')
-
-  .replace(/"/g, '&quot;')
-
-  .replace(/'/g, '&#039;');
+return String(
+  value ?? ''
+)
+  .replace(
+    /&/g,
+    '&amp;'
+  )
+  .replace(
+    /</g,
+    '&lt;'
+  )
+  .replace(
+    />/g,
+    '&gt;'
+  )
+  .replace(
+    /"/g,
+    '&quot;'
+  )
+  .replace(
+    /'/g,
+    '&#039;'
+  );
 ```
 
 }
@@ -614,19 +695,23 @@ return String(value ?? '')
 Live Refresh
 ========================================= */
 
-setInterval(function () {
+setInterval(
+function () {
 
 ```
-if (
-  document.visibilityState ===
-  'visible'
-) {
+  if (
+    document.visibilityState ===
+    'visible'
+  ) {
 
-  location.reload();
+    location.reload();
 
-}
+  }
+
+},
+30000
 ```
 
-}, 30000);
+);
 
 });
