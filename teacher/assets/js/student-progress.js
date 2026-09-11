@@ -1,3 +1,4 @@
+```javascript
 document.addEventListener('DOMContentLoaded', async () => {
 
   /* =========================================
@@ -140,6 +141,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /* =========================================
        केवल इस Student के Submitted Tests लें
+
+       IMPORTANT:
+       tests table को nested relation के रूप में
+       नहीं लिया जा रहा है।
+
+       पहले test_attempts पढ़ेंगे।
     ========================================= */
 
     const {
@@ -161,14 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         started_at,
         submitted_at,
         time_taken_seconds,
-        status,
-        tests (
-          id,
-          title,
-          test_type,
-          class_level,
-          test_date
-        )
+        status
       `)
 
       .eq('student_id', student.id)
@@ -184,26 +184,125 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (attemptsError) throw attemptsError;
 
 
+    const attemptList = attempts || [];
+
+
+
+    /* =========================================
+       केवल Submitted Attempts रखें
+    ========================================= */
+
     const submittedAttempts =
-      (attempts || []).filter(attempt =>
-        String(attempt.status || '').toLowerCase() === 'submitted' ||
+      attemptList.filter(attempt =>
+
+        String(
+          attempt.status || ''
+        ).toLowerCase() === 'submitted'
+
+        ||
+
         !!attempt.submitted_at
+
       );
+
+
+
+    /* =========================================
+       जिन Tests की जरूरत है उनके IDs निकालें
+    ========================================= */
+
+    const testIds = [
+      ...new Set(
+        submittedAttempts
+          .map(attempt => attempt.test_id)
+          .filter(
+            testId =>
+              testId !== null &&
+              testId !== undefined
+          )
+      )
+    ];
+
+
+
+    /* =========================================
+       Tests Table से Test Information अलग से लें
+    ========================================= */
+
+    let testMap = {};
+
+
+    if (testIds.length) {
+
+      const {
+        data: tests,
+        error: testsError
+      } = await supabaseClient
+
+        .from('tests')
+
+        .select(`
+          id,
+          title,
+          test_type,
+          class_level,
+          test_date
+        `)
+
+        .in('id', testIds);
+
+
+      if (testsError) throw testsError;
+
+
+      testMap =
+        Object.fromEntries(
+          (tests || []).map(test => [
+            test.id,
+            test
+          ])
+        );
+
+    }
+
+
+
+    /* =========================================
+       Attempts के साथ Test Information जोड़ें
+    ========================================= */
+
+    const enrichedAttempts =
+      submittedAttempts.map(attempt => ({
+
+        ...attempt,
+
+        tests:
+          testMap[attempt.test_id] || null
+
+      }));
 
 
 
     /* =========================================
        Safety:
        केवल उसी Class के Tests रखें
+
+       यदि Test में class_level मौजूद है,
+       तो Student की class से match होना चाहिए।
     ========================================= */
 
     const validAttempts =
-      submittedAttempts.filter(attempt => {
+      enrichedAttempts.filter(attempt => {
 
-        if (!attempt.tests) return false;
+        const test =
+          attempt.tests;
+
+
+        if (!test) return false;
+
 
         return Number(
-          attempt.tests.class_level
+          test.class_level
         ) === Number(
           student.class_level
         );
@@ -228,15 +327,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     validAttempts.forEach(attempt => {
 
       const percentage =
-        Number(attempt.percentage || 0);
+        Number(
+          attempt.percentage || 0
+        );
 
 
       totalPercentage += percentage;
 
 
-      if (percentage > bestPercentage) {
+      if (
+        percentage >
+        bestPercentage
+      ) {
 
-        bestPercentage = percentage;
+        bestPercentage =
+          percentage;
 
       }
 
@@ -254,15 +359,21 @@ document.addEventListener('DOMContentLoaded', async () => {
        Statistics दिखाएं
     ========================================= */
 
-    document.getElementById('totalTests').textContent =
+    document.getElementById(
+      'totalTests'
+    ).textContent =
       totalTests;
 
 
-    document.getElementById('averagePercentage').textContent =
+    document.getElementById(
+      'averagePercentage'
+    ).textContent =
       averagePercentage.toFixed(1) + '%';
 
 
-    document.getElementById('bestPercentage').textContent =
+    document.getElementById(
+      'bestPercentage'
+    ).textContent =
       bestPercentage.toFixed(1) + '%';
 
 
@@ -271,7 +382,9 @@ document.addEventListener('DOMContentLoaded', async () => {
        Result List दिखाएं
     ========================================= */
 
-    renderResults(validAttempts);
+    renderResults(
+      validAttempts
+    );
 
 
   } catch (error) {
@@ -283,15 +396,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
 
 
-    document.getElementById('studentName').textContent =
+    document.getElementById(
+      'studentName'
+    ).textContent =
       'जानकारी लोड नहीं हो सकी';
 
 
-    document.getElementById('studentInfo').textContent =
+    document.getElementById(
+      'studentInfo'
+    ).textContent =
       'कृपया बाद में पुनः प्रयास करें।';
 
 
-    document.getElementById('resultList').innerHTML = `
+    document.getElementById(
+      'resultList'
+    ).innerHTML = `
 
       <div class="error-box">
 
@@ -304,7 +423,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     alert(
       'डेटा लोड नहीं हो सका: ' +
-      (error.message || 'Unknown Error')
+      (
+        error.message ||
+        'Unknown Error'
+      )
     );
 
   }
@@ -319,7 +441,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     const resultList =
-      document.getElementById('resultList');
+      document.getElementById(
+        'resultList'
+      );
 
 
     if (!attempts.length) {
@@ -353,31 +477,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         const score =
-          Number(attempt.score || 0);
+          Number(
+            attempt.score || 0
+          );
 
 
         const totalMarks =
-          Number(attempt.total_marks || 0);
+          Number(
+            attempt.total_marks || 0
+          );
 
 
         const percentage =
-          Number(attempt.percentage || 0);
+          Number(
+            attempt.percentage || 0
+          );
 
 
         const date =
           formatDate(
+
             attempt.submitted_at ||
+
             test.test_date ||
+
             attempt.started_at
+
           );
 
 
         const correct =
-          Number(attempt.correct_answers || 0);
+          Number(
+            attempt.correct_answers || 0
+          );
 
 
         const wrong =
-          Number(attempt.wrong_answers || 0);
+          Number(
+            attempt.wrong_answers || 0
+          );
 
 
         return `
@@ -449,6 +587,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
 
       return new Date(value)
+
         .toLocaleDateString(
           'hi-IN',
           {
@@ -474,13 +613,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function getInitials(name) {
 
-    return String(name || 'GS')
+    return String(
+      name || 'GS'
+    )
 
       .trim()
 
       .split(/\s+/)
 
-      .map(word => word.charAt(0))
+      .map(
+        word =>
+          word.charAt(0)
+      )
 
       .join('')
 
@@ -498,25 +642,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function escapeHtml(value) {
 
-    return String(value ?? '')
+    return String(
+      value ?? ''
+    )
 
-      .replace(/&/g, '&amp;')
+      .replace(
+        /&/g,
+        '&amp;'
+      )
 
-      .replace(/</g, '&lt;')
+      .replace(
+        /</g,
+        '&lt;'
+      )
 
-      .replace(/>/g, '&gt;')
+      .replace(
+        />/g,
+        '&gt;'
+      )
 
-      .replace(/"/g, '&quot;')
+      .replace(
+        /"/g,
+        '&quot;'
+      )
 
-      .replace(/'/g, '&#039;');
+      .replace(
+        /'/g,
+        '&#039;'
+      );
 
   }
 
 
 
-  // Live refresh for this student's progress.
+  /* =========================================
+     Live refresh for this student's progress
+  ========================================= */
+
   setInterval(() => {
-    if (document.visibilityState === 'visible') location.reload();
+
+    if (
+      document.visibilityState ===
+      'visible'
+    ) {
+
+      location.reload();
+
+    }
+
   }, 30000);
 
 });
+```
