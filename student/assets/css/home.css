@@ -406,3 +406,59 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .winner-meta span{font-size:9px;}
   .winner-school,.winner-test{font-size:9px !important;}
 }
+
+
+/* =========================================================
+   DAILY NOTICE SLIDER - FINAL TOUCH
+   ========================================================= */
+.gs-notice-slider{
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--gs-line);
+  border-radius:18px;
+  padding:13px 14px 10px;
+  box-shadow:0 8px 25px rgba(24,45,90,.05);
+  overflow:hidden;
+}
+.gs-notice-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.gs-notice-label{display:inline-block;color:var(--gs-blue);font-size:11px;font-weight:800}
+.gs-notice-header h2{margin:2px 0 0;font-size:16px;color:var(--gs-text)}
+.gs-notice-counter{font-size:10px;font-weight:800;color:var(--gs-muted);background:var(--gs-soft);border-radius:999px;padding:5px 8px;white-space:nowrap}
+.gs-notice-viewport{overflow:hidden;width:100%}
+.gs-notice-track{display:flex;transition:transform .35s ease;will-change:transform}
+.gs-notice-slide{min-width:100%;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:9px 2px 7px}
+.gs-notice-icon{width:40px;height:40px;border-radius:12px;background:var(--gs-soft);display:grid;place-items:center;flex:none;font-size:20px}
+.gs-notice-content{min-width:0}
+.gs-notice-content h3{margin:0 0 3px;font-size:14px;line-height:1.3}
+.gs-notice-content p{margin:0;color:var(--gs-muted);font-size:11px;line-height:1.45}
+.gs-notice-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:3px}
+.gs-notice-controls button{width:27px;height:27px;border:1px solid var(--gs-line);border-radius:50%;background:#fff;color:var(--gs-blue);font-size:20px;line-height:1;cursor:pointer;padding:0}
+.gs-notice-controls button:active{transform:scale(.95)}
+.gs-notice-dots{display:flex;align-items:center;gap:5px}
+.gs-notice-dots span{width:6px;height:6px;border-radius:50%;background:#cbd5e7;display:block;transition:.2s}
+.gs-notice-dots span.active{width:17px;border-radius:999px;background:var(--gs-blue)}
+
+/* =========================================================
+   SOCIAL / CONTACT CARD
+   ========================================================= */
+.gs-social-card{margin-top:18px;margin-bottom:18px;background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:15px;box-shadow:0 8px 25px rgba(24,45,90,.04)}
+.gs-social-label{font-size:11px;color:var(--gs-blue);font-weight:800}
+.gs-social-heading h2{font-size:17px;margin:3px 0}
+.gs-social-heading p{font-size:11px;color:var(--gs-muted);margin:0 0 12px}
+.gs-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gs-social-btn{min-width:0;padding:9px 5px;border:1px solid var(--gs-line);border-radius:12px;background:#fafbff;color:var(--gs-text);text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-sizing:border-box}
+.gs-social-btn span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:15px;background:var(--gs-soft);color:var(--gs-blue)}
+.gs-social-btn b{font-size:10px;line-height:1.1}
+.gs-social-btn:hover{border-color:#b7c7ef;transform:translateY(-1px)}
+@media(max-width:480px){
+  .gs-notice-slider{padding:12px 12px 9px}
+  .gs-notice-header h2{font-size:15px}
+  .gs-notice-slide{gap:9px}
+  .gs-notice-icon{width:37px;height:37px;font-size:18px}
+  .gs-notice-content h3{font-size:13px}
+  .gs-notice-content p{font-size:10.5px}
+  .gs-social-card{padding:13px}
+  .gs-social-grid{gap:6px}
+  .gs-social-btn{padding:8px 3px}
+  .gs-social-btn b{font-size:9.5px}
+}
