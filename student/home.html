@@ -94,29 +94,18 @@
 
 
   <!-- ==========================================
-       DAILY IMAGE BANNER SLIDER
+       DYNAMIC HOME BANNER
+       Admin Panel से आने वाली active images यहाँ दिखेंगी
        ========================================== -->
-
-  <section class="gs-banner-slider" aria-label="सूचना बैनर">
+  <section class="gs-banner-slider" id="gsBannerSlider" aria-label="गणित सेतु बैनर" hidden>
     <div class="gs-banner-viewport">
-      <div class="gs-banner-track" id="gsNoticeTrack">
-        <div class="gs-banner-slide"><img src="assets/images/notifications/banner-1.svg" alt="गणित सेतु सूचना बैनर 1"></div>
-        <div class="gs-banner-slide"><img src="assets/images/notifications/banner-2.svg" alt="गणित सेतु सूचना बैनर 2"></div>
-        <div class="gs-banner-slide"><img src="assets/images/notifications/banner-3.svg" alt="गणित सेतु सूचना बैनर 3"></div>
-        <div class="gs-banner-slide"><img src="assets/images/notifications/banner-4.svg" alt="गणित सेतु सूचना बैनर 4"></div>
-        <div class="gs-banner-slide"><img src="assets/images/notifications/banner-5.svg" alt="गणित सेतु सूचना बैनर 5"></div>
-      </div>
+      <div class="gs-banner-track" id="gsBannerTrack"></div>
     </div>
 
-    <button type="button" class="gs-banner-arrow gs-banner-prev" id="gsNoticePrev" aria-label="पिछला बैनर">‹</button>
-    <button type="button" class="gs-banner-arrow gs-banner-next" id="gsNoticeNext" aria-label="अगला बैनर">›</button>
-
-    <div class="gs-banner-dots" id="gsNoticeDots" aria-label="बैनर चयन">
-      <button type="button" class="active" aria-label="बैनर 1"></button>
-      <button type="button" aria-label="बैनर 2"></button>
-      <button type="button" aria-label="बैनर 3"></button>
-      <button type="button" aria-label="बैनर 4"></button>
-      <button type="button" aria-label="बैनर 5"></button>
+    <div class="gs-banner-controls" id="gsBannerControls" hidden>
+      <button type="button" id="gsBannerPrev" aria-label="पिछला बैनर">‹</button>
+      <div class="gs-banner-dots" id="gsBannerDots"></div>
+      <button type="button" id="gsBannerNext" aria-label="अगला बैनर">›</button>
     </div>
   </section>
 
@@ -301,20 +290,6 @@
 
   </section>
 
-
-  <!-- ==========================================
-       SOCIAL / CONTACT
-       ========================================== -->
-
-  <section class="gs-social-section" aria-label="गणित सेतु से जुड़ें">
-    <h2>गणित सेतु से जुड़ें</h2>
-    <div class="gs-social-grid">
-      <a class="gs-social-btn youtube" href="contact.html" aria-label="YouTube">▶<span>YouTube</span></a>
-      <a class="gs-social-btn facebook" href="contact.html" aria-label="Facebook">f<span>Facebook</span></a>
-      <a class="gs-social-btn whatsapp" href="contact.html" aria-label="WhatsApp">◔<span>WhatsApp</span></a>
-      <a class="gs-social-btn instagram" href="contact.html" aria-label="Instagram">◎<span>Instagram</span></a>
-    </div>
-  </section>
 
 </main>
 
