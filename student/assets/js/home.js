@@ -1,33 +1,150 @@
-// Home Page - Daily image banner slider
+/* ============================================
+   GANIT SETU - HOME PAGE
+   Dynamic Banner Slider
+
+   Admin Panel में active banners 'home_banners'
+   table से आएँगे। Home पर कोई default image नहीं है।
+   ============================================ */
+
 (function(){
-  'use strict';
-
-  const track = document.getElementById('gsNoticeTrack');
-  const prev = document.getElementById('gsNoticePrev');
-  const next = document.getElementById('gsNoticeNext');
-  const dots = document.querySelectorAll('#gsNoticeDots button');
-
-  if (!track || !prev || !next || !dots.length) return;
-
-  const slides = track.children;
-  let index = 0;
+  let banners = [];
+  let currentIndex = 0;
   let timer = null;
 
-  function show(i){
-    index = (i + slides.length) % slides.length;
-    track.style.transform = 'translateX(-' + (index * 100) + '%)';
-    dots.forEach((dot, n) => dot.classList.toggle('active', n === index));
+  function el(id){ return document.getElementById(id); }
+
+  function stopAutoSlide(){
+    if(timer){
+      clearInterval(timer);
+      timer = null;
+    }
   }
 
-  function restart(){
-    clearInterval(timer);
-    timer = setInterval(() => show(index + 1), 5000);
+  function updateSlider(){
+    const track = el('gsBannerTrack');
+    const counterDots = el('gsBannerDots');
+    if(!track || !counterDots || !banners.length) return;
+
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    [...counterDots.children].forEach((dot, i)=>{
+      dot.classList.toggle('active', i === currentIndex);
+    });
   }
 
-  prev.addEventListener('click', () => { show(index - 1); restart(); });
-  next.addEventListener('click', () => { show(index + 1); restart(); });
-  dots.forEach((dot, n) => dot.addEventListener('click', () => { show(n); restart(); }));
+  function startAutoSlide(){
+    stopAutoSlide();
+    if(banners.length > 1){
+      timer = setInterval(()=>{
+        currentIndex = (currentIndex + 1) % banners.length;
+        updateSlider();
+      }, 5000);
+    }
+  }
 
-  show(0);
-  restart();
+  function renderBanners(rows){
+    const section = el('gsBannerSlider');
+    const track = el('gsBannerTrack');
+    const dots = el('gsBannerDots');
+    const controls = el('gsBannerControls');
+    const prev = el('gsBannerPrev');
+    const next = el('gsBannerNext');
+
+    if(!section || !track || !dots) return;
+
+    banners = (Array.isArray(rows) ? rows : [])
+      .filter(row => row && row.image_url && row.is_active !== false)
+      .sort((a,b) => Number(a.display_order || 0) - Number(b.display_order || 0));
+
+    track.innerHTML = '';
+    dots.innerHTML = '';
+    currentIndex = 0;
+    stopAutoSlide();
+
+    if(!banners.length){
+      section.hidden = true;
+      if(controls) controls.hidden = true;
+      return;
+    }
+
+    banners.forEach((banner, index)=>{
+      const slide = document.createElement('article');
+      slide.className = 'gs-banner-slide';
+
+      const image = document.createElement('img');
+      image.src = banner.image_url;
+      image.alt = '';
+      image.loading = index === 0 ? 'eager' : 'lazy';
+      image.decoding = 'async';
+
+      if(banner.link_url){
+        const link = document.createElement('a');
+        link.href = banner.link_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.appendChild(image);
+        slide.appendChild(link);
+      }else{
+        slide.appendChild(image);
+      }
+
+      track.appendChild(slide);
+
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = index === 0 ? 'active' : '';
+      dot.setAttribute('aria-label', `बैनर ${index + 1}`);
+      dot.addEventListener('click', ()=>{
+        currentIndex = index;
+        updateSlider();
+        startAutoSlide();
+      });
+      dots.appendChild(dot);
+    });
+
+    section.hidden = false;
+    if(controls) controls.hidden = banners.length <= 1;
+
+    if(prev) prev.onclick = ()=>{
+      currentIndex = (currentIndex - 1 + banners.length) % banners.length;
+      updateSlider();
+      startAutoSlide();
+    };
+
+    if(next) next.onclick = ()=>{
+      currentIndex = (currentIndex + 1) % banners.length;
+      updateSlider();
+      startAutoSlide();
+    };
+
+    updateSlider();
+    startAutoSlide();
+  }
+
+  async function loadHomeBanners(){
+    if(typeof supabaseClient === 'undefined') return;
+
+    try{
+      const { data, error } = await supabaseClient
+        .from('home_banners')
+        .select('id, image_url, link_url, display_order, is_active')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true })
+        .order('id', { ascending: true });
+
+      if(error){
+        // Table अभी न बनी हो तो Home Page को blank ही रखें।
+        console.warn('Home banner load skipped:', error.message);
+        renderBanners([]);
+        return;
+      }
+
+      renderBanners(data || []);
+    }catch(error){
+      console.warn('Home banner load skipped:', error);
+      renderBanners([]);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadHomeBanners);
 })();
