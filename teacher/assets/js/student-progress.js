@@ -1,9 +1,4 @@
-```javascript
 document.addEventListener('DOMContentLoaded', async () => {
-
-  /* =========================================
-     URL से Student ID लें
-  ========================================= */
 
   const params = new URLSearchParams(window.location.search);
   const studentId = params.get('student_id');
@@ -14,11 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-
-  /* =========================================
-     Teacher का DISE Code लें
-  ========================================= */
-
   const teacherDiseCode =
     sessionStorage.getItem('ganit_setu_teacher_dise_code');
 
@@ -28,14 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-
   try {
 
     /* =========================================
-       Student की जानकारी लोड करें
-
-       Security:
-       केवल उसी Teacher के School का Student
+       Student Information
     ========================================= */
 
     const {
@@ -57,11 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       .eq('school_dise_code', teacherDiseCode)
       .maybeSingle();
 
-
     if (studentError) {
       throw studentError;
     }
-
 
     if (!student) {
       alert(
@@ -74,24 +58,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* =========================================
-       Student की जानकारी दिखाएं
+       Student Name / Information
     ========================================= */
 
-    const studentNameEl =
+    const studentName =
       document.getElementById('studentName');
 
-    const studentInfoEl =
+    const studentInfo =
       document.getElementById('studentInfo');
 
-
-    if (studentNameEl) {
-      studentNameEl.textContent =
+    if (studentName) {
+      studentName.textContent =
         student.full_name || 'विद्यार्थी';
     }
 
-
-    if (studentInfoEl) {
-      studentInfoEl.textContent =
+    if (studentInfo) {
+      studentInfo.textContent =
         '🆔 ' +
         (student.student_id || '—') +
         ' • 📘 कक्षा ' +
@@ -102,12 +84,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* =========================================
-       Profile Photo
+       Student Photo
     ========================================= */
 
     const photoBox =
       document.getElementById('studentPhoto');
-
 
     if (photoBox) {
 
@@ -124,16 +105,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           getInitials(student.full_name);
 
       }
-
     }
 
 
     /* =========================================
-       Student के Test Attempts लें
+       Load Test Attempts
 
        IMPORTANT:
-       tests table को nested relation में
-       नहीं लिया जा रहा है।
+       tests nested relation नहीं है।
     ========================================= */
 
     const {
@@ -163,22 +142,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       );
 
-
     if (attemptsError) {
       throw attemptsError;
     }
 
-
-    const attemptList =
-      attempts || [];
+    const attemptList = attempts || [];
 
 
     /* =========================================
-       केवल Submitted Attempts रखें
+       Submitted Attempts
     ========================================= */
 
     const submittedAttempts =
-      attemptList.filter(attempt => {
+      attemptList.filter(function (attempt) {
 
         const status =
           String(
@@ -194,34 +170,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* =========================================
-       Test IDs निकालें
+       Test IDs
     ========================================= */
 
     const testIds = [
       ...new Set(
         submittedAttempts
-          .map(
-            attempt =>
-              attempt.test_id
-          )
-          .filter(
-            testId =>
+          .map(function (attempt) {
+            return attempt.test_id;
+          })
+          .filter(function (testId) {
+            return (
               testId !== null &&
               testId !== undefined
-          )
+            );
+          })
       )
     ];
 
 
     /* =========================================
-       Tests Table से Test Information लें
-
-       अलग query ताकि Supabase nested
-       relation पर dependency न रहे।
+       Load Tests Separately
     ========================================= */
 
     let testMap = {};
-
 
     if (testIds.length > 0) {
 
@@ -239,54 +211,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         `)
         .in('id', testIds);
 
-
       if (testsError) {
         throw testsError;
       }
 
-
-      testMap =
-        Object.fromEntries(
-          (tests || []).map(test => [
-            test.id,
-            test
-          ])
-        );
-
+      (tests || []).forEach(function (test) {
+        testMap[test.id] = test;
+      });
     }
 
 
     /* =========================================
-       Attempt + Test Data जोड़ें
+       Combine Attempt + Test
     ========================================= */
 
     const enrichedAttempts =
-      submittedAttempts.map(attempt => {
+      submittedAttempts.map(function (attempt) {
 
         return {
-          ...attempt,
-          tests:
-            testMap[attempt.test_id] || null
+          id: attempt.id,
+          test_id: attempt.test_id,
+          correct_answers: attempt.correct_answers,
+          wrong_answers: attempt.wrong_answers,
+          unattempted: attempt.unattempted,
+          score: attempt.score,
+          total_marks: attempt.total_marks,
+          percentage: attempt.percentage,
+          started_at: attempt.started_at,
+          submitted_at: attempt.submitted_at,
+          time_taken_seconds: attempt.time_taken_seconds,
+          status: attempt.status,
+          tests: testMap[attempt.test_id] || null
         };
 
       });
 
 
     /* =========================================
-       केवल Student की Class के Tests रखें
+       Class Filter
     ========================================= */
 
     const validAttempts =
-      enrichedAttempts.filter(attempt => {
+      enrichedAttempts.filter(function (attempt) {
 
-        const test =
-          attempt.tests;
-
+        const test = attempt.tests;
 
         if (!test) {
           return false;
         }
-
 
         return (
           Number(test.class_level) ===
@@ -297,41 +269,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* =========================================
-       Progress Statistics
+       Statistics
     ========================================= */
 
     const totalTests =
       validAttempts.length;
 
-
     let totalPercentage = 0;
-
     let bestPercentage = 0;
 
-
-    validAttempts.forEach(attempt => {
+    validAttempts.forEach(function (attempt) {
 
       const percentage =
-        Number(
-          attempt.percentage || 0
-        );
-
+        Number(attempt.percentage || 0);
 
       totalPercentage += percentage;
 
-
-      if (
-        percentage >
-        bestPercentage
-      ) {
-
-        bestPercentage =
-          percentage;
-
+      if (percentage > bestPercentage) {
+        bestPercentage = percentage;
       }
 
     });
-
 
     const averagePercentage =
       totalTests > 0
@@ -340,50 +298,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     /* =========================================
-       Statistics दिखाएं
+       Display Statistics
     ========================================= */
 
-    const totalTestsEl =
-      document.getElementById(
-        'totalTests'
-      );
+    const totalTestsElement =
+      document.getElementById('totalTests');
 
-    const averagePercentageEl =
-      document.getElementById(
-        'averagePercentage'
-      );
+    const averageElement =
+      document.getElementById('averagePercentage');
 
-    const bestPercentageEl =
-      document.getElementById(
-        'bestPercentage'
-      );
+    const bestElement =
+      document.getElementById('bestPercentage');
 
-
-    if (totalTestsEl) {
-      totalTestsEl.textContent =
+    if (totalTestsElement) {
+      totalTestsElement.textContent =
         totalTests;
     }
 
-
-    if (averagePercentageEl) {
-      averagePercentageEl.textContent =
+    if (averageElement) {
+      averageElement.textContent =
         averagePercentage.toFixed(1) + '%';
     }
 
-
-    if (bestPercentageEl) {
-      bestPercentageEl.textContent =
+    if (bestElement) {
+      bestElement.textContent =
         bestPercentage.toFixed(1) + '%';
     }
 
 
     /* =========================================
-       Result List दिखाएं
+       Render Results
     ========================================= */
 
-    renderResults(
-      validAttempts
-    );
+    renderResults(validAttempts);
 
 
   } catch (error) {
@@ -393,44 +340,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       error
     );
 
+    const studentName =
+      document.getElementById('studentName');
 
-    const studentNameEl =
-      document.getElementById(
-        'studentName'
-      );
-
-    const studentInfoEl =
-      document.getElementById(
-        'studentInfo'
-      );
+    const studentInfo =
+      document.getElementById('studentInfo');
 
     const resultList =
-      document.getElementById(
-        'resultList'
-      );
+      document.getElementById('resultList');
 
-
-    if (studentNameEl) {
-      studentNameEl.textContent =
+    if (studentName) {
+      studentName.textContent =
         'जानकारी लोड नहीं हो सकी';
     }
 
-
-    if (studentInfoEl) {
-      studentInfoEl.textContent =
+    if (studentInfo) {
+      studentInfo.textContent =
         'कृपया बाद में पुनः प्रयास करें।';
     }
 
-
     if (resultList) {
-
       resultList.innerHTML =
         '<div class="error-box">' +
         '❌ टेस्ट परिणाम लोड नहीं हो सके।' +
         '</div>';
-
     }
-
 
     alert(
       'डेटा लोड नहीं हो सका: ' +
@@ -444,21 +378,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
   /* =========================================
-     Results Render करें
+     Render Results
   ========================================= */
 
   function renderResults(attempts) {
 
     const resultList =
-      document.getElementById(
-        'resultList'
-      );
-
+      document.getElementById('resultList');
 
     if (!resultList) {
       return;
     }
-
 
     if (!attempts.length) {
 
@@ -468,108 +398,76 @@ document.addEventListener('DOMContentLoaded', async () => {
         '</div>';
 
       return;
-
     }
 
-
     resultList.innerHTML =
-      attempts
-        .map(attempt => {
+      attempts.map(function (attempt) {
 
-          const test =
-            attempt.tests || {};
+        const test =
+          attempt.tests || {};
 
+        const title =
+          test.title || 'टेस्ट';
 
-          const title =
-            test.title || 'टेस्ट';
+        const score =
+          Number(attempt.score || 0);
 
+        const totalMarks =
+          Number(attempt.total_marks || 0);
 
-          const score =
-            Number(
-              attempt.score || 0
-            );
+        const percentage =
+          Number(attempt.percentage || 0);
 
+        const correct =
+          Number(attempt.correct_answers || 0);
 
-          const totalMarks =
-            Number(
-              attempt.total_marks || 0
-            );
+        const wrong =
+          Number(attempt.wrong_answers || 0);
 
-
-          const percentage =
-            Number(
-              attempt.percentage || 0
-            );
-
-
-          const date =
-            formatDate(
-              attempt.submitted_at ||
-              test.test_date ||
-              attempt.started_at
-            );
-
-
-          const correct =
-            Number(
-              attempt.correct_answers || 0
-            );
-
-
-          const wrong =
-            Number(
-              attempt.wrong_answers || 0
-            );
-
-
-          return (
-            '<div class="mini-result">' +
-
-              '<div class="result-info">' +
-
-                '<b>' +
-                  escapeHtml(title) +
-                '</b>' +
-
-                '<small>' +
-
-                  '✅ सही: ' +
-                  correct +
-
-                  '&nbsp; | &nbsp;' +
-
-                  '❌ गलत: ' +
-                  wrong +
-
-                '</small>' +
-
-              '</div>' +
-
-              '<div class="result-score">' +
-
-                score +
-                '/' +
-                totalMarks +
-
-                '<br>' +
-
-                percentage.toFixed(1) +
-                '%' +
-
-              '</div>' +
-
-              '<div class="result-date">' +
-
-                '📅 ' +
-                escapeHtml(date) +
-
-              '</div>' +
-
-            '</div>'
+        const date =
+          formatDate(
+            attempt.submitted_at ||
+            test.test_date ||
+            attempt.started_at
           );
 
-        })
-        .join('');
+        return (
+          '<div class="mini-result">' +
+
+            '<div class="result-info">' +
+
+              '<b>' +
+                escapeHtml(title) +
+              '</b>' +
+
+              '<small>' +
+                '✅ सही: ' +
+                correct +
+                '&nbsp; | &nbsp;' +
+                '❌ गलत: ' +
+                wrong +
+              '</small>' +
+
+            '</div>' +
+
+            '<div class="result-score">' +
+              score +
+              '/' +
+              totalMarks +
+              '<br>' +
+              percentage.toFixed(1) +
+              '%' +
+            '</div>' +
+
+            '<div class="result-date">' +
+              '📅 ' +
+              escapeHtml(date) +
+            '</div>' +
+
+          '</div>'
+        );
+
+      }).join('');
 
   }
 
@@ -583,7 +481,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!value) {
       return '—';
     }
-
 
     try {
 
@@ -612,15 +509,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function getInitials(name) {
 
-    return String(
-      name || 'GS'
-    )
+    return String(name || 'GS')
       .trim()
       .split(/\s+/)
-      .map(
-        word =>
-          word.charAt(0)
-      )
+      .map(function (word) {
+        return word.charAt(0);
+      })
       .join('')
       .slice(0, 2)
       .toUpperCase();
@@ -634,49 +528,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function escapeHtml(value) {
 
-    return String(
-      value ?? ''
-    )
-      .replace(
-        /&/g,
-        '&amp;'
-      )
-      .replace(
-        /</g,
-        '&lt;'
-      )
-      .replace(
-        />/g,
-        '&gt;'
-      )
-      .replace(
-        /"/g,
-        '&quot;'
-      )
-      .replace(
-        /'/g,
-        '&#039;'
-      );
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
 
   }
 
 
   /* =========================================
-     Live refresh for this student's progress
-    ========================================= */
+     Live Refresh
+  ========================================= */
 
-  setInterval(() => {
+  setInterval(function () {
 
     if (
       document.visibilityState ===
       'visible'
     ) {
-
       location.reload();
-
     }
 
   }, 30000);
 
 });
-```
