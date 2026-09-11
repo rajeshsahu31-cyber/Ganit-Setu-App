@@ -407,54 +407,31 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .winner-school,.winner-test{font-size:9px !important;}
 }
 
-/* =========================================================
-   DAILY IMAGE BANNER SLIDER - no text inside banners
-   ========================================================= */
+/* ============================================
+   DYNAMIC IMAGE BANNER
+   No default image / no banner text
+============================================ */
 .gs-banner-slider{
-  position:relative;
-  margin-bottom:16px;
-  border-radius:20px;
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--gs-line);
+  border-radius:18px;
   overflow:hidden;
-  background:#eaf2ff;
-  box-shadow:0 10px 28px rgba(24,45,90,.08);
+  box-shadow:0 8px 25px rgba(24,45,90,.05);
 }
 .gs-banner-viewport{width:100%;overflow:hidden;}
 .gs-banner-track{display:flex;width:100%;transition:transform .45s ease;will-change:transform;}
-.gs-banner-slide{min-width:100%;box-sizing:border-box;}
-.gs-banner-slide img{display:block;width:100%;height:auto;aspect-ratio:1200/500;object-fit:cover;}
-.gs-banner-arrow{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:40px;height:40px;border:0;border-radius:50%;
-  background:rgba(255,255,255,.92);color:#17489e;font-size:32px;line-height:1;
-  display:grid;place-items:center;cursor:pointer;z-index:2;
-  box-shadow:0 4px 14px rgba(0,0,0,.18);
-}
-.gs-banner-prev{left:12px}.gs-banner-next{right:12px}
-.gs-banner-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.04)}
-.gs-banner-dots{
-  position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
-  display:flex;gap:7px;padding:5px 9px;border-radius:20px;
-  background:rgba(255,255,255,.78);backdrop-filter:blur(5px);
-}
-.gs-banner-dots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:#c6ceda;cursor:pointer}
-.gs-banner-dots button.active{width:22px;border-radius:8px;background:#2155c7}
-
-/* =========================================================
-   SOCIAL / CONTACT
-   ========================================================= */
-.gs-social-section{margin-top:20px;background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:15px;box-shadow:0 8px 25px rgba(24,45,90,.05)}
-.gs-social-section h2{margin:0 0 12px;text-align:center;color:#173f9c;font-size:20px}
-.gs-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.gs-social-btn{min-width:0;text-decoration:none;border-radius:14px;padding:11px 6px;text-align:center;color:#fff;font-weight:800;box-shadow:0 5px 14px rgba(0,0,0,.10);font-size:25px}
-.gs-social-btn span{display:block;font-size:10px;margin-top:4px}
-.gs-social-btn.youtube{background:#ef233c}.gs-social-btn.facebook{background:#1877f2}.gs-social-btn.whatsapp{background:#20bf6b}.gs-social-btn.instagram{background:linear-gradient(135deg,#7b2cff,#f72585,#ff9f1c)}
-
-@media(max-width:700px){
-  .gs-banner-slider{margin-bottom:14px;border-radius:16px}
-  .gs-banner-arrow{width:34px;height:34px;font-size:27px}
-  .gs-banner-prev{left:8px}.gs-banner-next{right:8px}
-  .gs-banner-dots{bottom:7px;gap:6px}
-  .gs-social-grid{grid-template-columns:repeat(4,1fr);gap:7px}
-  .gs-social-btn{padding:9px 3px;border-radius:12px;font-size:21px}
-  .gs-social-btn span{font-size:8.5px}
+.gs-banner-slide{flex:0 0 100%;width:100%;line-height:0;}
+.gs-banner-slide a{display:block;width:100%;}
+.gs-banner-slide img{display:block;width:100%;height:auto;max-height:230px;object-fit:cover;}
+.gs-banner-controls{height:40px;display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;}
+.gs-banner-controls button{width:30px;height:30px;border:1px solid var(--gs-line);border-radius:50%;background:#fff;color:var(--gs-blue);font-size:21px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;}
+.gs-banner-controls button:hover{background:var(--gs-soft);}
+.gs-banner-dots{display:flex;align-items:center;justify-content:center;gap:6px;}
+.gs-banner-dots button{width:7px;height:7px;border:0;border-radius:50%;background:#cbd5e7;padding:0;cursor:pointer;}
+.gs-banner-dots button.active{width:9px;height:9px;background:var(--gs-blue);}
+@media(max-width:480px){
+  .gs-banner-slider{border-radius:15px;margin-bottom:12px;}
+  .gs-banner-slide img{max-height:190px;}
+  .gs-banner-controls{height:36px;gap:12px;}
 }
