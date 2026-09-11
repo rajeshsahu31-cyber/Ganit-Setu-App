@@ -6,18 +6,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   ========================================= */
 
   const params = new URLSearchParams(window.location.search);
-
   const studentId = params.get('student_id');
 
-
   if (!studentId) {
-
     alert('विद्यार्थी की जानकारी नहीं मिली।');
-
     location.href = 'students.html';
-
     return;
-
   }
 
 
@@ -26,24 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   ========================================= */
 
   const teacherDiseCode =
-    sessionStorage.getItem(
-      'ganit_setu_teacher_dise_code'
-    );
-
+    sessionStorage.getItem('ganit_setu_teacher_dise_code');
 
   if (!teacherDiseCode) {
-
     alert('Teacher का DISE Code नहीं मिला। कृपया दोबारा लॉगिन करें।');
-
     location.href = 'index.html';
-
     return;
-
   }
 
 
   try {
-
 
     /* =========================================
        Student की जानकारी लोड करें
@@ -56,9 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       data: student,
       error: studentError
     } = await supabaseClient
-
       .from('students')
-
       .select(`
         id,
         student_id,
@@ -69,50 +53,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         photo_url,
         status
       `)
-
       .eq('student_id', studentId)
-
       .eq('school_dise_code', teacherDiseCode)
-
       .maybeSingle();
 
 
-    if (studentError) throw studentError;
+    if (studentError) {
+      throw studentError;
+    }
 
 
     if (!student) {
-
       alert(
         'यह विद्यार्थी आपके विद्यालय से संबंधित नहीं है या उपलब्ध नहीं है।'
       );
 
       location.href = 'students.html';
-
       return;
-
     }
-
 
 
     /* =========================================
        Student की जानकारी दिखाएं
     ========================================= */
 
-    document.getElementById('studentName').textContent =
-      student.full_name || 'विद्यार्थी';
+    const studentNameEl =
+      document.getElementById('studentName');
+
+    const studentInfoEl =
+      document.getElementById('studentInfo');
 
 
-    document.getElementById('studentInfo').textContent =
+    if (studentNameEl) {
+      studentNameEl.textContent =
+        student.full_name || 'विद्यार्थी';
+    }
 
-      '🆔 ' +
-      (student.student_id || '—') +
 
-      ' • 📘 कक्षा ' +
-      (student.class_level || '—') +
-
-      ' • 🏫 ' +
-      (student.school_name || '—');
-
+    if (studentInfoEl) {
+      studentInfoEl.textContent =
+        '🆔 ' +
+        (student.student_id || '—') +
+        ' • 📘 कक्षा ' +
+        (student.class_level || '—') +
+        ' • 🏫 ' +
+        (student.school_name || '—');
+    }
 
 
     /* =========================================
@@ -123,39 +109,38 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('studentPhoto');
 
 
-    if (student.photo_url) {
+    if (photoBox) {
 
-      photoBox.innerHTML =
-        '<img src="' +
-        escapeHtml(student.photo_url) +
-        '" alt="Student Photo">';
+      if (student.photo_url) {
 
-    } else {
+        photoBox.innerHTML =
+          '<img src="' +
+          escapeHtml(student.photo_url) +
+          '" alt="Student Photo">';
 
-      photoBox.textContent =
-        getInitials(student.full_name);
+      } else {
+
+        photoBox.textContent =
+          getInitials(student.full_name);
+
+      }
 
     }
 
 
-
     /* =========================================
-       केवल इस Student के Submitted Tests लें
+       Student के Test Attempts लें
 
        IMPORTANT:
-       tests table को nested relation के रूप में
+       tests table को nested relation में
        नहीं लिया जा रहा है।
-
-       पहले test_attempts पढ़ेंगे।
     ========================================= */
 
     const {
       data: attempts,
       error: attemptsError
     } = await supabaseClient
-
       .from('test_attempts')
-
       .select(`
         id,
         test_id,
@@ -170,9 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         time_taken_seconds,
         status
       `)
-
       .eq('student_id', student.id)
-
       .order(
         'submitted_at',
         {
@@ -181,11 +164,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       );
 
 
-    if (attemptsError) throw attemptsError;
+    if (attemptsError) {
+      throw attemptsError;
+    }
 
 
-    const attemptList = attempts || [];
-
+    const attemptList =
+      attempts || [];
 
 
     /* =========================================
@@ -193,28 +178,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     ========================================= */
 
     const submittedAttempts =
-      attemptList.filter(attempt =>
+      attemptList.filter(attempt => {
 
-        String(
-          attempt.status || ''
-        ).toLowerCase() === 'submitted'
+        const status =
+          String(
+            attempt.status || ''
+          ).toLowerCase();
 
-        ||
+        return (
+          status === 'submitted' ||
+          !!attempt.submitted_at
+        );
 
-        !!attempt.submitted_at
-
-      );
-
+      });
 
 
     /* =========================================
-       जिन Tests की जरूरत है उनके IDs निकालें
+       Test IDs निकालें
     ========================================= */
 
     const testIds = [
       ...new Set(
         submittedAttempts
-          .map(attempt => attempt.test_id)
+          .map(
+            attempt =>
+              attempt.test_id
+          )
           .filter(
             testId =>
               testId !== null &&
@@ -224,23 +213,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     ];
 
 
-
     /* =========================================
-       Tests Table से Test Information अलग से लें
+       Tests Table से Test Information लें
+
+       अलग query ताकि Supabase nested
+       relation पर dependency न रहे।
     ========================================= */
 
     let testMap = {};
 
 
-    if (testIds.length) {
+    if (testIds.length > 0) {
 
       const {
         data: tests,
         error: testsError
       } = await supabaseClient
-
         .from('tests')
-
         .select(`
           id,
           title,
@@ -248,11 +237,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           class_level,
           test_date
         `)
-
         .in('id', testIds);
 
 
-      if (testsError) throw testsError;
+      if (testsError) {
+        throw testsError;
+      }
 
 
       testMap =
@@ -266,29 +256,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-
     /* =========================================
-       Attempts के साथ Test Information जोड़ें
+       Attempt + Test Data जोड़ें
     ========================================= */
 
     const enrichedAttempts =
-      submittedAttempts.map(attempt => ({
+      submittedAttempts.map(attempt => {
 
-        ...attempt,
+        return {
+          ...attempt,
+          tests:
+            testMap[attempt.test_id] || null
+        };
 
-        tests:
-          testMap[attempt.test_id] || null
-
-      }));
-
+      });
 
 
     /* =========================================
-       Safety:
-       केवल उसी Class के Tests रखें
-
-       यदि Test में class_level मौजूद है,
-       तो Student की class से match होना चाहिए।
+       केवल Student की Class के Tests रखें
     ========================================= */
 
     const validAttempts =
@@ -298,17 +283,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           attempt.tests;
 
 
-        if (!test) return false;
+        if (!test) {
+          return false;
+        }
 
 
-        return Number(
-          test.class_level
-        ) === Number(
-          student.class_level
+        return (
+          Number(test.class_level) ===
+          Number(student.class_level)
         );
 
       });
-
 
 
     /* =========================================
@@ -354,28 +339,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         : 0;
 
 
-
     /* =========================================
        Statistics दिखाएं
     ========================================= */
 
-    document.getElementById(
-      'totalTests'
-    ).textContent =
-      totalTests;
+    const totalTestsEl =
+      document.getElementById(
+        'totalTests'
+      );
+
+    const averagePercentageEl =
+      document.getElementById(
+        'averagePercentage'
+      );
+
+    const bestPercentageEl =
+      document.getElementById(
+        'bestPercentage'
+      );
 
 
-    document.getElementById(
-      'averagePercentage'
-    ).textContent =
-      averagePercentage.toFixed(1) + '%';
+    if (totalTestsEl) {
+      totalTestsEl.textContent =
+        totalTests;
+    }
 
 
-    document.getElementById(
-      'bestPercentage'
-    ).textContent =
-      bestPercentage.toFixed(1) + '%';
+    if (averagePercentageEl) {
+      averagePercentageEl.textContent =
+        averagePercentage.toFixed(1) + '%';
+    }
 
+
+    if (bestPercentageEl) {
+      bestPercentageEl.textContent =
+        bestPercentage.toFixed(1) + '%';
+    }
 
 
     /* =========================================
@@ -389,36 +388,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   } catch (error) {
 
-
     console.error(
       'Student Progress Load Error:',
       error
     );
 
 
-    document.getElementById(
-      'studentName'
-    ).textContent =
-      'जानकारी लोड नहीं हो सकी';
+    const studentNameEl =
+      document.getElementById(
+        'studentName'
+      );
+
+    const studentInfoEl =
+      document.getElementById(
+        'studentInfo'
+      );
+
+    const resultList =
+      document.getElementById(
+        'resultList'
+      );
 
 
-    document.getElementById(
-      'studentInfo'
-    ).textContent =
-      'कृपया बाद में पुनः प्रयास करें।';
+    if (studentNameEl) {
+      studentNameEl.textContent =
+        'जानकारी लोड नहीं हो सकी';
+    }
 
 
-    document.getElementById(
-      'resultList'
-    ).innerHTML = `
+    if (studentInfoEl) {
+      studentInfoEl.textContent =
+        'कृपया बाद में पुनः प्रयास करें।';
+    }
 
-      <div class="error-box">
 
-        ❌ टेस्ट परिणाम लोड नहीं हो सके।
+    if (resultList) {
 
-      </div>
+      resultList.innerHTML =
+        '<div class="error-box">' +
+        '❌ टेस्ट परिणाम लोड नहीं हो सके।' +
+        '</div>';
 
-    `;
+    }
 
 
     alert(
@@ -432,13 +443,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 
-
   /* =========================================
      Results Render करें
   ========================================= */
 
   function renderResults(attempts) {
-
 
     const resultList =
       document.getElementById(
@@ -446,132 +455,123 @@ document.addEventListener('DOMContentLoaded', async () => {
       );
 
 
+    if (!resultList) {
+      return;
+    }
+
+
     if (!attempts.length) {
 
-      resultList.innerHTML = `
-
-        <div class="empty-box">
-
-          📝 इस विद्यार्थी ने अभी तक कोई टेस्ट Submit नहीं किया है।
-
-        </div>
-
-      `;
+      resultList.innerHTML =
+        '<div class="empty-box">' +
+        '📝 इस विद्यार्थी ने अभी तक कोई टेस्ट Submit नहीं किया है।' +
+        '</div>';
 
       return;
 
     }
 
 
-
     resultList.innerHTML =
-      attempts.map(attempt => {
+      attempts
+        .map(attempt => {
+
+          const test =
+            attempt.tests || {};
 
 
-        const test =
-          attempt.tests || {};
+          const title =
+            test.title || 'टेस्ट';
 
 
-        const title =
-          test.title || 'टेस्ट';
+          const score =
+            Number(
+              attempt.score || 0
+            );
 
 
-        const score =
-          Number(
-            attempt.score || 0
+          const totalMarks =
+            Number(
+              attempt.total_marks || 0
+            );
+
+
+          const percentage =
+            Number(
+              attempt.percentage || 0
+            );
+
+
+          const date =
+            formatDate(
+              attempt.submitted_at ||
+              test.test_date ||
+              attempt.started_at
+            );
+
+
+          const correct =
+            Number(
+              attempt.correct_answers || 0
+            );
+
+
+          const wrong =
+            Number(
+              attempt.wrong_answers || 0
+            );
+
+
+          return (
+            '<div class="mini-result">' +
+
+              '<div class="result-info">' +
+
+                '<b>' +
+                  escapeHtml(title) +
+                '</b>' +
+
+                '<small>' +
+
+                  '✅ सही: ' +
+                  correct +
+
+                  '&nbsp; | &nbsp;' +
+
+                  '❌ गलत: ' +
+                  wrong +
+
+                '</small>' +
+
+              '</div>' +
+
+              '<div class="result-score">' +
+
+                score +
+                '/' +
+                totalMarks +
+
+                '<br>' +
+
+                percentage.toFixed(1) +
+                '%' +
+
+              '</div>' +
+
+              '<div class="result-date">' +
+
+                '📅 ' +
+                escapeHtml(date) +
+
+              '</div>' +
+
+            '</div>'
           );
 
-
-        const totalMarks =
-          Number(
-            attempt.total_marks || 0
-          );
-
-
-        const percentage =
-          Number(
-            attempt.percentage || 0
-          );
-
-
-        const date =
-          formatDate(
-
-            attempt.submitted_at ||
-
-            test.test_date ||
-
-            attempt.started_at
-
-          );
-
-
-        const correct =
-          Number(
-            attempt.correct_answers || 0
-          );
-
-
-        const wrong =
-          Number(
-            attempt.wrong_answers || 0
-          );
-
-
-        return `
-
-          <div class="mini-result">
-
-
-            <div class="result-info">
-
-              <b>
-                ${escapeHtml(title)}
-              </b>
-
-
-              <small>
-
-                ✅ सही: ${correct}
-
-                &nbsp; | &nbsp;
-
-                ❌ गलत: ${wrong}
-
-              </small>
-
-            </div>
-
-
-
-            <div class="result-score">
-
-              ${score}/${totalMarks}
-
-              <br>
-
-              ${percentage.toFixed(1)}%
-
-            </div>
-
-
-
-            <div class="result-date">
-
-              📅 ${escapeHtml(date)}
-
-            </div>
-
-
-          </div>
-
-        `;
-
-
-      }).join('');
+        })
+        .join('');
 
   }
-
 
 
   /* =========================================
@@ -580,14 +580,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function formatDate(value) {
 
-
-    if (!value) return '—';
+    if (!value) {
+      return '—';
+    }
 
 
     try {
 
       return new Date(value)
-
         .toLocaleDateString(
           'hi-IN',
           {
@@ -606,7 +606,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 
-
   /* =========================================
      Initials
   ========================================= */
@@ -616,24 +615,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return String(
       name || 'GS'
     )
-
       .trim()
-
       .split(/\s+/)
-
       .map(
         word =>
           word.charAt(0)
       )
-
       .join('')
-
       .slice(0, 2)
-
       .toUpperCase();
 
   }
-
 
 
   /* =========================================
@@ -645,27 +637,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     return String(
       value ?? ''
     )
-
       .replace(
         /&/g,
         '&amp;'
       )
-
       .replace(
         /</g,
         '&lt;'
       )
-
       .replace(
         />/g,
         '&gt;'
       )
-
       .replace(
         /"/g,
         '&quot;'
       )
-
       .replace(
         /'/g,
         '&#039;'
@@ -674,10 +661,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 
-
   /* =========================================
      Live refresh for this student's progress
-  ========================================= */
+    ========================================= */
 
   setInterval(() => {
 
