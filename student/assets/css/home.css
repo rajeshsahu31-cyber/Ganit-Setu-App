@@ -540,165 +540,29 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 
-/* GS-FINAL-BOTH-SIDE-TEST-INDICATORS
-   Final Test CTA indicators.
-   Only visual enhancement; original link/functionality preserved. */
+/* GS-TWO-RESULT-BUTTONS-SIDE-BY-SIDE
+   Keep "मेरे परिणाम" and "पिछला परिणाम जानें" on one row on mobile.
+   Visual/layout only; existing links and functionality are untouched. */
 
-.main-actions > .test-btn{
-  position:relative !important;
-  overflow:hidden !important;
-  isolation:isolate;
-}
-
-/* Keep the original pencil icon above the indicators */
-.main-actions > .test-btn > .test-main-icon{
-  position:relative;
-  z-index:5;
-}
-
-/* Both dedicated indicator hands stay INSIDE the blue Test button */
-.main-actions > .test-btn > .test-side-indicator{
-  position:absolute !important;
-  top:50% !important;
-  width:52px !important;
-  height:52px !important;
-  margin:0 !important;
-  padding:0 !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  border-radius:50% !important;
-  font-size:30px !important;
-  line-height:1 !important;
-
-  background:rgba(255,255,255,.16) !important;
-  border:2px solid rgba(255,255,255,.42) !important;
-
-  box-shadow:
-    0 0 0 9px rgba(255,255,255,.055),
-    inset 0 1px 0 rgba(255,255,255,.45),
-    0 0 22px rgba(255,255,255,.40) !important;
-
-  z-index:4 !important;
-  pointer-events:none !important;
-  transform-origin:center !important;
-}
-
-/* Left hand -> center */
-.main-actions > .test-btn > .test-indicator-left{
-  left:7% !important;
-  animation:gsTestHandLeft 1.15s ease-in-out infinite !important;
-}
-
-/* Right hand -> center */
-.main-actions > .test-btn > .test-indicator-right{
-  right:7% !important;
-  animation:gsTestHandRight 1.15s ease-in-out infinite !important;
-}
-
-/* Animated arrows between each hand and the center */
-.main-actions > .test-btn > .test-indicator-left::after{
-  content:"» » »";
-  position:absolute;
-  left:58px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:21px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#fff;
-  text-shadow:0 0 9px rgba(255,255,255,.85);
-  white-space:nowrap;
-  animation:gsTestArrowsRight 1.15s ease-in-out infinite;
-}
-
-.main-actions > .test-btn > .test-indicator-right::after{
-  content:"« « «";
-  position:absolute;
-  right:58px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:21px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#fff;
-  text-shadow:0 0 9px rgba(255,255,255,.85);
-  white-space:nowrap;
-  animation:gsTestArrowsLeft 1.15s ease-in-out infinite;
-}
-
-@keyframes gsTestHandLeft{
-  0%,100%{
-    transform:translateY(-50%) translateX(0) scale(.96);
-    opacity:.78;
-  }
-  50%{
-    transform:translateY(-50%) translateX(9px) scale(1.08);
-    opacity:1;
-  }
-}
-
-@keyframes gsTestHandRight{
-  0%,100%{
-    transform:translateY(-50%) translateX(0) scale(.96);
-    opacity:.78;
-  }
-  50%{
-    transform:translateY(-50%) translateX(-9px) scale(1.08);
-    opacity:1;
-  }
-}
-
-@keyframes gsTestArrowsRight{
-  0%,100%{
-    opacity:.35;
-    transform:translateY(-50%) translateX(-4px);
-  }
-  50%{
-    opacity:1;
-    transform:translateY(-50%) translateX(6px);
-  }
-}
-
-@keyframes gsTestArrowsLeft{
-  0%,100%{
-    opacity:.35;
-    transform:translateY(-50%) translateX(4px);
-  }
-  50%{
-    opacity:1;
-    transform:translateY(-50%) translateX(-6px);
-  }
-}
-
-/* Mobile: smaller, but still clearly visible and safely inside the button */
-@media(max-width:700px){
-  .main-actions > .test-btn > .test-side-indicator{
-    width:42px !important;
-    height:42px !important;
-    font-size:25px !important;
-    border-radius:14px !important;
+@media (max-width: 700px){
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:12px !important;
+    align-items:stretch !important;
   }
 
-  .main-actions > .test-btn > .test-indicator-left{
-    left:12px !important;
+  /* Test CTA remains full width */
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
   }
 
-  .main-actions > .test-btn > .test-indicator-right{
-    right:12px !important;
-  }
-
-  .main-actions > .test-btn > .test-indicator-left::after{
-    left:46px;
-    font-size:16px;
-    letter-spacing:0;
-  }
-
-  .main-actions > .test-btn > .test-indicator-right::after{
-    right:46px;
-    font-size:16px;
-    letter-spacing:0;
+  /* The two result buttons share the next row */
+  .main-actions > a:not(.test-btn),
+  .main-actions > button:not(.test-btn){
+    width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
   }
 }
