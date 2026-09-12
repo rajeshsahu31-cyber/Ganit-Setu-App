@@ -1,3 +1,5 @@
+/* GANIT SETU HOME.CSS - CLEAN FINAL */
+/* Original working design preserved; duplicate mobile action overrides removed. */
 /* नया Home Page - हल्का, साफ और अलग CSS */
 :root{
   --gs-blue:#2155c7;
@@ -21,26 +23,6 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 .welcome-badge img{width:100%;height:100%;object-fit:contain;display:block}
 
 .home-container{width:min(1080px,92%);margin:24px auto 40px}
-.student-profile-card{background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:16px;display:grid;grid-template-columns:78px minmax(0,1fr);grid-template-areas:"photo details" "photo rank";column-gap:14px;row-gap:10px;align-items:start;box-shadow:0 8px 25px rgba(24,45,90,.05)}
-.student-photo{grid-area:photo;width:72px;height:72px;border-radius:50%;background:var(--gs-soft);border:3px solid #dbe5ff;color:var(--gs-blue);display:grid;place-items:center;font-weight:800;font-size:20px;overflow:hidden;align-self:center}
-.student-photo img{width:100%;height:100%;object-fit:cover}
-.student-details{grid-area:details;min-width:0;text-align:left}
-.profile-label{font-size:13px;color:var(--gs-blue);font-weight:800;margin:0 0 4px;text-align:left}
-.student-details h1{font-size:21px;margin:0 0 7px;text-align:left;line-height:1.2}
-.student-meta{display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:var(--gs-muted);font-size:12px;text-align:left}
-.student-meta span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.my-rank-box{grid-area:rank;background:var(--gs-soft);border-radius:12px;padding:9px 13px;text-align:left;width:100%;box-sizing:border-box;border-left:4px solid var(--gs-blue)}
-.my-rank-box small{display:block;color:var(--gs-muted);font-size:11px}
-.my-rank-box strong{display:block;color:var(--gs-blue);font-size:22px;margin-top:1px}
-
-@media(max-width:480px){
-  .student-profile-card{grid-template-columns:70px minmax(0,1fr);grid-template-areas:"photo details" "rank rank";padding:14px;column-gap:12px}
-  .student-photo{width:64px;height:64px;align-self:start}
-  .student-details h1{font-size:19px}
-  .student-meta{font-size:11.5px}
-  .my-rank-box{margin-top:2px}
-}
-
 .leaderboard-section{margin-top:22px}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px}.section-title p{margin:0;color:var(--gs-muted);font-size:12px}.section-title h2{margin:4px 0 0;font-size:24px}.section-title a{font-size:13px;color:var(--gs-blue);font-weight:700;text-decoration:none}
 
 .top-three{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:14px;align-items:end}
@@ -62,12 +44,6 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 .main-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
 .main-action{background:#fff;border:1px solid var(--gs-line);border-radius:17px;padding:17px;display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--gs-text);transition:.2s}.main-action:hover{transform:translateY(-2px);border-color:#b7c7ef}.main-action>span{font-size:27px}.main-action b{display:block;font-size:16px}.main-action small{display:block;color:var(--gs-muted);margin-top:3px;font-size:12px}
 .test-btn{border-left:4px solid #2155c7}.result-btn{border-left:4px solid #258a61}.winner-btn{border-left:4px solid #b88713}
-
-
-/* =========================================================
-   GANIT SETU - MOBILE TOP 3 (REFERENCE LAYOUT)
-   LEFT: 2nd | CENTER: 1st | RIGHT: 3rd
-   ========================================================= */
 @media (max-width:700px){
 
   html,body{
@@ -230,22 +206,11 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   }
 
   .winner-info{min-width:0;}
-
-  .main-actions{
-    grid-template-columns:1fr;
-  }
-
-  .main-action{padding:14px;}
-}
-
-
-/* ===== PROFESSIONAL STUDENT MENU ===== */
 .gs-menu-wrap{position:relative}.gs-menu-btn{width:42px;height:42px;border:1px solid var(--gs-line);border-radius:12px;background:#fff;color:var(--gs-blue);font-size:22px;cursor:pointer;display:grid;place-items:center}.gs-menu-btn:hover{background:var(--gs-soft)}.gs-dropdown{position:absolute;right:0;top:50px;width:245px;background:#fff;border:1px solid var(--gs-line);border-radius:16px;padding:8px;box-shadow:0 16px 40px rgba(23,32,51,.14);display:none;z-index:100}.gs-dropdown.open{display:block}.gs-dropdown a,.gs-logout-btn{width:100%;display:flex;align-items:center;gap:11px;padding:12px;border-radius:10px;border:0;background:transparent;color:var(--gs-text);font:inherit;font-size:14px;text-align:left;cursor:pointer}.gs-dropdown a:hover,.gs-logout-btn:hover{background:var(--gs-soft);color:var(--gs-blue)}.gs-menu-divider{height:1px;background:var(--gs-line);margin:6px 4px}.gs-logout-btn{color:#b42318}.gs-logout-btn:hover{background:#fff1f0;color:#b42318}
 
 /* Profile photos in Home leaderboard */
 .mini-photo{overflow:hidden}
 .mini-photo img{width:100%;height:100%;object-fit:cover;display:block}
-
 
 /* ============================================
    PROFILE FINAL LAYOUT
@@ -436,7 +401,6 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .gs-banner-controls{height:36px;gap:12px;}
 }
 
-
 /* GS-THREE-ACTION-CARDS */
 .main-actions > .main-action{
   position:relative;
@@ -516,53 +480,166 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   transform:scale(.985) !important;
   box-shadow:0 4px 12px rgba(30,55,100,.18) !important;
 }
-@media (max-width:700px){
-  .main-actions{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:14px !important;
-    width:100% !important;
-    margin-top:20px !important;
-  }
-  .main-actions > .main-action{
-    width:100% !important;
-    min-height:128px !important;
-    padding:16px 18px !important;
-  }
-  .main-actions > .main-action > span{
-    width:48px;
-    height:48px;
-    font-size:29px !important;
-  }
-  .main-actions > .main-action b{
-    font-size:18px !important;
-  }
+.main-actions > .main-action{
+  position:relative;
+  overflow:hidden;
 }
 
+.main-actions > .main-action::after{
+  pointer-events:none;
+}
 
-/* GS-TWO-RESULT-BUTTONS-SIDE-BY-SIDE
-   Keep "मेरे परिणाम" and "पिछला परिणाम जानें" on one row on mobile.
-   Visual/layout only; existing links and functionality are untouched. */
+/* The two real indicator spans already exist in home.html. */
+.main-actions > .test-btn > .test-attention{
+  position:absolute !important;
+  top:50% !important;
+  z-index:4 !important;
+  width:auto !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  display:block !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  color:#fff !important;
+  text-shadow:0 0 7px rgba(255,255,255,.85);
+  pointer-events:none !important;
+}
 
-@media (max-width: 700px){
+.main-actions > .test-btn > .test-attention-left{
+  left:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionLeft 1.15s ease-in-out infinite;
+}
+
+.main-actions > .test-btn > .test-attention-right{
+  right:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionRight 1.15s ease-in-out infinite;
+}
+
+@keyframes gsAttentionLeft{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(-4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(7px) scale(1.05)}
+}
+
+@keyframes gsAttentionRight{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(-7px) scale(1.05)}
+}
+
+@media(max-width:700px){
   .main-actions{
     display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
     gap:12px !important;
-    align-items:stretch !important;
+    width:100% !important;
   }
 
-  /* Test CTA remains full width */
   .main-actions > .test-btn{
     grid-column:1 / -1 !important;
     width:100% !important;
+    min-width:0 !important;
+    min-height:142px !important;
+    height:142px !important;
+    padding:12px 18px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:7px !important;
   }
 
-  /* The two result buttons share the next row */
-  .main-actions > a:not(.test-btn),
-  .main-actions > button:not(.test-btn){
+  .main-actions > .test-btn > .test-attention{
+    font-size:20px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-left{
+    left:13px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-right{
+    right:13px !important;
+  }
+
+  /* Pencil icon only: no pseudo-indicators on it. */
+  .main-actions > .test-btn > span:not(.test-attention){
+    position:relative !important;
+    z-index:5 !important;
+    width:48px !important;
+    height:48px !important;
+    flex:0 0 48px !important;
+    font-size:29px !important;
+    background:rgba(255,255,255,.20) !important;
+  }
+
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:5 !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn > div::before,
+  .main-actions > .test-btn > div::after,
+  .main-actions > .test-btn > span:not(.test-attention)::before,
+  .main-actions > .test-btn > span:not(.test-attention)::after{
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Two bottom buttons stay side-by-side. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
     width:100% !important;
     min-width:0 !important;
-    box-sizing:border-box !important;
+    min-height:128px !important;
+    height:128px !important;
+    padding:12px 6px !important;
+    gap:5px !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    flex:0 0 44px !important;
+    font-size:25px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    width:100% !important;
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.25px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    white-space:nowrap !important;
   }
 }
+
+@media(max-width:360px){
+  .main-actions > .test-btn > .test-attention{
+    font-size:17px !important;
+  }
+  .main-actions > .test-btn > .test-attention-left{left:7px !important}
+  .main-actions > .test-btn > .test-attention-right{right:7px !important}
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:11px !important;
+    letter-spacing:-.35px !important;
+  }
+}
+
