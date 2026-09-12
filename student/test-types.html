@@ -123,40 +123,122 @@ body{
   .test-choice::after{right:12px;font-size:28px}
 }
 </style>
+
+<style id="gs-test-selection-final">
+  .gs-test-selection {
+    min-height: calc(100vh - 90px);
+    padding: 18px 14px 28px;
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+  }
+  .gs-test-selection h1 {
+    text-align:center;
+    margin:4px 0 5px;
+    font-size:clamp(24px,7vw,34px);
+    font-weight:900;
+  }
+  .gs-test-selection .sub {
+    text-align:center;
+    margin:0 0 18px;
+    font-size:14px;
+    opacity:.78;
+  }
+  .gs-test-card {
+    width:100%;
+    min-height:150px;
+    border:0;
+    border-radius:24px;
+    margin:7px 0;
+    padding:18px 16px;
+    display:grid;
+    grid-template-columns:72px 1fr 44px;
+    align-items:center;
+    gap:13px;
+    text-align:left;
+    cursor:pointer;
+    box-shadow:0 9px 22px rgba(0,0,0,.13);
+    transition:transform .15s ease;
+    box-sizing:border-box;
+  }
+  .gs-test-card:active { transform:scale(.985); }
+  .gs-test-icon {
+    width:64px;height:64px;border-radius:50%;
+    display:grid;place-items:center;
+    font-size:31px;
+    background:rgba(255,255,255,.72);
+  }
+  .gs-test-card h2 {
+    margin:0 0 8px;
+    font-size:clamp(19px,5.3vw,27px);
+    font-weight:900;
+  }
+  .gs-test-card p {
+    margin:0;
+    font-size:13px;
+    line-height:1.45;
+    font-weight:600;
+  }
+  .gs-test-arrow {
+    width:42px;height:42px;border-radius:50%;
+    display:grid;place-items:center;
+    background:rgba(255,255,255,.76);
+    font-size:28px;font-weight:900;
+  }
+  .gs-daily { background:linear-gradient(135deg,#ffd66b,#f6a33b); }
+  .gs-chapter { background:linear-gradient(135deg,#8ed4ff,#4b8fe8); }
+  .gs-course { background:linear-gradient(135deg,#a9e8a0,#58b96b); }
+  .gs-test-footer {
+    margin-top:auto;
+    text-align:center;
+    padding-top:18px;
+    font-size:12px;
+    opacity:.65;
+  }
+  @media (min-width:700px) {
+    .gs-test-selection { max-width:760px; margin:auto; }
+    .gs-test-card { min-height:165px; }
+  }
+</style>
+
 </head>
 <body>
 <main class="test-page">
-  <header class="test-top">
-    <a href="home.html">← होम पर वापस</a>
-    <h1>📝 टेस्ट दें</h1>
-    <p>अपनी तैयारी के अनुसार एक टेस्ट चुनें</p>
-  </header>
 
-  <section class="test-buttons" aria-label="तीन टेस्ट">
-    <a href="course-test.html" class="test-choice choice-course">
-      <span class="test-icon">🎓</span>
-      <span class="test-content">
-        <h2>Course Progress Test</h2>
-        <p>आपने जहाँ तक पढ़ा है, उस अध्याय तक अपनी पूरी तैयारी परखें।</p>
-      </span>
-    </a>
+<section class="gs-test-selection" id="gsTestSelection">
+  <h1>Test चुनें</h1>
+  <p class="sub">अपनी तैयारी को एक नई दिशा दें</p>
 
-    <a href="chapter-test.html" class="test-choice choice-chapter">
-      <span class="test-icon">🎯</span>
-      <span class="test-content">
-        <h2>Chapter Practice Test</h2>
-        <p>जिस अध्याय का अभ्यास करना है, उसे चुनकर 10 प्रश्न हल करें।</p>
-      </span>
-    </a>
+  <button class="gs-test-card gs-daily" type="button" data-test="daily">
+    <span class="gs-test-icon">📅</span>
+    <span>
+      <h2>Daily Test</h2>
+      <p>रोज़ थोड़ा अभ्यास करें और<br>अपनी तैयारी मजबूत करें।</p>
+    </span>
+    <span class="gs-test-arrow">›</span>
+  </button>
 
-    <a href="daily-question.html" class="test-choice choice-daily">
-      <span class="test-icon">✏️</span>
-      <span class="test-content">
-        <h2>Daily Practice Test</h2>
-        <p>अपनी पढ़ाई के अनुसार अध्याय चुनें और आज का अभ्यास टेस्ट दें।</p>
-      </span>
-    </a>
-  </section>
+  <button class="gs-test-card gs-chapter" type="button" data-test="chapter">
+    <span class="gs-test-icon">📖</span>
+    <span>
+      <h2>Chapter Practice Test</h2>
+      <p>किसी एक अध्याय के 10 प्रश्न<br>हल करके अपनी पकड़ जाँचें।</p>
+    </span>
+    <span class="gs-test-arrow">›</span>
+  </button>
+
+  <button class="gs-test-card gs-course" type="button" data-test="course">
+    <span class="gs-test-icon">📊</span>
+    <span>
+      <h2>Course Progress Test</h2>
+      <p>अब तक पढ़े अध्यायों से प्रश्न देकर<br>अपनी पूरी तैयारी जाँचें।</p>
+    </span>
+    <span class="gs-test-arrow">›</span>
+  </button>
+
+  <div class="gs-test-footer">📖 सीखें • अभ्यास करें • आगे बढ़ें</div>
+</section>
+
 </main>
 </body>
 </html>
