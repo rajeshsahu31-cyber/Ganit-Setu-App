@@ -540,13 +540,221 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 
+/* ===== FINAL TOUCH: TEST CTA + RESULT BUTTON LAYOUT =====
+   IMPORTANT: visual/layout only. Existing HTML links and JS are untouched. */
+
+@media (max-width:700px){
+
+  /* The three actions: Test full row; two result cards share the next row. */
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+  }
+
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Prevent the long previous-result title from pushing outside its card. */
+  .main-actions > .previous-result-btn b{
+    white-space:normal !important;
+    font-size:17px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn b{
+    white-space:normal !important;
+    font-size:18px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:11.5px !important;
+  }
+
+  /* Original Test CTA stays clean: one pencil icon + text in the centre. */
+  .main-actions > .test-btn{
+    position:relative !important;
+    overflow:hidden !important;
+  }
+
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Left indicator: hand and moving arrows toward Test */
+  .main-actions > .test-btn > span::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    top:50% !important;
+    left:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Right indicator: moving arrows and hand toward Test */
+  .main-actions > .test-btn > span::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    top:50% !important;
+    right:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  @keyframes gsTestLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(9px);}
+  }
+
+  @keyframes gsTestRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
+  }
+}
+
+
+/* GS-CLEAN-TEST-INDICATORS-V2
+   Final override: exactly TWO indicators on the Test CTA.
+   The pencil icon remains untouched. */
+@media (max-width:700px){
+  /* Remove the previous pseudo-indicators that were attached to the pencil span. */
+  .main-actions > .test-btn > span::before,
+  .main-actions > .test-btn > span::after{
+    content:none !important;
+    display:none !important;
+    animation:none !important;
+  }
+
+  /* Use the text container for the two side indicators, so the pencil is shown only once. */
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  .main-actions > .test-btn > div::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    right:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  .main-actions > .test-btn > div::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    left:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Keep the important Test CTA visually compact and centered. */
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Bottom two cards: same row, and the long title stays on ONE line. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    min-height:128px !important;
+    padding:14px 8px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:13px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.15px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:10px !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    font-size:26px !important;
+  }
+
+  @keyframes gsCleanLeft{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(9px);}
+  }
+  @keyframes gsCleanRight{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(-9px);}
+  }
+}
+
+@media (max-width:360px){
+  .main-actions > .test-btn > div::before{right:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .test-btn > div::after{left:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{font-size:12px !important;}
+}
 
 /* =========================================================
-   FINAL CLEAN MOBILE ACTION BUTTONS
-   One Test button + two result buttons in one row.
-   Only TWO side indicators are used on the Test button.
+   FINAL CLEAN MOBILE ACTION BUTTON OVERRIDE
+   Test button: original single pencil + two side indicators.
+   Result buttons: one row, previous-result title one line.
+   No HTML/JS/functionality changes.
    ========================================================= */
+
 @media (max-width:700px){
+
+  /* ---- ACTION GRID ---- */
   .main-actions{
     display:grid !important;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
@@ -556,7 +764,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     align-items:stretch !important;
   }
 
-  /* Test button: full width */
+  /* ---- TEST: compact single full-width card ---- */
   .main-actions > .test-btn{
     grid-column:1 / -1 !important;
     width:100% !important;
@@ -574,7 +782,8 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     padding:12px 18px !important;
   }
 
-  /* Remove every old indicator. This prevents duplicate hands/arrows. */
+  /* Kill ALL older indicator pseudo-elements first.
+     This is what prevents 3-3 hands from appearing. */
   .main-actions > .test-btn > span::before,
   .main-actions > .test-btn > span::after,
   .main-actions > .test-btn > div::before,
@@ -584,21 +793,24 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     animation:none !important;
   }
 
-  /* ONLY TWO indicators: left and right of the Test button. */
+  /* The only two indicators: attached to the whole Test card,
+     so they can never become extra vertical children. */
   .main-actions > .test-btn::before{
     content:"👉  » » »" !important;
     position:absolute !important;
-    left:10px !important;
+    left:12px !important;
     top:50% !important;
     width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
     transform:translateY(-50%) !important;
     color:#fff !important;
     font-size:20px !important;
     line-height:1 !important;
     white-space:nowrap !important;
     text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.8)) !important;
-    animation:gsTestLeft 1.15s ease-in-out infinite !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalLeft 1.15s ease-in-out infinite !important;
     pointer-events:none !important;
     z-index:3 !important;
   }
@@ -606,17 +818,19 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .main-actions > .test-btn::after{
     content:"« « «  👈" !important;
     position:absolute !important;
-    right:10px !important;
+    right:12px !important;
     top:50% !important;
     width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
     transform:translateY(-50%) !important;
     color:#fff !important;
     font-size:20px !important;
     line-height:1 !important;
     white-space:nowrap !important;
     text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.8)) !important;
-    animation:gsTestRight 1.15s ease-in-out infinite !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalRight 1.15s ease-in-out infinite !important;
     pointer-events:none !important;
     z-index:3 !important;
   }
@@ -651,7 +865,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     white-space:nowrap !important;
   }
 
-  /* Two result buttons: always side-by-side. */
+  /* ---- TWO RESULT CARDS: SAME ROW ---- */
   .main-actions > .result-btn,
   .main-actions > .previous-result-btn{
     grid-column:auto !important;
@@ -692,25 +906,179 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     white-space:nowrap !important;
   }
 
-  @keyframes gsTestLeft{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px)}
-    50%{opacity:1;transform:translateY(-50%) translateX(8px)}
+  @keyframes gsFinalLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(8px);}
   }
-  @keyframes gsTestRight{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px)}
-    50%{opacity:1;transform:translateY(-50%) translateX(-8px)}
+
+  @keyframes gsFinalRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-8px);}
+  }
+
+/* =========================================================
+   FINAL ACTION BUTTONS - ONLY TARGETED FIX
+   Original Home design preserved.
+   Test: full width on mobile + two real side indicators.
+   Results: two cards in one row on mobile.
+   ========================================================= */
+
+.main-actions > .main-action{
+  position:relative;
+  overflow:hidden;
+}
+
+.main-actions > .main-action::after{
+  pointer-events:none;
+}
+
+/* The two real indicator spans already exist in home.html. */
+.main-actions > .test-btn > .test-attention{
+  position:absolute !important;
+  top:50% !important;
+  z-index:4 !important;
+  width:auto !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  display:block !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  color:#fff !important;
+  text-shadow:0 0 7px rgba(255,255,255,.85);
+  pointer-events:none !important;
+}
+
+.main-actions > .test-btn > .test-attention-left{
+  left:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionLeft 1.15s ease-in-out infinite;
+}
+
+.main-actions > .test-btn > .test-attention-right{
+  right:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionRight 1.15s ease-in-out infinite;
+}
+
+@keyframes gsAttentionLeft{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(-4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(7px) scale(1.05)}
+}
+
+@keyframes gsAttentionRight{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(-7px) scale(1.05)}
+}
+
+@media(max-width:700px){
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:142px !important;
+    height:142px !important;
+    padding:12px 18px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:7px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention{
+    font-size:20px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-left{
+    left:13px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-right{
+    right:13px !important;
+  }
+
+  /* Pencil icon only: no pseudo-indicators on it. */
+  .main-actions > .test-btn > span:not(.test-attention){
+    position:relative !important;
+    z-index:5 !important;
+    width:48px !important;
+    height:48px !important;
+    flex:0 0 48px !important;
+    font-size:29px !important;
+    background:rgba(255,255,255,.20) !important;
+  }
+
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:5 !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn > div::before,
+  .main-actions > .test-btn > div::after,
+  .main-actions > .test-btn > span:not(.test-attention)::before,
+  .main-actions > .test-btn > span:not(.test-attention)::after{
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Two bottom buttons stay side-by-side. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+    height:128px !important;
+    padding:12px 6px !important;
+    gap:5px !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    flex:0 0 44px !important;
+    font-size:25px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    width:100% !important;
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.25px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    white-space:nowrap !important;
   }
 }
 
-@media (max-width:360px){
-  .main-actions > .test-btn::before,
-  .main-actions > .test-btn::after{
-    width:82px !important;
-    font-size:16px !important;
+@media(max-width:360px){
+  .main-actions > .test-btn > .test-attention{
+    font-size:17px !important;
   }
-  .main-actions > .test-btn::before{left:4px !important}
-  .main-actions > .test-btn::after{right:4px !important}
-  .main-actions > .test-btn{padding-left:8px !important;padding-right:8px !important}
+  .main-actions > .test-btn > .test-attention-left{left:7px !important}
+  .main-actions > .test-btn > .test-attention-right{right:7px !important}
   .main-actions > .result-btn b,
   .main-actions > .previous-result-btn b{
     font-size:11px !important;
