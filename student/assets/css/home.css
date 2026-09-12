@@ -540,29 +540,105 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 
-/* GS-TWO-RESULT-BUTTONS-SIDE-BY-SIDE
-   Keep "मेरे परिणाम" and "पिछला परिणाम जानें" on one row on mobile.
-   Visual/layout only; existing links and functionality are untouched. */
+/* ===== FINAL TOUCH: TEST CTA + RESULT BUTTON LAYOUT =====
+   IMPORTANT: visual/layout only. Existing HTML links and JS are untouched. */
 
-@media (max-width: 700px){
+@media (max-width:700px){
+
+  /* The three actions: Test full row; two result cards share the next row. */
   .main-actions{
     display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
     gap:12px !important;
-    align-items:stretch !important;
+    width:100% !important;
   }
 
-  /* Test CTA remains full width */
   .main-actions > .test-btn{
     grid-column:1 / -1 !important;
     width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
   }
 
-  /* The two result buttons share the next row */
-  .main-actions > a:not(.test-btn),
-  .main-actions > button:not(.test-btn){
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
     width:100% !important;
     min-width:0 !important;
+    min-height:128px !important;
     box-sizing:border-box !important;
+  }
+
+  /* Prevent the long previous-result title from pushing outside its card. */
+  .main-actions > .previous-result-btn b{
+    white-space:normal !important;
+    font-size:17px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn b{
+    white-space:normal !important;
+    font-size:18px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:11.5px !important;
+  }
+
+  /* Original Test CTA stays clean: one pencil icon + text in the centre. */
+  .main-actions > .test-btn{
+    position:relative !important;
+    overflow:hidden !important;
+  }
+
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Left indicator: hand and moving arrows toward Test */
+  .main-actions > .test-btn > span::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    top:50% !important;
+    left:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Right indicator: moving arrows and hand toward Test */
+  .main-actions > .test-btn > span::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    top:50% !important;
+    right:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  @keyframes gsTestLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(9px);}
+  }
+
+  @keyframes gsTestRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
   }
 }
