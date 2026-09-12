@@ -94,20 +94,181 @@
 
 
   <!-- ==========================================
-       DYNAMIC HOME BANNER
-       Admin Panel से आने वाली active images यहाँ दिखेंगी
+       DAILY NOTICE / UPDATE
        ========================================== -->
-  <section class="gs-banner-slider" id="gsBannerSlider" aria-label="गणित सेतु बैनर" hidden>
-    <div class="gs-banner-viewport">
-      <div class="gs-banner-track" id="gsBannerTrack"></div>
+
+  <section
+    class="gs-notice-slider"
+    aria-label="आज की सूचना"
+  >
+
+    <div class="gs-notice-header">
+
+      <div>
+
+        <span class="gs-notice-label">
+          📢 आज की सूचना
+        </span>
+
+        <h2>
+          गणित सेतु अपडेट
+        </h2>
+
+      </div>
+
+      <div
+        class="gs-notice-counter"
+        id="gsNoticeCounter"
+      >
+        1 / 4
+      </div>
+
     </div>
 
-    <div class="gs-banner-controls" id="gsBannerControls" hidden>
-      <button type="button" id="gsBannerPrev" aria-label="पिछला बैनर">‹</button>
-      <div class="gs-banner-dots" id="gsBannerDots"></div>
-      <button type="button" id="gsBannerNext" aria-label="अगला बैनर">›</button>
+
+    <div class="gs-notice-viewport">
+
+      <div
+        class="gs-notice-track"
+        id="gsNoticeTrack"
+      >
+
+
+        <!-- SLIDE 1 -->
+
+        <article class="gs-notice-slide">
+
+          <div class="gs-notice-icon">
+            📝
+          </div>
+
+          <div class="gs-notice-content">
+
+            <h3>
+              आज का टेस्ट जरूर दें
+            </h3>
+
+            <p>
+              नियमित टेस्ट देने से आपकी गणित की तैयारी बेहतर होती है।
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <!-- SLIDE 2 -->
+
+        <article class="gs-notice-slide">
+
+          <div class="gs-notice-icon">
+            📚
+          </div>
+
+          <div class="gs-notice-content">
+
+            <h3>
+              महत्वपूर्ण नोट्स
+            </h3>
+
+            <p>
+              परीक्षा की तैयारी के लिए नए Maths Notes जल्द उपलब्ध होंगे।
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <!-- SLIDE 3 -->
+
+        <article class="gs-notice-slide">
+
+          <div class="gs-notice-icon">
+            🏆
+          </div>
+
+          <div class="gs-notice-content">
+
+            <h3>
+              अपनी रैंक देखें
+            </h3>
+
+            <p>
+              टेस्ट देने के बाद Leaderboard में अपनी स्थिति जरूर देखें।
+            </p>
+
+          </div>
+
+        </article>
+
+
+        <!-- SLIDE 4 -->
+
+        <article class="gs-notice-slide">
+
+          <div class="gs-notice-icon">
+            💡
+          </div>
+
+          <div class="gs-notice-content">
+
+            <h3>
+              गणित सेतु से जुड़े रहें
+            </h3>
+
+            <p>
+              नए टेस्ट, नोट्स और महत्वपूर्ण जानकारी के लिए अपडेट देखते रहें।
+            </p>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
     </div>
+
+
+    <!-- NOTICE CONTROLS -->
+
+    <div class="gs-notice-controls">
+
+      <button
+        type="button"
+        id="gsNoticePrev"
+        aria-label="पिछली सूचना"
+      >
+        ‹
+      </button>
+
+
+      <div
+        class="gs-notice-dots"
+        id="gsNoticeDots"
+      >
+
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </div>
+
+
+      <button
+        type="button"
+        id="gsNoticeNext"
+        aria-label="अगली सूचना"
+      >
+        ›
+      </button>
+
+    </div>
+
   </section>
+
 
 
   <!-- ==========================================
@@ -291,6 +452,37 @@
   </section>
 
 
+  <!-- ==========================================
+       GANIT SETU SOCIAL / CONTACT
+       ========================================== -->
+
+  <section class="gs-social-card" aria-label="गणित सेतु से जुड़ें">
+    <div class="gs-social-heading">
+      <div>
+        <span class="gs-social-label">🔗 हमसे जुड़े रहें</span>
+        <h2>गणित सेतु से जुड़ें</h2>
+        <p>नए टेस्ट, नोट्स और महत्वपूर्ण अपडेट के लिए</p>
+      </div>
+    </div>
+
+    <div class="gs-social-grid">
+      <!-- वास्तविक Ganit Setu links बाद में यहाँ डालें -->
+      <a class="gs-social-btn youtube" id="socialYoutube" href="contact.html" aria-label="YouTube">
+        <span>▶</span><b>YouTube</b>
+      </a>
+      <a class="gs-social-btn facebook" id="socialFacebook" href="contact.html" aria-label="Facebook">
+        <span>f</span><b>Facebook</b>
+      </a>
+      <a class="gs-social-btn whatsapp" id="socialWhatsapp" href="contact.html" aria-label="WhatsApp">
+        <span>◉</span><b>WhatsApp</b>
+      </a>
+      <a class="gs-social-btn instagram" id="socialInstagram" href="contact.html" aria-label="Instagram">
+        <span>◎</span><b>Instagram</b>
+      </a>
+    </div>
+  </section>
+
+
 </main>
 
 
@@ -387,5 +579,18 @@
 </nav>
 
 
+<script>
+(async function(){
+try{
+ const {data,error}=await supabaseClient.from("contact_settings")
+ .select("youtube_url,facebook_url,whatsapp_url,instagram_url").eq("id",1).maybeSingle();
+ if(error||!data)return;
+ [["socialYoutube",data.youtube_url],["socialFacebook",data.facebook_url],
+  ["socialWhatsapp",data.whatsapp_url],["socialInstagram",data.instagram_url]].forEach(([id,url])=>{
+   const el=document.getElementById(id); if(el&&url){el.href=url;el.target="_blank";el.rel="noopener noreferrer";}
+  });
+}catch(e){console.warn("Social links load failed:",e);}
+})();
+</script>
 </body>
 </html>
