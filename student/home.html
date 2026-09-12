@@ -94,181 +94,41 @@
 
 
   <!-- ==========================================
-       DAILY NOTICE / UPDATE
+       DYNAMIC IMAGE BANNER
+       Admin Panel → home_banners से images आएँगी
+       कोई fixed/default text या image नहीं
        ========================================== -->
 
   <section
-    class="gs-notice-slider"
-    aria-label="आज की सूचना"
+    class="gs-banner-slider"
+    id="gsBannerSlider"
+    aria-label="गणित सेतु सूचना"
+    hidden
   >
-
-    <div class="gs-notice-header">
-
-      <div>
-
-        <span class="gs-notice-label">
-          📢 आज की सूचना
-        </span>
-
-        <h2>
-          गणित सेतु अपडेट
-        </h2>
-
-      </div>
-
-      <div
-        class="gs-notice-counter"
-        id="gsNoticeCounter"
-      >
-        1 / 4
-      </div>
-
+    <div class="gs-banner-viewport">
+      <div class="gs-banner-track" id="gsBannerTrack"></div>
     </div>
 
+    <button
+      type="button"
+      class="gs-banner-arrow gs-banner-prev"
+      id="gsBannerPrev"
+      aria-label="पिछला banner"
+    >‹</button>
 
-    <div class="gs-notice-viewport">
+    <button
+      type="button"
+      class="gs-banner-arrow gs-banner-next"
+      id="gsBannerNext"
+      aria-label="अगला banner"
+    >›</button>
 
-      <div
-        class="gs-notice-track"
-        id="gsNoticeTrack"
-      >
-
-
-        <!-- SLIDE 1 -->
-
-        <article class="gs-notice-slide">
-
-          <div class="gs-notice-icon">
-            📝
-          </div>
-
-          <div class="gs-notice-content">
-
-            <h3>
-              आज का टेस्ट जरूर दें
-            </h3>
-
-            <p>
-              नियमित टेस्ट देने से आपकी गणित की तैयारी बेहतर होती है।
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- SLIDE 2 -->
-
-        <article class="gs-notice-slide">
-
-          <div class="gs-notice-icon">
-            📚
-          </div>
-
-          <div class="gs-notice-content">
-
-            <h3>
-              महत्वपूर्ण नोट्स
-            </h3>
-
-            <p>
-              परीक्षा की तैयारी के लिए नए Maths Notes जल्द उपलब्ध होंगे।
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- SLIDE 3 -->
-
-        <article class="gs-notice-slide">
-
-          <div class="gs-notice-icon">
-            🏆
-          </div>
-
-          <div class="gs-notice-content">
-
-            <h3>
-              अपनी रैंक देखें
-            </h3>
-
-            <p>
-              टेस्ट देने के बाद Leaderboard में अपनी स्थिति जरूर देखें।
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- SLIDE 4 -->
-
-        <article class="gs-notice-slide">
-
-          <div class="gs-notice-icon">
-            💡
-          </div>
-
-          <div class="gs-notice-content">
-
-            <h3>
-              गणित सेतु से जुड़े रहें
-            </h3>
-
-            <p>
-              नए टेस्ट, नोट्स और महत्वपूर्ण जानकारी के लिए अपडेट देखते रहें।
-            </p>
-
-          </div>
-
-        </article>
-
-
-      </div>
-
-    </div>
-
-
-    <!-- NOTICE CONTROLS -->
-
-    <div class="gs-notice-controls">
-
-      <button
-        type="button"
-        id="gsNoticePrev"
-        aria-label="पिछली सूचना"
-      >
-        ‹
-      </button>
-
-
-      <div
-        class="gs-notice-dots"
-        id="gsNoticeDots"
-      >
-
-        <span class="active"></span>
-        <span></span>
-        <span></span>
-        <span></span>
-
-      </div>
-
-
-      <button
-        type="button"
-        id="gsNoticeNext"
-        aria-label="अगली सूचना"
-      >
-        ›
-      </button>
-
-    </div>
-
+    <div
+      class="gs-banner-dots"
+      id="gsBannerDots"
+      aria-label="Banner navigation"
+    ></div>
   </section>
-
 
 
   <!-- ==========================================
