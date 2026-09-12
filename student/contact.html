@@ -1,1 +1,20 @@
-<!doctype html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>सहायता / संपर्क करें | गणित सेतु</title><link rel="stylesheet" href="assets/css/style.css"></head><body><header class="simple-header"><div class="brand-inline"><div class="logo-small">GS</div><b>गणित सेतु</b></div><a href="home.html">← होम</a></header><main class="page narrow"><section class="panel"><h1>सहायता / संपर्क करें</h1><p class="muted">किसी समस्या या सहायता के लिए संपर्क करने की सुविधा यहाँ जोड़ी जाएगी।</p></section></main></body></html>
+<!doctype html>
+<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>संपर्क करें | गणित सेतु</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body><header class="simple-header"><div class="brand-inline"><div class="logo-small">GS</div><b>गणित सेतु</b></div><a href="home.html">← होम</a></header>
+<main class="page narrow"><section class="panel"><h1>🔗 गणित सेतु से जुड़ें</h1>
+<p class="muted">नए टेस्ट, महत्वपूर्ण सूचना और अपडेट के लिए हमसे जुड़े रहें।</p>
+<div class="gs-social-grid" style="margin-top:20px">
+<a id="contactYoutube" class="gs-social-btn youtube" href="#" target="_blank" rel="noopener">▶ <b>YouTube</b></a>
+<a id="contactFacebook" class="gs-social-btn facebook" href="#" target="_blank" rel="noopener">f <b>Facebook</b></a>
+<a id="contactWhatsapp" class="gs-social-btn whatsapp" href="#" target="_blank" rel="noopener">◉ <b>WhatsApp</b></a>
+<a id="contactInstagram" class="gs-social-btn instagram" href="#" target="_blank" rel="noopener">◎ <b>Instagram</b></a>
+</div></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script>
+<script>
+(async function(){try{
+ const {data,error}=await supabaseClient.from("contact_settings").select("youtube_url,facebook_url,whatsapp_url,instagram_url").eq("id",1).maybeSingle();
+ if(error||!data)return;
+ [["contactYoutube",data.youtube_url],["contactFacebook",data.facebook_url],["contactWhatsapp",data.whatsapp_url],["contactInstagram",data.instagram_url]].forEach(([id,url])=>{const e=document.getElementById(id);if(e&&url)e.href=url;});
+}catch(e){console.warn(e);}})();
+</script></body></html>
