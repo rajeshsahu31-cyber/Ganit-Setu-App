@@ -702,3 +702,69 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     letter-spacing:0;
   }
 }
+/* ===== FINAL: TEST LOCK + TWO RESULT BUTTONS HORIZONTAL ===== */
+
+/* TEST BUTTON — इसे बिल्कुल न बदलें */
+.main-actions > .test-btn{
+  position:relative !important;
+}
+
+/* MOBILE: नीचे के दोनों बटन एक ही लाइन में */
+@media (max-width:700px){
+
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  /* Test button पूरी पहली लाइन */
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+  }
+
+  /* दोनों Result buttons दूसरी लाइन */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:128px !important;
+    min-height:128px !important;
+    max-height:128px !important;
+    box-sizing:border-box !important;
+    padding:10px 5px !important;
+  }
+
+  /* नाम एक ही लाइन में */
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.3px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    font-size:25px !important;
+  }
+}
+
+/* बहुत छोटे फोन */
+@media (max-width:360px){
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:11px !important;
+  }
+}
