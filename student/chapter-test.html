@@ -111,6 +111,57 @@ body{padding-bottom:18px}
 }
 
 
+
+
+/* ===== Test selection popup: shown once when this test page opens ===== */
+.gs-choice-modal{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;
+  background:rgba(7,43,82,.42);
+  backdrop-filter:blur(4px);
+}
+.gs-choice-modal[hidden]{display:none}
+.gs-choice-box{
+  width:min(100%,390px);
+  background:#fff;
+  border:1px solid #d7e8f8;
+  border-radius:24px;
+  padding:23px 19px 18px;
+  text-align:center;
+  box-shadow:0 22px 55px rgba(5,48,92,.22);
+  animation:gsPopIn .2s ease-out;
+}
+.gs-choice-icon{
+  width:58px;height:58px;margin:0 auto 9px;
+  border-radius:18px;
+  display:grid;place-items:center;
+  background:#eaf5ff;
+  font-size:29px;
+}
+.gs-choice-box h2{
+  margin:0;color:#123d70;font-size:20px;line-height:1.35;
+}
+.gs-choice-box p{
+  margin:8px 0 0;color:#5a7490;font-size:13px;line-height:1.65;
+}
+.gs-choice-box p + p{margin-top:1px}
+.gs-choice-next{
+  width:100%;margin-top:16px;
+  min-height:46px;border:0;border-radius:14px;
+  background:linear-gradient(100deg,#0766d8,#087df0);
+  color:#fff;font:800 14px "Noto Sans Devanagari",Arial,sans-serif;
+  cursor:pointer;box-shadow:0 8px 18px rgba(8,103,216,.20);
+}
+@keyframes gsPopIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:560px){
+  .gs-choice-modal{padding:13px}
+  .gs-choice-box{border-radius:20px;padding:19px 15px 15px}
+  .gs-choice-icon{width:50px;height:50px;border-radius:15px;font-size:25px}
+  .gs-choice-box h2{font-size:17px}
+  .gs-choice-box p{font-size:11px;line-height:1.55}
+  .gs-choice-next{margin-top:13px;min-height:43px;font-size:12px}
+}
 </style>
 
 <style id="gs-question-help-only">
@@ -172,6 +223,15 @@ body{padding-bottom:18px}
     <div class="gs-user" aria-hidden="true">●</div>
   </div>
 </header>
+<div id="testChoiceModal" class="gs-choice-modal" role="dialog" aria-modal="true" aria-labelledby="testChoiceTitle">
+  <div class="gs-choice-box">
+    <div class="gs-choice-icon">🎯</div>
+    <h2 id="testChoiceTitle">Chapter Practice Test</h2>
+    <p>जिस अध्याय का अभ्यास करना है, उसका चयन करें।</p>
+    <p>चुने गए अध्याय से 10 प्रश्न होंगे।</p>
+    <button type="button" class="gs-choice-next" id="testChoiceNext">आगे बढ़ें →</button>
+  </div>
+</div>
 <main class="gs-wrap">
   <a class="gs-back" href="test-types.html">⌂ &nbsp;टेस्ट पेज पर वापस</a>
   <section class="gs-card">
@@ -264,5 +324,21 @@ body{padding-bottom:18px}
     <div id="helpModalBody" class="gs-help-body"></div>
   </div>
 </div>
+<script>
+(function(){
+  var modal=document.getElementById('testChoiceModal');
+  var next=document.getElementById('testChoiceNext');
+  if(!modal||!next) return;
+  function closeChoice(){
+    modal.hidden=true;
+    var sel=document.querySelector('#chapterSelect,#chapterTo,#dailyChapterTo');
+    if(sel){
+      try{ sel.focus(); }catch(e){}
+    }
+  }
+  next.addEventListener('click',closeChoice);
+  modal.addEventListener('click',function(e){ if(e.target===modal) closeChoice(); });
+})();
+</script>
 </body>
 </html>
