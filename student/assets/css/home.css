@@ -540,221 +540,13 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 
-/* ===== FINAL TOUCH: TEST CTA + RESULT BUTTON LAYOUT =====
-   IMPORTANT: visual/layout only. Existing HTML links and JS are untouched. */
-
-@media (max-width:700px){
-
-  /* The three actions: Test full row; two result cards share the next row. */
-  .main-actions{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-    gap:12px !important;
-    width:100% !important;
-  }
-
-  .main-actions > .test-btn{
-    grid-column:1 / -1 !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:128px !important;
-  }
-
-  .main-actions > .result-btn,
-  .main-actions > .previous-result-btn{
-    grid-column:auto !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:128px !important;
-    box-sizing:border-box !important;
-  }
-
-  /* Prevent the long previous-result title from pushing outside its card. */
-  .main-actions > .previous-result-btn b{
-    white-space:normal !important;
-    font-size:17px !important;
-    line-height:1.2 !important;
-  }
-
-  .main-actions > .result-btn b{
-    white-space:normal !important;
-    font-size:18px !important;
-    line-height:1.2 !important;
-  }
-
-  .main-actions > .result-btn small,
-  .main-actions > .previous-result-btn small{
-    font-size:11.5px !important;
-  }
-
-  /* Original Test CTA stays clean: one pencil icon + text in the centre. */
-  .main-actions > .test-btn{
-    position:relative !important;
-    overflow:hidden !important;
-  }
-
-  .main-actions > .test-btn > span{
-    position:relative !important;
-    z-index:5 !important;
-  }
-
-  /* Left indicator: hand and moving arrows toward Test */
-  .main-actions > .test-btn > span::before{
-    content:"👉  » » »" !important;
-    position:absolute !important;
-    top:50% !important;
-    left:calc(50% - 154px) !important;
-    transform:translateY(-50%) !important;
-    width:110px !important;
-    font-size:22px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
-    animation:gsTestLeft 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  /* Right indicator: moving arrows and hand toward Test */
-  .main-actions > .test-btn > span::after{
-    content:"« « «  👈" !important;
-    position:absolute !important;
-    top:50% !important;
-    right:calc(50% - 154px) !important;
-    transform:translateY(-50%) !important;
-    width:110px !important;
-    font-size:22px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
-    animation:gsTestRight 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  @keyframes gsTestLeft{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(9px);}
-  }
-
-  @keyframes gsTestRight{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
-  }
-}
-
-
-/* GS-CLEAN-TEST-INDICATORS-V2
-   Final override: exactly TWO indicators on the Test CTA.
-   The pencil icon remains untouched. */
-@media (max-width:700px){
-  /* Remove the previous pseudo-indicators that were attached to the pencil span. */
-  .main-actions > .test-btn > span::before,
-  .main-actions > .test-btn > span::after{
-    content:none !important;
-    display:none !important;
-    animation:none !important;
-  }
-
-  /* Use the text container for the two side indicators, so the pencil is shown only once. */
-  .main-actions > .test-btn > div{
-    position:relative !important;
-    z-index:2 !important;
-  }
-
-  .main-actions > .test-btn > div::before{
-    content:"👉  » » »" !important;
-    position:absolute !important;
-    right:calc(100% + 26px) !important;
-    top:50% !important;
-    transform:translateY(-50%) !important;
-    width:108px !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsCleanLeft 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  .main-actions > .test-btn > div::after{
-    content:"« « «  👈" !important;
-    position:absolute !important;
-    left:calc(100% + 26px) !important;
-    top:50% !important;
-    transform:translateY(-50%) !important;
-    width:108px !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsCleanRight 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  /* Keep the important Test CTA visually compact and centered. */
-  .main-actions > .test-btn > span{
-    position:relative !important;
-    z-index:5 !important;
-  }
-
-  /* Bottom two cards: same row, and the long title stays on ONE line. */
-  .main-actions > .result-btn,
-  .main-actions > .previous-result-btn{
-    min-height:128px !important;
-    padding:14px 8px !important;
-  }
-
-  .main-actions > .result-btn b,
-  .main-actions > .previous-result-btn b{
-    font-size:13px !important;
-    line-height:1.15 !important;
-    white-space:nowrap !important;
-    letter-spacing:-.15px !important;
-  }
-
-  .main-actions > .result-btn small,
-  .main-actions > .previous-result-btn small{
-    font-size:10px !important;
-    white-space:nowrap !important;
-  }
-
-  .main-actions > .result-btn > span,
-  .main-actions > .previous-result-btn > span{
-    width:44px !important;
-    height:44px !important;
-    font-size:26px !important;
-  }
-
-  @keyframes gsCleanLeft{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1;transform:translateY(-50%) translateX(9px);}
-  }
-  @keyframes gsCleanRight{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1;transform:translateY(-50%) translateX(-9px);}
-  }
-}
-
-@media (max-width:360px){
-  .main-actions > .test-btn > div::before{right:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
-  .main-actions > .test-btn > div::after{left:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
-  .main-actions > .result-btn b,
-  .main-actions > .previous-result-btn b{font-size:12px !important;}
-}
 
 /* =========================================================
-   FINAL CLEAN MOBILE ACTION BUTTON OVERRIDE
-   Test button: original single pencil + two side indicators.
-   Result buttons: one row, previous-result title one line.
-   No HTML/JS/functionality changes.
+   FINAL CLEAN MOBILE ACTION BUTTONS
+   One Test button + two result buttons in one row.
+   Only TWO side indicators are used on the Test button.
    ========================================================= */
-
 @media (max-width:700px){
-
-  /* ---- ACTION GRID ---- */
   .main-actions{
     display:grid !important;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
@@ -764,7 +556,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     align-items:stretch !important;
   }
 
-  /* ---- TEST: compact single full-width card ---- */
+  /* Test button: full width */
   .main-actions > .test-btn{
     grid-column:1 / -1 !important;
     width:100% !important;
@@ -782,8 +574,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     padding:12px 18px !important;
   }
 
-  /* Kill ALL older indicator pseudo-elements first.
-     This is what prevents 3-3 hands from appearing. */
+  /* Remove every old indicator. This prevents duplicate hands/arrows. */
   .main-actions > .test-btn > span::before,
   .main-actions > .test-btn > span::after,
   .main-actions > .test-btn > div::before,
@@ -793,24 +584,21 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     animation:none !important;
   }
 
-  /* The only two indicators: attached to the whole Test card,
-     so they can never become extra vertical children. */
+  /* ONLY TWO indicators: left and right of the Test button. */
   .main-actions > .test-btn::before{
     content:"👉  » » »" !important;
     position:absolute !important;
-    left:12px !important;
+    left:10px !important;
     top:50% !important;
     width:105px !important;
-    margin:0 !important;
-    padding:0 !important;
     transform:translateY(-50%) !important;
     color:#fff !important;
     font-size:20px !important;
     line-height:1 !important;
     white-space:nowrap !important;
     text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsFinalLeft 1.15s ease-in-out infinite !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.8)) !important;
+    animation:gsTestLeft 1.15s ease-in-out infinite !important;
     pointer-events:none !important;
     z-index:3 !important;
   }
@@ -818,19 +606,17 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .main-actions > .test-btn::after{
     content:"« « «  👈" !important;
     position:absolute !important;
-    right:12px !important;
+    right:10px !important;
     top:50% !important;
     width:105px !important;
-    margin:0 !important;
-    padding:0 !important;
     transform:translateY(-50%) !important;
     color:#fff !important;
     font-size:20px !important;
     line-height:1 !important;
     white-space:nowrap !important;
     text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsFinalRight 1.15s ease-in-out infinite !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.8)) !important;
+    animation:gsTestRight 1.15s ease-in-out infinite !important;
     pointer-events:none !important;
     z-index:3 !important;
   }
@@ -865,7 +651,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     white-space:nowrap !important;
   }
 
-  /* ---- TWO RESULT CARDS: SAME ROW ---- */
+  /* Two result buttons: always side-by-side. */
   .main-actions > .result-btn,
   .main-actions > .previous-result-btn{
     grid-column:auto !important;
@@ -906,33 +692,25 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     white-space:nowrap !important;
   }
 
-  @keyframes gsFinalLeft{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(8px);}
+  @keyframes gsTestLeft{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px)}
+    50%{opacity:1;transform:translateY(-50%) translateX(8px)}
   }
-
-  @keyframes gsFinalRight{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(-8px);}
+  @keyframes gsTestRight{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px)}
+    50%{opacity:1;transform:translateY(-50%) translateX(-8px)}
   }
 }
 
-/* Very narrow phones: keep both indicators inside the Test card. */
 @media (max-width:360px){
-  .main-actions > .test-btn::before{
-    left:5px !important;
-    width:82px !important;
-    font-size:16px !important;
-  }
+  .main-actions > .test-btn::before,
   .main-actions > .test-btn::after{
-    right:5px !important;
     width:82px !important;
     font-size:16px !important;
   }
-  .main-actions > .test-btn{
-    padding-left:8px !important;
-    padding-right:8px !important;
-  }
+  .main-actions > .test-btn::before{left:4px !important}
+  .main-actions > .test-btn::after{right:4px !important}
+  .main-actions > .test-btn{padding-left:8px !important;padding-right:8px !important}
   .main-actions > .result-btn b,
   .main-actions > .previous-result-btn b{
     font-size:11px !important;
