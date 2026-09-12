@@ -1,4 +1,9 @@
-/* नया Home Page - हल्का, साफ और अलग CSS */
+/* =========================================================
+   GANIT SETU - STUDENT HOME
+   CLEAN FINAL CSS
+   Duplicate rules removed
+   ========================================================= */
+
 :root{
   --gs-blue:#2155c7;
   --gs-blue-dark:#173f9c;
@@ -9,320 +14,107 @@
   --gs-white:#ffffff;
 }
 
-body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sans Devanagari',sans-serif}
-.gs-header{height:64px;background:var(--gs-white);border-bottom:1px solid var(--gs-line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,5vw);position:sticky;top:0;z-index:10}
-.gs-brand{display:flex;align-items:center;gap:10px}
-.gs-logo{width:38px;height:38px;display:grid;place-items:center;flex:none;overflow:hidden}
-.gs-logo img{width:100%;height:100%;object-fit:contain;display:block;background:transparent}
-.gs-brand strong{display:block;font-size:17px}.gs-brand small{display:block;color:var(--gs-muted);font-size:11px;margin-top:2px}
-
-.welcome-card{margin-bottom:14px;background:linear-gradient(135deg,#ffffff,#f2f6ff);border:1px solid var(--gs-line);border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 25px rgba(24,45,90,.04)}
-.welcome-card span{font-size:10px;letter-spacing:2px;color:var(--gs-blue);font-weight:800}.welcome-card h2{font-size:22px;margin:4px 0}.welcome-card p{margin:0;color:var(--gs-muted);font-size:12px}.welcome-badge{width:48px;height:48px;display:grid;place-items:center;flex:none;overflow:hidden}
-.welcome-badge img{width:100%;height:100%;object-fit:contain;display:block}
-
-.home-container{width:min(1080px,92%);margin:24px auto 40px}
-.student-profile-card{background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:16px;display:grid;grid-template-columns:78px minmax(0,1fr);grid-template-areas:"photo details" "photo rank";column-gap:14px;row-gap:10px;align-items:start;box-shadow:0 8px 25px rgba(24,45,90,.05)}
-.student-photo{grid-area:photo;width:72px;height:72px;border-radius:50%;background:var(--gs-soft);border:3px solid #dbe5ff;color:var(--gs-blue);display:grid;place-items:center;font-weight:800;font-size:20px;overflow:hidden;align-self:center}
-.student-photo img{width:100%;height:100%;object-fit:cover}
-.student-details{grid-area:details;min-width:0;text-align:left}
-.profile-label{font-size:13px;color:var(--gs-blue);font-weight:800;margin:0 0 4px;text-align:left}
-.student-details h1{font-size:21px;margin:0 0 7px;text-align:left;line-height:1.2}
-.student-meta{display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:var(--gs-muted);font-size:12px;text-align:left}
-.student-meta span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.my-rank-box{grid-area:rank;background:var(--gs-soft);border-radius:12px;padding:9px 13px;text-align:left;width:100%;box-sizing:border-box;border-left:4px solid var(--gs-blue)}
-.my-rank-box small{display:block;color:var(--gs-muted);font-size:11px}
-.my-rank-box strong{display:block;color:var(--gs-blue);font-size:22px;margin-top:1px}
-
-@media(max-width:480px){
-  .student-profile-card{grid-template-columns:70px minmax(0,1fr);grid-template-areas:"photo details" "rank rank";padding:14px;column-gap:12px}
-  .student-photo{width:64px;height:64px;align-self:start}
-  .student-details h1{font-size:19px}
-  .student-meta{font-size:11.5px}
-  .my-rank-box{margin-top:2px}
+*{
+  box-sizing:border-box;
 }
 
-.leaderboard-section{margin-top:22px}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px}.section-title p{margin:0;color:var(--gs-muted);font-size:12px}.section-title h2{margin:4px 0 0;font-size:24px}.section-title a{font-size:13px;color:var(--gs-blue);font-weight:700;text-decoration:none}
-
-.top-three{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:14px;align-items:end}
-.champion-card{background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:16px;text-align:center;box-shadow:0 5px 16px rgba(23,32,51,.04)}
-/* Top 3 के लिए हल्के अलग रंग */
-.champion-card.rank-1{background:linear-gradient(135deg,#fffaf0,#fff4cf);border-color:#e8c86c}
-.champion-card.rank-2{background:linear-gradient(135deg,#ffffff,#f0f3f7);border-color:#c9d0d8}
-.champion-card.rank-3{background:linear-gradient(135deg,#fffaf7,#f7e5d7);border-color:#d7a77e}
-.champion-card.rank-1 .champion-score{color:#a96e00}.champion-card.rank-2 .champion-score{color:#586575}.champion-card.rank-3 .champion-score{color:#9a5b2f}
-.champion-card.first{padding-top:24px}
-.medal{font-size:26px}.champion-photo{width:58px;height:58px;border-radius:50%;margin:8px auto;background:#eef3ff;display:grid;place-items:center;color:var(--gs-blue);font-weight:800;overflow:hidden}.champion-photo img{width:100%;height:100%;object-fit:cover}
-.champion-card h3{font-size:15px;margin:5px 0;word-break:break-word}.champion-card small{color:var(--gs-muted);font-size:12px}.champion-score{margin-top:7px;color:var(--gs-blue);font-weight:800;font-size:13px}.champion-details{margin-top:7px;text-align:left;display:grid;gap:3px}.champion-details span{display:block;color:var(--gs-muted);font-size:11px;line-height:1.35;word-break:break-word}
-
-.winner-slider{margin-top:16px;background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:15px}
-.slider-title{display:flex;justify-content:space-between;margin-bottom:10px;font-weight:700}.slider-title small{color:var(--gs-muted);font-weight:400}
-.winner-track{display:flex;gap:10px;overflow:hidden;padding-bottom:4px}.winner-track::-webkit-scrollbar{height:5px}.winner-track::-webkit-scrollbar-thumb{background:#cdd7eb;border-radius:10px}
-.winner-card{min-width:270px;border:1px solid var(--gs-line);border-radius:14px;padding:11px;display:flex;align-items:flex-start;gap:9px;scroll-snap-align:start;background:linear-gradient(180deg,#fff,#fbfcff)}.winner-number{font-weight:800;color:var(--gs-blue);padding-top:3px}.mini-photo{width:42px;height:42px;border-radius:50%;background:var(--gs-soft);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;color:var(--gs-blue)}.winner-info{min-width:0}.winner-card b{font-size:13px;display:block;margin-bottom:3px}.winner-score{font-size:11px;font-weight:700;color:var(--gs-blue);margin-bottom:3px}.winner-card small{color:var(--gs-muted);font-size:10px;display:block;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;word-break:break-word}
-
-.main-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
-.main-action{background:#fff;border:1px solid var(--gs-line);border-radius:17px;padding:17px;display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--gs-text);transition:.2s}.main-action:hover{transform:translateY(-2px);border-color:#b7c7ef}.main-action>span{font-size:27px}.main-action b{display:block;font-size:16px}.main-action small{display:block;color:var(--gs-muted);margin-top:3px;font-size:12px}
-.test-btn{border-left:4px solid #2155c7}.result-btn{border-left:4px solid #258a61}.winner-btn{border-left:4px solid #b88713}
-
-
-/* =========================================================
-   GANIT SETU - MOBILE TOP 3 (REFERENCE LAYOUT)
-   LEFT: 2nd | CENTER: 1st | RIGHT: 3rd
-   ========================================================= */
-@media (max-width:700px){
-
-  html,body{
-    width:100%;
-    max-width:100%;
-    overflow-x:hidden;
-  }
-
-  .home-container{
-    width:100%;
-    max-width:100%;
-    margin:16px 0 32px;
-    padding:0 12px;
-  }
-
-  /* ===== TOP 3: तीनों एक ही row में ===== */
-  .top-three{
-    display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    gap:8px !important;
-    align-items:stretch !important;
-    width:100% !important;
-  }
-
-  /* Order बिल्कुल reference image जैसा */
-  .champion-card.rank-2{order:1 !important;}
-  .champion-card.rank-1,
-  .champion-card.first{order:2 !important;}
-  .champion-card.rank-3{order:3 !important;}
-
-  .champion-card,
-  .champion-card.rank-1,
-  .champion-card.rank-2,
-  .champion-card.rank-3,
-  .champion-card.first{
-    width:100% !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    height:auto !important;
-    padding:12px 6px !important;
-    margin:0 !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:flex-start !important;
-    text-align:center !important;
-    overflow:hidden !important;
-  }
-
-  /* 1st बीच वाला थोड़ा highlight, लेकिन size समान */
-  .champion-card.rank-1,
-  .champion-card.first{
-    padding-top:12px !important;
-  }
-
-  .champion-card .medal{
-    font-size:38px !important;
-    line-height:1 !important;
-    margin:0 0 8px !important;
-  }
-
-  .champion-card .champion-photo{
-    width:48px !important;
-    height:48px !important;
-    min-width:48px !important;
-    margin:0 0 7px !important;
-    font-size:16px !important;
-  }
-
-  .champion-card h3{
-    width:100% !important;
-    margin:0 0 4px !important;
-    font-size:15px !important;
-    line-height:1.25 !important;
-    white-space:normal !important;
-    overflow-wrap:anywhere !important;
-  }
-
-  .champion-card > small{
-    display:block !important;
-    width:100% !important;
-    margin:0 0 4px !important;
-    font-size:11px !important;
-    line-height:1.25 !important;
-    white-space:normal !important;
-  }
-
-  .champion-card .champion-score{
-    width:100% !important;
-    margin:3px 0 5px !important;
-    font-size:13px !important;
-    line-height:1.25 !important;
-    white-space:normal !important;
-  }
-
-  /* School/detail lines को mobile Top 3 में छुपाया गया है,
-     ताकि cards reference image जैसे compact रहें */
-  .champion-card .champion-details{
-    display:none !important;
-  }
-
-  /* यदि class/time अलग elements में हों तो compact रखें */
-  .champion-card .champion-class,
-  .champion-card .champion-time{
-    width:100% !important;
-    font-size:11px !important;
-    line-height:1.3 !important;
-    white-space:normal !important;
-  }
-
-  /* ===== बहुत छोटे mobile के लिए ===== */
-  @media (max-width:420px){
-    .top-three{gap:7px !important;}
-
-    .champion-card,
-    .champion-card.rank-1,
-    .champion-card.rank-2,
-    .champion-card.rank-3,
-    .champion-card.first{
-      padding:10px 5px !important;
-      border-radius:16px !important;
-    }
-
-    .champion-card .medal{
-      font-size:34px !important;
-      margin-bottom:7px !important;
-    }
-
-    .champion-card .champion-photo{
-      width:46px !important;
-      height:46px !important;
-      min-width:46px !important;
-    }
-
-    .champion-card h3{font-size:14px !important;}
-    .champion-card > small{font-size:10px !important;}
-    .champion-card .champion-score{font-size:12px !important;}
-  }
-
-  /* ===== बाकी page responsive ===== */
-  .winner-slider{
-    width:100%;
-    max-width:100%;
-    min-width:0;
-    overflow:hidden;
-  }
-
-  .winner-track{
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  .winner-card{
-    min-width:min(82vw,300px);
-    width:min(82vw,300px);
-    max-width:min(82vw,300px);
-  }
-
-  .winner-info{min-width:0;}
-
-  .main-actions{
-    grid-template-columns:1fr;
-  }
-
-  .main-action{padding:14px;}
+html,
+body{
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
 }
 
+body{
+  background:#f5f7fb;
+  color:var(--gs-text);
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+}
 
-/* ===== PROFESSIONAL STUDENT MENU ===== */
-.gs-menu-wrap{position:relative}.gs-menu-btn{width:42px;height:42px;border:1px solid var(--gs-line);border-radius:12px;background:#fff;color:var(--gs-blue);font-size:22px;cursor:pointer;display:grid;place-items:center}.gs-menu-btn:hover{background:var(--gs-soft)}.gs-dropdown{position:absolute;right:0;top:50px;width:245px;background:#fff;border:1px solid var(--gs-line);border-radius:16px;padding:8px;box-shadow:0 16px 40px rgba(23,32,51,.14);display:none;z-index:100}.gs-dropdown.open{display:block}.gs-dropdown a,.gs-logout-btn{width:100%;display:flex;align-items:center;gap:11px;padding:12px;border-radius:10px;border:0;background:transparent;color:var(--gs-text);font:inherit;font-size:14px;text-align:left;cursor:pointer}.gs-dropdown a:hover,.gs-logout-btn:hover{background:var(--gs-soft);color:var(--gs-blue)}.gs-menu-divider{height:1px;background:var(--gs-line);margin:6px 4px}.gs-logout-btn{color:#b42318}.gs-logout-btn:hover{background:#fff1f0;color:#b42318}
+/* ================= HEADER ================= */
 
-/* Profile photos in Home leaderboard */
-.mini-photo{overflow:hidden}
-.mini-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.gs-header{
+  height:64px;
+  background:#fff;
+  border-bottom:1px solid var(--gs-line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 max(18px,5vw);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
 
+.gs-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-/* ============================================
-   PROFILE FINAL LAYOUT
-   Left details | Right large photo
-   Rank below in balanced box
-============================================ */
+.gs-logo{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  flex:none;
+  overflow:hidden;
+}
+
+.gs-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.gs-brand strong{
+  display:block;
+  font-size:17px;
+}
+
+.gs-brand small{
+  display:block;
+  color:var(--gs-muted);
+  font-size:11px;
+  margin-top:2px;
+}
+
+/* ================= HOME ================= */
+
+.home-container{
+  width:min(1080px,92%);
+  margin:24px auto 40px;
+}
+
+/* ================= PROFILE ================= */
+
 .student-profile-card{
   background:#fff;
   border:1px solid var(--gs-line);
   border-radius:18px;
-  padding:16px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 100px;
-  grid-template-areas:
-    "details photo"
-    "rank rank";
-  column-gap:14px;
-  row-gap:14px;
+  padding:18px;
+  display:flex;
   align-items:center;
+  gap:16px;
   box-shadow:0 8px 25px rgba(24,45,90,.05);
 }
 
-.student-details{
-  grid-area:details;
-  min-width:0;
-  text-align:left;
-  align-self:center;
-}
-
-.profile-label{
-  font-size:13px;
-  color:var(--gs-blue);
-  font-weight:800;
-  margin:0 0 5px;
-  text-align:left;
-}
-
-.student-details h1{
-  font-size:21px;
-  margin:0 0 8px;
-  text-align:left;
-  line-height:1.2;
-}
-
-.student-meta{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:5px;
-  color:var(--gs-muted);
-  font-size:12px;
-  text-align:left;
-}
-
-.student-meta span{
-  display:block;
-  max-width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
 .student-photo{
-  grid-area:photo;
-  width:96px;
-  height:96px;
+  width:68px;
+  height:68px;
   border-radius:50%;
   background:var(--gs-soft);
-  border:4px solid #dbe5ff;
+  border:3px solid #dbe5ff;
   color:var(--gs-blue);
   display:grid;
   place-items:center;
   font-weight:800;
-  font-size:25px;
+  font-size:20px;
   overflow:hidden;
-  justify-self:end;
-  align-self:center;
+  flex:none;
 }
 
 .student-photo img{
@@ -331,16 +123,37 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   object-fit:cover;
 }
 
+.student-details{
+  flex:1;
+  min-width:0;
+}
+
+.profile-label{
+  font-size:12px;
+  color:var(--gs-blue);
+  font-weight:700;
+  margin:0 0 3px;
+}
+
+.student-details h1{
+  font-size:22px;
+  margin:0 0 8px;
+}
+
+.student-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 16px;
+  color:var(--gs-muted);
+  font-size:13px;
+}
+
 .my-rank-box{
-  grid-area:rank;
   background:var(--gs-soft);
   border-radius:14px;
   padding:11px 16px;
   text-align:center;
-  width:100%;
-  box-sizing:border-box;
-  border-left:none;
-  min-width:0;
+  min-width:85px;
 }
 
 .my-rank-box small{
@@ -352,57 +165,430 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 .my-rank-box strong{
   display:block;
   color:var(--gs-blue);
-  font-size:24px;
+  font-size:23px;
   margin-top:2px;
 }
 
-@media(max-width:480px){
+/* =========================================================
+   MAIN BUTTON AREA
+   Test = Full Width
+   Result + Previous Result = Same Row
+   ========================================================= */
+
+.main-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:22px;
+}
+
+/* सभी मुख्य buttons */
+
+.main-action{
+  position:relative;
+  min-width:0;
+  min-height:145px;
+  border-radius:24px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  text-decoration:none;
+  color:#fff;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 12px 28px rgba(23,32,51,.16),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.main-action:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 16px 32px rgba(23,32,51,.20),
+    inset 0 1px 0 rgba(255,255,255,.4);
+}
+
+.main-action:active{
+  transform:scale(.98);
+}
+
+/* हल्की shining layer */
+
+.main-action::before{
+  content:"";
+  position:absolute;
+  top:-55%;
+  left:-20%;
+  width:45%;
+  height:210%;
+  background:rgba(255,255,255,.13);
+  transform:rotate(25deg);
+  pointer-events:none;
+}
+
+/* ================= TEST BUTTON ================= */
+
+.test-btn{
+  grid-column:1 / -1;
+  min-height:205px;
+  background:linear-gradient(
+    135deg,
+    #08a0f5 0%,
+    #087ee8 45%,
+    #1247cc 100%
+  );
+}
+
+/* Test icon */
+
+.test-main-icon{
+  position:relative;
+  z-index:3;
+  width:78px;
+  height:78px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:48px;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.15),
+    inset 0 1px 0 rgba(255,255,255,.45);
+}
+
+/* Test text */
+
+.test-btn > div{
+  position:relative;
+  z-index:3;
+  margin-top:8px;
+}
+
+.test-btn b{
+  display:block;
+  font-size:29px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.test-btn small{
+  display:block;
+  margin-top:5px;
+  font-size:17px;
+  color:#fff;
+}
+
+/* =========================================================
+   LEFT + RIGHT FLASH INDICATORS
+   ========================================================= */
+
+.test-side-indicator{
+  position:absolute;
+  z-index:4;
+  top:50%;
+  transform:translateY(-50%);
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:43px;
+  background:rgba(0,180,255,.18);
+  border:2px solid rgba(255,255,255,.32);
+  box-shadow:
+    0 0 0 8px rgba(255,255,255,.04),
+    0 0 25px rgba(255,255,255,.45);
+  animation:testIndicatorFlash 1.15s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.test-indicator-left{
+  left:28px;
+}
+
+.test-indicator-right{
+  right:28px;
+}
+
+/* अलग-अलग दिशा में हल्का movement */
+
+.test-indicator-left{
+  animation:
+    testLeft 1.15s ease-in-out infinite;
+}
+
+.test-indicator-right{
+  animation:
+    testRight 1.15s ease-in-out infinite;
+}
+
+@keyframes testLeft{
+  0%,100%{
+    opacity:.35;
+    transform:translateY(-50%) translateX(-5px) scale(.92);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-50%) translateX(8px) scale(1.05);
+  }
+}
+
+@keyframes testRight{
+  0%,100%{
+    opacity:.35;
+    transform:translateY(-50%) translateX(5px) scale(.92);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-50%) translateX(-8px) scale(1.05);
+  }
+}
+
+/* ================= OTHER TWO BUTTONS ================= */
+
+.result-btn{
+  background:linear-gradient(
+    135deg,
+    #05c985 0%,
+    #05ae72 50%,
+    #078453 100%
+  );
+}
+
+.previous-result-btn{
+  background:linear-gradient(
+    135deg,
+    #b83cff 0%,
+    #8b2be8 50%,
+    #5d20c8 100%
+  );
+}
+
+.result-btn > span,
+.previous-result-btn > span{
+  position:relative;
+  z-index:2;
+  width:68px;
+  height:68px;
+  border-radius:19px;
+  display:grid;
+  place-items:center;
+  font-size:40px;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.30);
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.result-btn > div,
+.previous-result-btn > div{
+  position:relative;
+  z-index:2;
+  margin-top:8px;
+}
+
+.result-btn b,
+.previous-result-btn b{
+  display:block;
+  font-size:21px;
+  line-height:1.25;
+  font-weight:900;
+}
+
+.result-btn small,
+.previous-result-btn small{
+  display:block;
+  margin-top:4px;
+  font-size:13px;
+  color:#fff;
+}
+
+/* ================= SOCIAL ================= */
+
+.gs-social-card{
+  margin-top:16px;
+}
+
+.gs-social-label{
+  color:var(--gs-text);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+  .gs-header{
+    padding:0 4%;
+  }
+
+  .gs-brand small{
+    display:none;
+  }
+
+  .home-container{
+    width:94%;
+    margin:16px auto 32px;
+  }
+
   .student-profile-card{
-    grid-template-columns:minmax(0,1fr) 92px;
+    align-items:flex-start;
+    gap:11px;
     padding:14px;
-    column-gap:12px;
   }
 
   .student-photo{
-    width:88px;
-    height:88px;
-    font-size:23px;
+    width:55px;
+    height:55px;
+    font-size:16px;
   }
 
   .student-details h1{
-    font-size:19px;
+    font-size:18px;
   }
 
   .student-meta{
-    font-size:11.5px;
+    font-size:11px;
+    gap:5px 9px;
   }
 
   .my-rank-box{
-    padding:10px 14px;
+    padding:8px;
+    min-width:56px;
+  }
+
+  .my-rank-box strong{
+    font-size:18px;
+  }
+
+  /* ================= BUTTONS ================= */
+
+  .main-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:18px;
+  }
+
+  /* Test हमेशा पूरी चौड़ाई */
+
+  .test-btn{
+    grid-column:1 / -1;
+    min-height:175px;
+    border-radius:22px;
+    padding:14px 10px;
+  }
+
+  .test-main-icon{
+    width:64px;
+    height:64px;
+    border-radius:19px;
+    font-size:39px;
+  }
+
+  .test-btn > div{
+    margin-top:6px;
+  }
+
+  .test-btn b{
+    font-size:25px;
+  }
+
+  .test-btn small{
+    font-size:14px;
+  }
+
+  /* दोनों indicators एक ही horizontal line में */
+
+  .test-side-indicator{
+    width:58px;
+    height:58px;
+    font-size:31px;
+  }
+
+  .test-indicator-left{
+    left:13px;
+  }
+
+  .test-indicator-right{
+    right:13px;
+  }
+
+  /* नीचे के दोनों buttons बराबर */
+
+  .result-btn,
+  .previous-result-btn{
+    min-height:150px;
+    padding:12px 7px;
+    border-radius:20px;
+  }
+
+  .result-btn > span,
+  .previous-result-btn > span{
+    width:55px;
+    height:55px;
+    border-radius:17px;
+    font-size:32px;
+  }
+
+  .result-btn > div,
+  .previous-result-btn > div{
+    margin-top:6px;
+  }
+
+  .result-btn b,
+  .previous-result-btn b{
+    font-size:17px;
+    line-height:1.2;
+    white-space:nowrap;
+  }
+
+  .result-btn small,
+  .previous-result-btn small{
+    font-size:11px;
+    line-height:1.25;
   }
 }
 
-/* ===== HOME TOP-10 DETAILS: compact, mobile-safe ===== */
-.winner-card{box-sizing:border-box;min-width:320px;max-width:360px;}
-.winner-info{flex:1;min-width:0;overflow:hidden;}
-.winner-name{white-space:normal !important;overflow-wrap:anywhere !important;word-break:break-word !important;line-height:1.25 !important;}
-.winner-school,.winner-test{white-space:normal !important;overflow-wrap:anywhere !important;word-break:break-word !important;line-height:1.3 !important;}
-.winner-meta{display:grid;grid-template-columns:1fr 1fr;gap:3px 7px;margin:4px 0;min-width:0;}
-.winner-meta span{min-width:0;font-size:10.5px;line-height:1.3;color:var(--gs-muted);white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
-.winner-test{margin-top:2px;}
+/* बहुत छोटी mobile screen */
 
-@media(max-width:700px){
-  .winner-card{min-width:min(86vw,330px);width:min(86vw,330px);max-width:min(86vw,330px);padding:9px;gap:7px;}
-  .winner-number{font-size:12px;flex:none;}
-  .mini-photo{width:40px;height:40px;}
-  .winner-card b{font-size:12px;}
-  .winner-school,.winner-test{font-size:9.5px !important;}
-  .winner-meta span{font-size:9.5px;}
-}
+@media(max-width:380px){
 
-@media(max-width:360px){
-  .winner-card{min-width:88vw;width:88vw;max-width:88vw;padding:8px;}
-  .winner-meta{gap:2px 5px;}
-  .winner-meta span{font-size:9px;}
-  .winner-school,.winner-test{font-size:9px !important;}
+  .test-btn{
+    min-height:165px;
+  }
+
+  .test-side-indicator{
+    width:50px;
+    height:50px;
+    font-size:27px;
+  }
+
+  .test-indicator-left{
+    left:8px;
+  }
+
+  .test-indicator-right{
+    right:8px;
+  }
+
+  .test-btn b{
+    font-size:23px;
+  }
+
+  .result-btn,
+  .previous-result-btn{
+    min-height:140px;
+  }
+
+  .result-btn b,
+  .previous-result-btn b{
+    font-size:15px;
+  }
 }
