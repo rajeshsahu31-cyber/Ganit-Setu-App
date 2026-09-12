@@ -642,3 +642,105 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
   }
 }
+
+
+/* GS-CLEAN-TEST-INDICATORS-V2
+   Final override: exactly TWO indicators on the Test CTA.
+   The pencil icon remains untouched. */
+@media (max-width:700px){
+  /* Remove the previous pseudo-indicators that were attached to the pencil span. */
+  .main-actions > .test-btn > span::before,
+  .main-actions > .test-btn > span::after{
+    content:none !important;
+    display:none !important;
+    animation:none !important;
+  }
+
+  /* Use the text container for the two side indicators, so the pencil is shown only once. */
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  .main-actions > .test-btn > div::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    right:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  .main-actions > .test-btn > div::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    left:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Keep the important Test CTA visually compact and centered. */
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Bottom two cards: same row, and the long title stays on ONE line. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    min-height:128px !important;
+    padding:14px 8px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:13px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.15px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:10px !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    font-size:26px !important;
+  }
+
+  @keyframes gsCleanLeft{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(9px);}
+  }
+  @keyframes gsCleanRight{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(-9px);}
+  }
+}
+
+@media (max-width:360px){
+  .main-actions > .test-btn > div::before{right:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .test-btn > div::after{left:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{font-size:12px !important;}
+}
