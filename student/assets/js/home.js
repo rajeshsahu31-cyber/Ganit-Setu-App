@@ -148,3 +148,65 @@
 
   document.addEventListener('DOMContentLoaded', loadHomeBanners);
 })();
+
+/* GS-BANNER-SWIPE */
+
+/* GS-BANNER-SWIPE */
+(function(){
+  let startX = 0, startY = 0, moved = false;
+  const threshold = 45;
+
+  function bannerTarget(){
+    return document.querySelector('.banner-slider, .banner-carousel, .hero-banner, #bannerSlider, #bannerCarousel');
+  }
+
+  function clickArrow(direction){
+    const root = bannerTarget();
+    if(!root) return;
+    const selectors = direction === 'next'
+      ? ['.banner-next', '.next', '.slider-next', '[data-direction="next"]', '[aria-label*="Next" i]']
+      : ['.banner-prev', '.prev', '.slider-prev', '[data-direction="prev"]', '[aria-label*="Previous" i]'];
+    for(const selector of selectors){
+      const btn = root.querySelector(selector) || document.querySelector(selector);
+      if(btn){ btn.click(); return true; }
+    }
+    return false;
+  }
+
+  function attach(){
+    const el = bannerTarget();
+    if(!el || el.dataset.gsSwipeAttached === '1') return;
+    el.dataset.gsSwipeAttached = '1';
+
+    el.addEventListener('touchstart', function(e){
+      if(!e.touches || !e.touches[0]) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      moved = false;
+    }, {passive:true});
+
+    el.addEventListener('touchmove', function(e){
+      if(!e.touches || !e.touches[0]) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 12) moved = true;
+    }, {passive:true});
+
+    el.addEventListener('touchend', function(e){
+      if(!moved) return;
+      const touch = e.changedTouches && e.changedTouches[0];
+      if(!touch) return;
+      const dx = touch.clientX - startX;
+      if(Math.abs(dx) < threshold) return;
+      clickArrow(dx < 0 ? 'next' : 'prev');
+      moved = false;
+    }, {passive:true});
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', attach, {once:true});
+  }else{
+    attach();
+  }
+  setTimeout(attach, 500);
+})();
