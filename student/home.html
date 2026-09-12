@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/home.css">
   <link rel="stylesheet" href="assets/css/bottom-nav.css">
+  <link rel="stylesheet" href="assets/css/home-status.css">
 </head>
 
 <body>
@@ -229,6 +230,46 @@
 
 
   <!-- ==========================================
+       TODAY'S TEST STATUS
+       Profile के ठीक नीचे
+       ========================================== -->
+
+  <section class="gs-today-status" id="gsTodayStatus" aria-label="आज की टेस्ट स्थिति">
+    <div class="gs-today-status-head">
+      <div>
+        <span class="gs-today-status-label">📅 आज की टेस्ट स्थिति</span>
+        <h2>आज आपने कौन-कौन से टेस्ट दिए?</h2>
+      </div>
+    </div>
+    <div class="gs-today-test-grid" id="gsTodayTestGrid">
+      <div class="gs-status-loading">टेस्ट स्थिति लोड हो रही है...</div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       OVERALL LEADERBOARD
+       ========================================== -->
+
+  <section class="leaderboard-section">
+    <div class="section-title">
+      <div>
+        <p id="testDateText">तीनों टेस्ट के आधार पर Overall Ranking</p>
+        <h2>🏆 लीडरबोर्ड</h2>
+      </div>
+      <a href="leaderboard.html">पूरा देखें →</a>
+    </div>
+    <div class="top-three" id="topThree"></div>
+    <div class="winner-slider">
+      <div class="slider-title">
+        <span>Top 10 विजेता</span>
+        <small>Rank 4 से 10 • स्वतः स्क्रॉल</small>
+      </div>
+      <div class="winner-track" id="winnerTrack"></div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================
        MAIN ACTIONS
        ========================================== -->
 
@@ -240,13 +281,12 @@
       href="test-types.html"
     >
 
-      <span class="test-side-indicator test-indicator-left" aria-hidden="true">👉</span>
+      <span class="test-attention test-attention-left" aria-hidden="true">👉</span>
+      <span class="test-attention test-attention-right" aria-hidden="true">👈</span>
 
-      <span class="test-main-icon">
+      <span>
         📝
       </span>
-
-      <span class="test-side-indicator test-indicator-right" aria-hidden="true">👈</span>
 
       <div>
 
@@ -366,6 +406,7 @@
 <script src="assets/js/profile.js"></script>
 
 <script src="assets/js/leaderboard-home.js"></script>
+<script src="assets/js/home-status.js"></script>
 
 
 
