@@ -240,5 +240,19 @@ body{
 </section>
 
 </main>
+
+<script id="gs-test-card-navigation">
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.gs-test-card[data-test]').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var type = card.getAttribute('data-test');
+      if (type === 'daily') window.location.href = 'daily-question.html';
+      else if (type === 'chapter') window.location.href = 'chapter-test.html';
+      else if (type === 'course') window.location.href = 'course-test.html';
+    });
+  });
+});
+</script>
+
 </body>
 </html>
