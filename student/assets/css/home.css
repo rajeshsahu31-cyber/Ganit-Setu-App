@@ -744,3 +744,198 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .main-actions > .result-btn b,
   .main-actions > .previous-result-btn b{font-size:12px !important;}
 }
+
+/* =========================================================
+   FINAL CLEAN MOBILE ACTION BUTTON OVERRIDE
+   Test button: original single pencil + two side indicators.
+   Result buttons: one row, previous-result title one line.
+   No HTML/JS/functionality changes.
+   ========================================================= */
+
+@media (max-width:700px){
+
+  /* ---- ACTION GRID ---- */
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+    margin-top:20px !important;
+    align-items:stretch !important;
+  }
+
+  /* ---- TEST: compact single full-width card ---- */
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    height:142px !important;
+    min-height:142px !important;
+    max-height:142px !important;
+    box-sizing:border-box !important;
+    position:relative !important;
+    overflow:hidden !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:7px !important;
+    padding:12px 18px !important;
+  }
+
+  /* Kill ALL older indicator pseudo-elements first.
+     This is what prevents 3-3 hands from appearing. */
+  .main-actions > .test-btn > span::before,
+  .main-actions > .test-btn > span::after,
+  .main-actions > .test-btn > div::before,
+  .main-actions > .test-btn > div::after{
+    content:none !important;
+    display:none !important;
+    animation:none !important;
+  }
+
+  /* The only two indicators: attached to the whole Test card,
+     so they can never become extra vertical children. */
+  .main-actions > .test-btn::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    left:12px !important;
+    top:50% !important;
+    width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:translateY(-50%) !important;
+    color:#fff !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+    z-index:3 !important;
+  }
+
+  .main-actions > .test-btn::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    right:12px !important;
+    top:50% !important;
+    width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:translateY(-50%) !important;
+    color:#fff !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+    z-index:3 !important;
+  }
+
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+    width:48px !important;
+    height:48px !important;
+    flex:0 0 48px !important;
+    font-size:29px !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:5 !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn b{
+    font-size:18px !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .test-btn small{
+    font-size:12px !important;
+    margin-top:3px !important;
+    white-space:nowrap !important;
+  }
+
+  /* ---- TWO RESULT CARDS: SAME ROW ---- */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:128px !important;
+    min-height:128px !important;
+    max-height:128px !important;
+    box-sizing:border-box !important;
+    padding:12px 6px !important;
+    gap:5px !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    flex:0 0 44px !important;
+    font-size:25px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    display:block !important;
+    width:100% !important;
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    letter-spacing:-.25px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
+
+  @keyframes gsFinalLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(8px);}
+  }
+
+  @keyframes gsFinalRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-8px);}
+  }
+}
+
+/* Very narrow phones: keep both indicators inside the Test card. */
+@media (max-width:360px){
+  .main-actions > .test-btn::before{
+    left:5px !important;
+    width:82px !important;
+    font-size:16px !important;
+  }
+  .main-actions > .test-btn::after{
+    right:5px !important;
+    width:82px !important;
+    font-size:16px !important;
+  }
+  .main-actions > .test-btn{
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:11px !important;
+    letter-spacing:-.35px !important;
+  }
+}
