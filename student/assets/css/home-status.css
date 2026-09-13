@@ -591,6 +591,8 @@
 
   .home-status-panel,
   .home-status-card{
+    height:auto !important;
+    min-height:0 !important;
     padding:6px;
     border-radius:17px;
   }
@@ -672,9 +674,9 @@
   .course-encourage,
   .chapter-encourage,
   .daily-encourage{
-    height:46px;
-    min-height:46px;
-    max-height:46px;
+    height:48px;
+    min-height:48px;
+    max-height:48px;
     margin-top:4px;
     padding:4px;
     border-radius:11px;
@@ -864,9 +866,9 @@
   .course-encourage,
   .chapter-encourage,
   .daily-encourage{
-    height:44px;
-    min-height:44px;
-    max-height:44px;
+    height:46px;
+    min-height:46px;
+    max-height:46px;
   }
 }
 
@@ -878,149 +880,10 @@
   }
 }
 
-/* =========================================================
-   GANIT SETU — FINAL MOBILE LOWER-BOX ALIGNMENT
-   केवल नीचे वाले 3 boxes की alignment सुधारें.
-   बाकी layout / colours / functionality को न छुएँ.
-   ========================================================= */
-
+/* ---------- FINAL MOBILE HEIGHT GUARD ---------- */
 @media (max-width:700px){
-
-  /* तीनों lower boxes एक जैसी चौड़ाई/ऊँचाई और vertical alignment */
-  .course-encourage,
-  .chapter-encourage,
-  .daily-encourage{
-    height:54px !important;
-    min-height:54px !important;
-    max-height:54px !important;
-    margin-top:5px !important;
-    padding:5px 6px !important;
-    display:flex !important;
-    align-items:center !important;
-    overflow:hidden !important;
-    box-sizing:border-box !important;
-  }
-
-  /* Trophy / target icon एक fixed जगह पर */
-  .course-encourage > span,
-  .chapter-encourage > span{
-    flex:0 0 20px !important;
-    width:20px !important;
-    font-size:19px !important;
-    line-height:1 !important;
-    text-align:center !important;
-  }
-
-  /* Course + Chapter text */
-  .course-encourage > div,
-  .chapter-encourage > div{
-    flex:1 1 auto !important;
-    min-width:0 !important;
-    max-width:100% !important;
-    overflow:hidden !important;
-    text-align:left !important;
-  }
-
-  /* मुख्य लाइन — दोनों में समान baseline */
-  .course-encourage b,
-  .chapter-encourage b,
-  .daily-encourage b{
-    display:block !important;
-    width:100% !important;
-    min-height:17px !important;
-    max-height:17px !important;
-    margin:0 !important;
-    overflow:hidden !important;
-    white-space:nowrap !important;
-    text-overflow:ellipsis !important;
-    font-size:7.6px !important;
-    line-height:17px !important;
-  }
-
-  /* नीचे की छोटी लाइन */
-  .course-encourage small,
-  .chapter-encourage small,
-  .daily-encourage small{
-    display:block !important;
-    width:100% !important;
-    max-height:22px !important;
-    margin:1px 0 0 !important;
-    overflow:hidden !important;
-    font-size:6px !important;
-    line-height:10px !important;
-  }
-
-  /* Daily box: left text + right "आज ही दें →" साफ अलग */
-  .daily-encourage{
-    gap:3px !important;
-    justify-content:space-between !important;
-  }
-
-  .daily-encourage > div:first-child{
-    flex:1 1 0 !important;
-    min-width:0 !important;
-    max-width:68% !important;
-    overflow:hidden !important;
-    text-align:left !important;
-  }
-
-  .daily-encourage > div:last-child,
-  .daily-encourage > #dailyActionText{
-    flex:0 0 auto !important;
-    width:auto !important;
-    max-width:30% !important;
-    margin:0 !important;
-    padding:0 !important;
-    overflow:hidden !important;
-    white-space:nowrap !important;
-    text-overflow:ellipsis !important;
-    text-align:right !important;
-    font-size:6.5px !important;
-    line-height:1.1 !important;
-  }
-}
-
-/* छोटे फोन पर भी यही alignment रहे */
-@media (max-width:370px){
-  .course-encourage,
-  .chapter-encourage,
-  .daily-encourage{
-    height:52px !important;
-    min-height:52px !important;
-    max-height:52px !important;
-    padding:4px 5px !important;
-  }
-
-  .course-encourage > span,
-  .chapter-encourage > span{
-    flex-basis:18px !important;
-    width:18px !important;
-    font-size:17px !important;
-  }
-
-  .course-encourage b,
-  .chapter-encourage b,
-  .daily-encourage b{
-    font-size:7px !important;
-    min-height:16px !important;
-    max-height:16px !important;
-    line-height:16px !important;
-  }
-
-  .course-encourage small,
-  .chapter-encourage small,
-  .daily-encourage small{
-    font-size:5.6px !important;
-    line-height:9px !important;
-  }
-
-  .daily-encourage > div:first-child{
-    max-width:67% !important;
-  }
-
-  .daily-encourage > div:last-child,
-  .daily-encourage > #dailyActionText{
-    max-width:31% !important;
-    font-size:6px !important;
+  .home-test-status-board,
+  .home-test-status-grid{
+    align-items:start;
   }
 }
