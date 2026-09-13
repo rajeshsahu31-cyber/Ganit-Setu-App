@@ -1,8 +1,13 @@
 /* =========================================================
    GANIT SETU — HOME STATUS / TEST DASHBOARD
-   CLEANED + MOBILE FIXED VERSION
-   Duplicate mobile rules removed.
-   Existing colours and class names preserved.
+   FINAL CLEAN REPLACEMENT
+   ---------------------------------------------------------
+   - Existing colours preserved
+   - Desktop layout preserved
+   - Mobile: 3 equal cards
+   - No fixed 450px / 460px card height
+   - Bottom three encouragement boxes aligned
+   - Chapter: 12 = 6+6, 14 = 7+7
    ========================================================= */
 
 .home-test-status,
@@ -172,9 +177,14 @@
   overflow-wrap:anywhere;
 }
 
-.course-panel .home-status-badge,#courseStatusCard .home-status-badge{background:#10b968}
-.chapter-panel .home-status-badge,#chapterStatusCard .home-status-badge{background:#f39a12}
-.daily-panel .home-status-badge,#dailyStatusCard .home-status-badge{background:#ef2850}
+.course-panel .home-status-badge,
+#courseStatusCard .home-status-badge{background:#10b968}
+
+.chapter-panel .home-status-badge,
+#chapterStatusCard .home-status-badge{background:#f39a12}
+
+.daily-panel .home-status-badge,
+#dailyStatusCard .home-status-badge{background:#ef2850}
 
 .home-status-check{
   width:28px;
@@ -187,36 +197,40 @@
   font-size:18px;
   line-height:1;
   font-weight:900;
+  flex:0 0 28px;
   box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-.course-panel .home-status-check,#courseStatusCard .home-status-check{background:#12b866}
-.chapter-panel .home-status-check,#chapterStatusCard .home-status-check{background:#f29a16}
-.daily-panel .home-status-check,#dailyStatusCard .home-status-check{background:#ef2850}
+.course-panel .home-status-check,
+#courseStatusCard .home-status-check{background:#12b866}
+.chapter-panel .home-status-check,
+#chapterStatusCard .home-status-check{background:#f29a16}
+.daily-panel .home-status-check,
+#dailyStatusCard .home-status-check{background:#ef2850}
 
 /* ---------- COURSE ---------- */
 .course-progress-box{
   min-width:0;
   min-height:150px;
   width:100%;
+  border-radius:15px;
+  background:rgba(255,255,255,.66);
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
   padding:10px 6px;
-  border-radius:15px;
-  background:rgba(255,255,255,.66);
   overflow:hidden;
 }
 
 .course-progress-ring{
-  position:relative;
   width:92px;
   height:92px;
   flex:0 0 92px;
+  border-radius:50%;
   display:grid;
   place-items:center;
-  border-radius:50%;
+  position:relative;
   background:conic-gradient(#12b866 0deg,#d7eee4 0deg);
   box-shadow:0 2px 10px rgba(18,184,102,.12);
 }
@@ -232,40 +246,40 @@
 .course-progress-ring span{
   position:relative;
   z-index:1;
-  color:#17304f;
-  font-size:19px;
-  line-height:1;
+  color:#087a4a;
+  font-size:18px;
   font-weight:900;
 }
 
 .course-progress-info{
   min-width:0;
-  max-width:100%;
-  overflow:hidden;
+  max-width:calc(100% - 102px);
   text-align:left;
+  overflow:hidden;
 }
 
 .course-progress-info b,
 .course-progress-info small{
   display:block;
   max-width:100%;
-  white-space:normal;
   overflow-wrap:anywhere;
 }
+
 .course-progress-info b{
   color:#087a4a;
-  font-size:16px;
-  line-height:1.15;
+  font-size:14px;
+  line-height:1.1;
   font-weight:900;
 }
+
 .course-progress-info small{
-  margin-top:5px;
-  color:#52708a;
+  margin-top:3px;
+  color:#287458;
   font-size:10px;
-  line-height:1.2;
+  line-height:1.1;
 }
 
-/* ---------- LOWER MESSAGE BOXES ---------- */
+/* ---------- ENCOURAGEMENT BOXES ---------- */
 .course-encourage,
 .chapter-encourage,
 .daily-encourage{
@@ -273,6 +287,7 @@
   min-width:0;
   border-radius:14px;
   overflow:hidden;
+  box-sizing:border-box;
 }
 
 .course-encourage,
@@ -280,25 +295,29 @@
   display:flex;
   align-items:center;
   gap:8px;
-  min-height:58px;
   padding:9px;
+  min-height:58px;
 }
+
 .course-encourage{
   margin-top:8px;
   background:rgba(155,247,205,.72);
   color:#087a4a;
 }
+
 .chapter-encourage{
   margin-top:2px;
   background:rgba(255,226,166,.74);
   color:#a63212;
 }
+
 .course-encourage>span,
 .chapter-encourage>span{
-  flex:0 0 auto;
   font-size:28px;
   line-height:1;
+  flex:0 0 auto;
 }
+
 .course-encourage>div,
 .chapter-encourage>div,
 .daily-encourage>div{
@@ -306,22 +325,34 @@
   max-width:100%;
   overflow:hidden;
 }
+
 .course-encourage b,
 .chapter-encourage b,
-.daily-encourage b{
-  display:block;
-  font-size:14px;
-  line-height:1.1;
-  font-weight:900;
-}
+.daily-encourage b,
 .course-encourage small,
 .chapter-encourage small,
 .daily-encourage small{
   display:block;
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+
+.course-encourage b,
+.chapter-encourage b,
+.daily-encourage b{
+  font-size:14px;
+  line-height:1.1;
+  font-weight:900;
+}
+
+.course-encourage small,
+.chapter-encourage small,
+.daily-encourage small{
   margin-top:3px;
   font-size:10px;
   line-height:1.2;
 }
+
 .course-encourage small{color:#287458}
 .chapter-encourage small{color:#7c4b26}
 
@@ -330,17 +361,20 @@
   align-items:center;
   gap:7px;
   margin-top:8px;
-  min-height:58px;
   padding:9px;
+  min-height:58px;
   background:rgba(255,255,255,.52);
   color:#9a3450;
 }
+
 .daily-encourage b{color:#8e1d39}
 .daily-encourage small{color:#9a6271}
+
 .daily-encourage>div:first-child{
   flex:1 1 auto;
   min-width:0;
 }
+
 .daily-encourage>div:last-child,
 .daily-encourage>#dailyActionText{
   flex:0 0 auto;
@@ -361,31 +395,39 @@
   background:rgba(255,255,255,.66);
   overflow:hidden;
 }
+
 .chapter-dots:has(.chapter-dot:nth-child(13)){
   grid-template-columns:repeat(7,minmax(0,1fr));
 }
+
 .chapter-dot{
   width:100%;
   min-width:0;
   aspect-ratio:1/1;
+  border-radius:50%;
   display:grid;
   place-items:center;
-  border-radius:50%;
-  border:2px solid transparent;
-  color:#fff;
   font-size:12px;
   line-height:1;
   font-weight:900;
+  border:2px solid transparent;
   box-shadow:0 2px 6px rgba(20,40,60,.12);
 }
+
 .chapter-dot.done{
   background:#16b86b;
+  color:#fff;
   border-color:#0f9f59;
+  box-shadow:0 3px 10px rgba(18,184,107,.28);
 }
+
 .chapter-dot.pending{
   background:#ff3855;
+  color:#fff;
   border-color:#e62c47;
+  box-shadow:0 3px 10px rgba(239,49,82,.22);
 }
+
 .chapter-legend{
   display:flex;
   align-items:center;
@@ -399,18 +441,21 @@
   line-height:1;
   font-weight:700;
 }
+
 .chapter-legend span{
   display:inline-flex;
   align-items:center;
   gap:4px;
   white-space:nowrap;
 }
+
 .chapter-legend .dot{
   width:8px;
   height:8px;
   border-radius:50%;
   display:inline-block;
 }
+
 .chapter-legend .dot.done{background:#16b86b}
 .chapter-legend .dot.pending{background:#ff3f59}
 .chapter-legend b{font-weight:900}
@@ -420,26 +465,28 @@
   width:100%;
   min-width:0;
   min-height:150px;
+  padding:10px;
+  border-radius:15px;
+  background:rgba(255,255,255,.66);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:10px;
-  border-radius:15px;
-  background:rgba(255,255,255,.66);
   overflow:hidden;
 }
+
 .daily-main-icon{
   width:54px;
   height:54px;
   display:grid;
   place-items:center;
+  font-size:31px;
+  line-height:1;
   margin-bottom:8px;
   border-radius:14px;
   background:rgba(255,255,255,.72);
-  font-size:31px;
-  line-height:1;
 }
+
 .daily-status-body strong{
   display:block;
   width:100%;
@@ -454,13 +501,14 @@
 /* ---------- SUMMARY ---------- */
 .home-test-summary{
   margin:15px 0 19px;
-  padding:10px;
-  border:2px solid #a9c8ff;
   border-radius:20px;
   overflow:hidden;
   background:linear-gradient(135deg,#3e36df 0%,#1e73ed 57%,#0c8de9 100%);
+  border:2px solid #a9c8ff;
   box-shadow:0 9px 23px rgba(39,65,185,.16);
+  padding:10px;
 }
+
 .home-summary-head{
   display:flex;
   align-items:center;
@@ -470,12 +518,14 @@
   padding:2px 4px 10px;
   color:#fff;
 }
+
 .home-summary-title{
   display:flex;
   align-items:center;
   gap:9px;
   min-width:0;
 }
+
 .home-summary-icon{
   width:36px;
   height:36px;
@@ -486,18 +536,21 @@
   background:rgba(255,255,255,.18);
   font-size:21px;
 }
+
 .home-summary-title h2{
   margin:0;
   font-size:21px;
   line-height:1.05;
   font-weight:900;
 }
+
 .home-summary-title p{
   margin:3px 0 0;
   font-size:10px;
   line-height:1;
   opacity:.9;
 }
+
 .home-summary-pill{
   flex:0 0 auto;
   padding:7px 10px;
@@ -509,11 +562,13 @@
   font-weight:900;
   white-space:nowrap;
 }
+
 .home-summary-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:7px;
 }
+
 .home-summary-card{
   min-width:0;
   display:flex;
@@ -525,6 +580,7 @@
   background:rgba(255,255,255,.95);
   box-shadow:inset 0 1px 0 #fff;
 }
+
 .home-summary-card .summary-icon{
   width:32px;
   height:32px;
@@ -535,10 +591,12 @@
   font-size:19px;
   font-weight:900;
 }
+
 .summary-tests .summary-icon{background:#dceeff;color:#145ed7}
 .summary-correct .summary-icon{background:#dff9e9;color:#0caa5e}
 .summary-wrong .summary-icon{background:#ffe0e8;color:#ef2449}
 .summary-average .summary-icon{background:#fff0cf;color:#c17a00}
+
 .home-summary-card small{
   display:block;
   color:#5b6c7f;
@@ -546,6 +604,7 @@
   line-height:1;
   white-space:nowrap;
 }
+
 .home-summary-card strong{
   display:block;
   margin-top:3px;
@@ -554,6 +613,7 @@
   line-height:1.05;
   font-weight:900;
 }
+
 .home-summary-card em{
   display:block;
   margin-top:2px;
@@ -587,12 +647,20 @@
   .home-test-status-board,
   .home-test-status-grid{
     gap:5px;
+    align-items:stretch;
   }
 
+  /*
+     No fixed card height.
+     Grid itself equalises the row height, while flex keeps
+     each bottom encouragement box at the same baseline.
+  */
   .home-status-panel,
   .home-status-card{
     height:auto !important;
     min-height:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
     padding:6px;
     border-radius:17px;
   }
@@ -629,7 +697,7 @@
     border-radius:12px;
   }
 
-  /* icon is deliberately a little lower */
+  /* Tick / cross lower than heading */
   .home-status-check{
     width:21px;
     height:21px;
@@ -642,54 +710,71 @@
   .daily-status-body{
     height:92px;
     min-height:92px;
+    max-height:92px;
     padding:6px;
     border-radius:12px;
+    flex:0 0 auto;
   }
 
-  .course-progress-box{gap:4px}
+  .course-progress-box{
+    gap:4px;
+  }
 
   .course-progress-ring{
     width:52px;
     height:52px;
-    flex-basis:52px;
+    flex:0 0 52px;
   }
 
-  .course-progress-ring:after{inset:5px}
-  .course-progress-ring span{font-size:11px}
+  .course-progress-ring:after{
+    inset:5px;
+  }
+
+  .course-progress-ring span{
+    font-size:11px;
+  }
 
   .course-progress-info{
     max-width:calc(100% - 56px);
   }
+
   .course-progress-info b{
     font-size:8px;
     line-height:1.02;
   }
+
   .course-progress-info small{
     margin-top:2px;
     font-size:6.3px;
     line-height:1.02;
   }
 
-  /* All three bottom boxes: same size and same vertical line */
+  /* All three bottom boxes: same size + same baseline */
   .course-encourage,
   .chapter-encourage,
   .daily-encourage{
     height:48px;
     min-height:48px;
     max-height:48px;
-    margin-top:4px;
+    margin-top:auto !important;
+    margin-bottom:0 !important;
     padding:4px;
     border-radius:11px;
+    flex:0 0 48px;
     align-items:center;
   }
 
   .course-encourage,
-  .chapter-encourage{gap:3px}
+  .chapter-encourage{
+    gap:3px;
+  }
 
   .course-encourage>span,
   .chapter-encourage>span{
-    flex:0 0 17px;
-    font-size:17px;
+    width:18px;
+    flex:0 0 18px;
+    font-size:18px;
+    text-align:center;
   }
 
   .course-encourage b,
@@ -697,42 +782,45 @@
   .daily-encourage b{
     min-height:0;
     font-size:7px;
-    line-height:1.02;
+    line-height:1.05;
   }
 
   .course-encourage small,
   .chapter-encourage small,
   .daily-encourage small{
     margin-top:1px;
-    font-size:5.6px;
-    line-height:1;
+    font-size:5.8px;
+    line-height:1.02;
   }
 
+  /* Daily: text + action stay aligned */
   .daily-encourage{
     gap:3px;
   }
 
   .daily-encourage>div:first-child{
     flex:1 1 0;
-    max-width:60%;
+    min-width:0;
+    max-width:62%;
   }
 
   .daily-encourage>div:last-child,
   .daily-encourage>#dailyActionText{
     flex:0 0 auto;
     max-width:38%;
-    font-size:6px;
+    font-size:6.2px;
     line-height:1;
     text-align:right;
     white-space:nowrap;
   }
 
-  /* Chapter = 6+6 for 12, 7+7 for 14 */
+  /* Chapter: 12 = 6+6, 14 = 7+7 */
   .chapter-dots{
     grid-template-columns:repeat(6,minmax(0,1fr));
     gap:3px;
     padding:5px 3px;
     border-radius:11px;
+    flex:0 0 auto;
   }
 
   .chapter-dots:has(.chapter-dot:nth-child(13)){
@@ -748,35 +836,41 @@
     gap:4px;
     margin:3px 0 2px;
     font-size:6.2px;
+    flex:0 0 auto;
   }
 
-  .chapter-legend span{gap:3px}
+  .chapter-legend span{
+    gap:3px;
+  }
+
   .chapter-legend .dot{
     width:5px;
     height:5px;
   }
 
   .daily-main-icon{
-    width:34px;
-    height:34px;
-    margin-bottom:3px;
-    border-radius:9px;
-    font-size:20px;
+    width:38px;
+    height:38px;
+    font-size:22px;
+    margin-bottom:4px;
+    border-radius:10px;
   }
 
   .daily-status-body strong{
-    font-size:8px;
-    line-height:1.05;
+    font-size:8.5px;
+    line-height:1.1;
   }
 
-  /* Summary stays compact */
+  /* Summary compact */
   .home-test-summary{
     padding:8px;
-    margin-top:10px;
     border-radius:17px;
+    margin-top:10px;
   }
 
-  .home-summary-head{padding:1px 3px 6px}
+  .home-summary-head{
+    padding:1px 3px 6px;
+  }
 
   .home-summary-icon{
     width:28px;
@@ -785,16 +879,26 @@
     font-size:16px;
   }
 
-  .home-summary-title{gap:6px}
-  .home-summary-title h2{font-size:16px}
-  .home-summary-title p{font-size:7px}
+  .home-summary-title{
+    gap:6px;
+  }
 
-  .home-summary-pill{
-    padding:5px 7px;
+  .home-summary-title h2{
+    font-size:16px;
+  }
+
+  .home-summary-title p{
     font-size:7px;
   }
 
-  .home-summary-grid{gap:4px}
+  .home-summary-pill{
+    font-size:7px;
+    padding:5px 7px;
+  }
+
+  .home-summary-grid{
+    gap:4px;
+  }
 
   .home-summary-card{
     padding:6px 2px;
@@ -809,15 +913,27 @@
     font-size:13px;
   }
 
-  .home-summary-card small{font-size:6px}
-  .home-summary-card strong{font-size:15px}
-  .home-summary-card em{display:none}
+  .home-summary-card small{
+    font-size:6px;
+  }
+
+  .home-summary-card strong{
+    font-size:15px;
+  }
+
+  .home-summary-card em{
+    display:none;
+  }
 }
 
-/* ---------- VERY SMALL PHONES ---------- */
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
 @media (max-width:370px){
 
-  .home-test-status-motto{display:none}
+  .home-test-status-motto{
+    display:none;
+  }
 
   .home-status-panel,
   .home-status-card{
@@ -844,13 +960,20 @@
     font-size:12px;
   }
 
-  .home-status-title-wrap h3{font-size:8px}
-  .home-status-badge{font-size:5.8px;padding:3px}
+  .home-status-title-wrap h3{
+    font-size:8px;
+  }
+
+  .home-status-badge{
+    font-size:5.8px;
+    padding:3px;
+  }
 
   .course-progress-box,
   .daily-status-body{
     height:88px;
     min-height:88px;
+    max-height:88px;
   }
 
   .course-progress-ring{
@@ -859,9 +982,21 @@
     flex-basis:49px;
   }
 
-  .course-progress-info{max-width:calc(100% - 53px)}
-  .course-progress-info b{font-size:7.5px}
-  .course-progress-info small{font-size:6px}
+  .course-progress-ring:after{
+    inset:5px;
+  }
+
+  .course-progress-info{
+    max-width:calc(100% - 53px);
+  }
+
+  .course-progress-info b{
+    font-size:7.5px;
+  }
+
+  .course-progress-info small{
+    font-size:6px;
+  }
 
   .course-encourage,
   .chapter-encourage,
@@ -869,126 +1004,57 @@
     height:46px;
     min-height:46px;
     max-height:46px;
-  }
-}
-
-/* Respect reduced-motion preference */
-@media (prefers-reduced-motion:reduce){
-  .home-status-panel.is-pending,
-  .home-status-panel.is-pending:after{
-    animation:none!important;
-  }
-}
-
-/* ---------- FINAL MOBILE HEIGHT GUARD ---------- */
-@media (max-width:700px){
-  .home-test-status-board,
-  .home-test-status-grid{
-    align-items:start;
-  }
-}
-/* =========================================================
-   FINAL MOBILE FIX — 3 TEST CARDS
-   समान height + नीचे के boxes एक ही line में
-   ========================================================= */
-@media (max-width:700px){
-
-  .home-test-status-board,
-  .home-test-status-grid{
-    align-items:stretch !important;
+    flex-basis:46px;
+    padding:4px;
   }
 
-  .home-status-panel,
-  .home-status-card{
-    height:450px !important;
-    min-height:450px !important;
-    max-height:450px !important;
-    display:flex !important;
-    flex-direction:column !important;
-  }
-
-  .home-status-panel-head{
-    flex:0 0 auto !important;
-  }
-
-  .course-progress-box,
-  .daily-status-body{
-    flex:0 0 96px !important;
-    height:96px !important;
-    min-height:96px !important;
-    max-height:96px !important;
-  }
-
-  .course-encourage,
-  .chapter-encourage,
-  .daily-encourage{
-    flex:0 0 52px !important;
-    height:52px !important;
-    min-height:52px !important;
-    max-height:52px !important;
-    margin-top:auto !important;
-    margin-bottom:0 !important;
-    padding:5px 6px !important;
-    display:flex !important;
-    align-items:center !important;
-    box-sizing:border-box !important;
+  .course-encourage>span,
+  .chapter-encourage>span{
+    width:17px;
+    flex-basis:17px;
+    font-size:17px;
   }
 
   .course-encourage b,
   .chapter-encourage b,
   .daily-encourage b{
-    font-size:7.5px !important;
-    line-height:1.1 !important;
+    font-size:6.7px;
   }
 
   .course-encourage small,
   .chapter-encourage small,
   .daily-encourage small{
-    font-size:6px !important;
-    line-height:1.1 !important;
+    font-size:5.5px;
   }
 
-  .daily-encourage{
-    justify-content:space-between !important;
-    gap:4px !important;
+  .chapter-dot{
+    font-size:6px;
   }
 
-  .daily-encourage > div:first-child{
-    flex:1 1 auto !important;
-    min-width:0 !important;
-    max-width:68% !important;
+  .chapter-legend{
+    font-size:6px;
   }
 
-  .daily-encourage > #dailyActionText{
-    flex:0 0 auto !important;
-    max-width:30% !important;
-    white-space:nowrap !important;
-    text-align:right !important;
+  .daily-main-icon{
+    width:34px;
+    height:34px;
+    font-size:20px;
+  }
+
+  .daily-status-body strong{
+    font-size:8px;
+  }
+
+  .daily-encourage>div:last-child,
+  .daily-encourage>#dailyActionText{
+    font-size:5.8px;
   }
 }
 
-@media (max-width:370px){
-  .home-status-panel,
-  .home-status-card{
-    height:430px !important;
-    min-height:430px !important;
-    max-height:430px !important;
-  }
-
-  .course-progress-box,
-  .daily-status-body{
-    flex-basis:92px !important;
-    height:92px !important;
-    min-height:92px !important;
-    max-height:92px !important;
-  }
-
-  .course-encourage,
-  .chapter-encourage,
-  .daily-encourage{
-    flex-basis:48px !important;
-    height:48px !important;
-    min-height:48px !important;
-    max-height:48px !important;
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  .home-status-panel.is-pending,
+  .home-status-panel.is-pending:after{
+    animation:none!important;
   }
 }
