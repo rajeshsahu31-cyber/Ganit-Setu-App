@@ -235,111 +235,129 @@
        Leaderboard / Top 10 यहाँ नहीं है
        ========================================== -->
 
+  <!-- ==========================================
+       TODAY'S TEST STATUS
+       Compact 3-column dashboard
+       ========================================== -->
+
   <section
     class="home-test-status"
     id="homeTestStatus"
-    aria-label="आज की टेस्ट स्थिति"
+    aria-label="आज के टेस्ट"
   >
 
     <div class="home-test-status-head">
-
       <div>
-
-        <span>
-          📋 आज की स्थिति
-        </span>
-
-        <h2>
-          आज के टेस्ट
-        </h2>
-
+        <span>📋 आज की स्थिति</span>
+        <h2>आज के टेस्ट</h2>
       </div>
-
+      <div class="home-test-status-motto">🎯 पढ़ो • अभ्यास करो • आगे बढ़ो</div>
     </div>
 
+    <div class="home-test-status-board">
 
-    <div class="home-test-status-grid">
-
-
-      <div
-        class="home-status-card"
-        id="courseStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📘
+      <!-- COURSE -->
+      <article class="home-status-panel course-panel" id="courseStatusCard">
+        <div class="home-status-panel-head">
+          <div class="home-status-title-icon">📘</div>
+          <div class="home-status-title-wrap">
+            <h3>Course Test</h3>
+            <span class="home-status-badge" id="courseStatusBadge">जाँच...</span>
+          </div>
+          <div class="home-status-check" id="courseStatusMark">✓</div>
         </div>
 
-        <div class="home-status-content">
-
-          <b>
-            Course Test
-          </b>
-
-          <small id="courseStatusText">
-            जाँच हो रही है...
-          </small>
-
+        <div class="home-status-main" id="courseStatusText">
+          <div class="home-status-big">जाँच हो रही है...</div>
         </div>
 
-      </div>
+        <div class="home-status-mini">
+          <span>सिलेबस प्रगति</span>
+          <b id="courseProgressText">—</b>
+        </div>
+      </article>
 
-
-
-      <div
-        class="home-status-card"
-        id="chapterStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📖
+      <!-- CHAPTER -->
+      <article class="home-status-panel chapter-panel" id="chapterStatusCard">
+        <div class="home-status-panel-head">
+          <div class="home-status-title-icon">📖</div>
+          <div class="home-status-title-wrap">
+            <h3>Chapter Test</h3>
+            <span class="home-status-badge" id="chapterStatusBadge">जाँच...</span>
+          </div>
+          <div class="home-status-check" id="chapterStatusMark">!</div>
         </div>
 
-        <div class="home-status-content">
+        <div class="chapter-dots" id="chapterDots" aria-label="अध्याय टेस्ट प्रगति"></div>
 
-          <b>
-            Chapter Test
-          </b>
-
-          <small id="chapterStatusText">
-            जाँच हो रही है...
-          </small>
-
+        <div class="chapter-legend">
+          <span><i class="dot done"></i> किया <b id="chapterDoneCount">0</b></span>
+          <span><i class="dot pending"></i> बाकी <b id="chapterPendingCount">0</b></span>
         </div>
 
-      </div>
+        <div class="chapter-status-note" id="chapterStatusText">जाँच हो रही है...</div>
+      </article>
 
-
-
-      <div
-        class="home-status-card"
-        id="dailyStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📝
+      <!-- DAILY -->
+      <article class="home-status-panel daily-panel" id="dailyStatusCard">
+        <div class="home-status-panel-head">
+          <div class="home-status-title-icon">📝</div>
+          <div class="home-status-title-wrap">
+            <h3>Daily Test</h3>
+            <span class="home-status-badge" id="dailyStatusBadge">जाँच...</span>
+          </div>
+          <div class="home-status-check" id="dailyStatusMark">×</div>
         </div>
 
-        <div class="home-status-content">
-
-          <b>
-            Daily Test
-          </b>
-
-          <small id="dailyStatusText">
-            जाँच हो रही है...
-          </small>
-
+        <div class="daily-status-body" id="dailyStatusText">
+          <strong>जाँच हो रही है...</strong>
         </div>
 
-      </div>
-
+        <div class="daily-status-foot">
+          <span>रोज़ 1 प्रश्न</span>
+          <b id="dailyActionText">आज दें →</b>
+        </div>
+      </article>
 
     </div>
-
   </section>
 
 
+  <!-- ==========================================
+       TEST SUMMARY
+       ========================================== -->
+
+  <section class="home-test-summary" id="homeTestSummary" aria-label="आपके टेस्ट का सारांश">
+    <div class="home-summary-head">
+      <div class="home-summary-title">
+        <span class="home-summary-icon">📊</span>
+        <div>
+          <h2>आपके टेस्ट का सारांश</h2>
+          <p>अब तक की कुल प्रगति</p>
+        </div>
+      </div>
+      <span class="home-summary-pill">अब तक</span>
+    </div>
+
+    <div class="home-summary-grid">
+      <div class="home-summary-card summary-tests">
+        <span class="summary-icon">🎯</span>
+        <div><small>कुल टेस्ट</small><strong id="summaryTotalTests">—</strong></div>
+      </div>
+      <div class="home-summary-card summary-correct">
+        <span class="summary-icon">✓</span>
+        <div><small>सही उत्तर</small><strong id="summaryCorrect">—</strong></div>
+      </div>
+      <div class="home-summary-card summary-wrong">
+        <span class="summary-icon">×</span>
+        <div><small>गलत उत्तर</small><strong id="summaryWrong">—</strong></div>
+      </div>
+      <div class="home-summary-card summary-average">
+        <span class="summary-icon">▥</span>
+        <div><small>औसत प्रतिशत</small><strong id="summaryAverage">—</strong></div>
+      </div>
+    </div>
+  </section>
 
   <!-- ==========================================
        MAIN ACTIONS
