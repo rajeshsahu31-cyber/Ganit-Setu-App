@@ -1324,3 +1324,92 @@
     font-size:5.7px !important;
   }
 }
+
+
+/* =========================================================
+   FINAL LAST TOUCH — DAILY CARD ONLY
+   No card height/width/colour changes.
+   ========================================================= */
+@media (max-width:700px){
+
+  /* The action text is optional and was causing the Daily
+     bottom line to collide. Keep the main message clean. */
+  .daily-encourage > #dailyActionText{
+    display:none !important;
+  }
+
+  .daily-encourage{
+    display:grid !important;
+    grid-template-columns:20px minmax(0,1fr) !important;
+    align-items:center !important;
+    gap:4px !important;
+    padding:4px 6px !important;
+    overflow:hidden !important;
+  }
+
+  .daily-encourage::before{
+    content:"🎯" !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:20px !important;
+    height:20px !important;
+    font-size:16px !important;
+    line-height:1 !important;
+  }
+
+  .daily-encourage > div:first-child{
+    min-width:0 !important;
+    width:100% !important;
+    max-width:none !important;
+    overflow:hidden !important;
+    text-align:left !important;
+  }
+
+  .daily-encourage > div:first-child > b{
+    display:block !important;
+    width:100% !important;
+    font-size:0 !important;
+    line-height:1 !important;
+    white-space:normal !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न,\A बड़ी सफलता!" !important;
+    display:block !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    white-space:pre !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.6px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (max-width:370px){
+  .daily-encourage{
+    grid-template-columns:18px minmax(0,1fr) !important;
+    gap:3px !important;
+    padding:4px 5px !important;
+  }
+
+  .daily-encourage::before{
+    width:18px !important;
+    height:18px !important;
+    font-size:15px !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    font-size:5.2px !important;
+  }
+}
