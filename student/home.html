@@ -240,23 +240,14 @@
        Compact 3-column dashboard
        ========================================== -->
 
-  <section
-    class="home-test-status"
-    id="homeTestStatus"
-    aria-label="आज के टेस्ट"
-  >
-
+  <section class="home-test-status" id="homeTestStatus" aria-label="आज के टेस्ट">
     <div class="home-test-status-head">
-      <div>
-        <span>📋 आज की स्थिति</span>
-        <h2>आज के टेस्ट</h2>
-      </div>
+      <div class="home-test-status-title">📋 आज के टेस्ट</div>
       <div class="home-test-status-motto">🎯 पढ़ो • अभ्यास करो • आगे बढ़ो</div>
     </div>
 
     <div class="home-test-status-board">
-
-      <!-- COURSE -->
+      <!-- COURSE TEST -->
       <article class="home-status-panel course-panel" id="courseStatusCard">
         <div class="home-status-panel-head">
           <div class="home-status-title-icon">📘</div>
@@ -267,17 +258,26 @@
           <div class="home-status-check" id="courseStatusMark">✓</div>
         </div>
 
-        <div class="home-status-main" id="courseStatusText">
-          <div class="home-status-big">जाँच हो रही है...</div>
+        <div class="course-progress-box">
+          <div class="course-progress-ring" id="courseProgressRing">
+            <span id="courseProgressPercent">0%</span>
+          </div>
+          <div class="course-progress-info">
+            <b id="courseChapterRange">अध्याय 1–0</b>
+            <small id="courseChapterCount">(0/0)</small>
+          </div>
         </div>
 
-        <div class="home-status-mini">
-          <span>सिलेबस प्रगति</span>
-          <b id="courseProgressText">—</b>
+        <div class="course-encourage">
+          <span>🏆</span>
+          <div>
+            <b id="courseEncourageTitle">अभी बाकी है</b>
+            <small id="courseEncourageText">आज का Course Test दें</small>
+          </div>
         </div>
       </article>
 
-      <!-- CHAPTER -->
+      <!-- CHAPTER TEST -->
       <article class="home-status-panel chapter-panel" id="chapterStatusCard">
         <div class="home-status-panel-head">
           <div class="home-status-title-icon">📖</div>
@@ -291,14 +291,20 @@
         <div class="chapter-dots" id="chapterDots" aria-label="अध्याय टेस्ट प्रगति"></div>
 
         <div class="chapter-legend">
-          <span><i class="dot done"></i> किया <b id="chapterDoneCount">0</b></span>
-          <span><i class="dot pending"></i> बाकी <b id="chapterPendingCount">0</b></span>
+          <span><i class="dot done"></i> किया (<b id="chapterDoneCount">0</b>)</span>
+          <span><i class="dot pending"></i> बाकी (<b id="chapterPendingCount">0</b>)</span>
         </div>
 
-        <div class="chapter-status-note" id="chapterStatusText">जाँच हो रही है...</div>
+        <div class="chapter-encourage">
+          <span>🎯</span>
+          <div>
+            <b>और अध्याय करें</b>
+            <small>हर अध्याय से 10 प्रश्न</small>
+          </div>
+        </div>
       </article>
 
-      <!-- DAILY -->
+      <!-- DAILY TEST -->
       <article class="home-status-panel daily-panel" id="dailyStatusCard">
         <div class="home-status-panel-head">
           <div class="home-status-title-icon">📝</div>
@@ -310,23 +316,22 @@
         </div>
 
         <div class="daily-status-body" id="dailyStatusText">
+          <div class="daily-main-icon">📅</div>
           <strong>जाँच हो रही है...</strong>
         </div>
 
-        <div class="daily-status-foot">
-          <span>रोज़ 1 प्रश्न</span>
-          <b id="dailyActionText">आज दें →</b>
+        <div class="daily-encourage">
+          <div>
+            <b>रोज़ 1 प्रश्न, बड़ी सफलता!</b>
+            <small>नियमित अभ्यास करते रहें</small>
+          </div>
+          <b id="dailyActionText">आज ही दें →</b>
         </div>
       </article>
-
     </div>
   </section>
 
-
-  <!-- ==========================================
-       TEST SUMMARY
-       ========================================== -->
-
+  <!-- TEST SUMMARY -->
   <section class="home-test-summary" id="homeTestSummary" aria-label="आपके टेस्ट का सारांश">
     <div class="home-summary-head">
       <div class="home-summary-title">
@@ -342,19 +347,19 @@
     <div class="home-summary-grid">
       <div class="home-summary-card summary-tests">
         <span class="summary-icon">🎯</span>
-        <div><small>कुल टेस्ट</small><strong id="summaryTotalTests">—</strong></div>
+        <div><small>कुल टेस्ट</small><strong id="summaryTotalTests">—</strong><em>(सभी प्रकार)</em></div>
       </div>
       <div class="home-summary-card summary-correct">
         <span class="summary-icon">✓</span>
-        <div><small>सही उत्तर</small><strong id="summaryCorrect">—</strong></div>
+        <div><small>सही उत्तर</small><strong id="summaryCorrect">—</strong><em>(कुल सही)</em></div>
       </div>
       <div class="home-summary-card summary-wrong">
         <span class="summary-icon">×</span>
-        <div><small>गलत उत्तर</small><strong id="summaryWrong">—</strong></div>
+        <div><small>गलत उत्तर</small><strong id="summaryWrong">—</strong><em>(कुल गलत)</em></div>
       </div>
       <div class="home-summary-card summary-average">
         <span class="summary-icon">▥</span>
-        <div><small>औसत प्रतिशत</small><strong id="summaryAverage">—</strong></div>
+        <div><small>औसत प्रतिशत</small><strong id="summaryAverage">—</strong><em>(सभी टेस्ट का औसत)</em></div>
       </div>
     </div>
   </section>
