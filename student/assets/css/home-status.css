@@ -1184,3 +1184,143 @@
     font-size:5.7px !important;
   }
 }
+
+
+/* =========================================================
+   FINAL TOUCH — MOBILE ALIGNMENT
+   Only the requested visual corrections.
+   Existing card heights/sizes remain unchanged.
+   ========================================================= */
+@media (max-width:700px){
+
+  /* Header: keep the motto completely visible and balanced */
+  .home-test-status-head{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto !important;
+    align-items:center !important;
+    gap:6px !important;
+  }
+
+  .home-test-status-title{
+    min-width:0 !important;
+    white-space:nowrap !important;
+  }
+
+  .home-test-status-motto{
+    display:block !important;
+    width:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    flex:none !important;
+    padding:5px 7px !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+
+  /* Daily bottom area: icon | message | action */
+  .daily-encourage{
+    display:grid !important;
+    grid-template-columns:20px minmax(0,1fr) auto !important;
+    align-items:center !important;
+    column-gap:4px !important;
+    overflow:hidden !important;
+  }
+
+  .daily-encourage::before{
+    content:"🎯" !important;
+    width:20px !important;
+    height:20px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:17px !important;
+    line-height:1 !important;
+  }
+
+  .daily-encourage > div:first-child{
+    min-width:0 !important;
+    max-width:none !important;
+    width:auto !important;
+    overflow:hidden !important;
+    text-align:left !important;
+  }
+
+  /* Exact requested wording: रोज़ 5 प्रश्न, बड़ी सफलता! */
+  .daily-encourage > div:first-child > b{
+    display:block !important;
+    width:100% !important;
+    font-size:0 !important;
+    line-height:1 !important;
+    white-space:normal !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न,\A बड़ी सफलता!" !important;
+    display:block !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    white-space:pre !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.7px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+  }
+
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    min-width:0 !important;
+    max-width:none !important;
+    width:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    font-size:6.2px !important;
+    line-height:1 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (max-width:370px){
+
+  .home-test-status-head{
+    grid-template-columns:minmax(0,1fr) auto !important;
+    gap:4px !important;
+  }
+
+  .home-test-status-motto{
+    font-size:6px !important;
+    padding:4px 5px !important;
+  }
+
+  .daily-encourage{
+    grid-template-columns:18px minmax(0,1fr) auto !important;
+    column-gap:3px !important;
+  }
+
+  .daily-encourage::before{
+    width:18px !important;
+    height:18px !important;
+    font-size:15px !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    font-size:5.2px !important;
+  }
+
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    font-size:5.7px !important;
+  }
+}
