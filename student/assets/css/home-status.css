@@ -887,3 +887,108 @@
     align-items:start;
   }
 }
+/* =========================================================
+   FINAL MOBILE FIX — 3 TEST CARDS
+   समान height + नीचे के boxes एक ही line में
+   ========================================================= */
+@media (max-width:700px){
+
+  .home-test-status-board,
+  .home-test-status-grid{
+    align-items:stretch !important;
+  }
+
+  .home-status-panel,
+  .home-status-card{
+    height:450px !important;
+    min-height:450px !important;
+    max-height:450px !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  .home-status-panel-head{
+    flex:0 0 auto !important;
+  }
+
+  .course-progress-box,
+  .daily-status-body{
+    flex:0 0 96px !important;
+    height:96px !important;
+    min-height:96px !important;
+    max-height:96px !important;
+  }
+
+  .course-encourage,
+  .chapter-encourage,
+  .daily-encourage{
+    flex:0 0 52px !important;
+    height:52px !important;
+    min-height:52px !important;
+    max-height:52px !important;
+    margin-top:auto !important;
+    margin-bottom:0 !important;
+    padding:5px 6px !important;
+    display:flex !important;
+    align-items:center !important;
+    box-sizing:border-box !important;
+  }
+
+  .course-encourage b,
+  .chapter-encourage b,
+  .daily-encourage b{
+    font-size:7.5px !important;
+    line-height:1.1 !important;
+  }
+
+  .course-encourage small,
+  .chapter-encourage small,
+  .daily-encourage small{
+    font-size:6px !important;
+    line-height:1.1 !important;
+  }
+
+  .daily-encourage{
+    justify-content:space-between !important;
+    gap:4px !important;
+  }
+
+  .daily-encourage > div:first-child{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    max-width:68% !important;
+  }
+
+  .daily-encourage > #dailyActionText{
+    flex:0 0 auto !important;
+    max-width:30% !important;
+    white-space:nowrap !important;
+    text-align:right !important;
+  }
+}
+
+@media (max-width:370px){
+  .home-status-panel,
+  .home-status-card{
+    height:430px !important;
+    min-height:430px !important;
+    max-height:430px !important;
+  }
+
+  .course-progress-box,
+  .daily-status-body{
+    flex-basis:92px !important;
+    height:92px !important;
+    min-height:92px !important;
+    max-height:92px !important;
+  }
+
+  .course-encourage,
+  .chapter-encourage,
+  .daily-encourage{
+    flex-basis:48px !important;
+    height:48px !important;
+    min-height:48px !important;
+    max-height:48px !important;
+  }
+}
