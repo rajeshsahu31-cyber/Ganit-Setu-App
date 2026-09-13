@@ -1,50 +1,78 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>लीडरबोर्ड | गणित सेतु</title>
-<link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/bottom-nav.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>गणित सेतु | Overall Ranking</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/leaderboard.css">
 </head>
 <body>
-<header class="simple-header">
-  <a href="home.html">← होम</a>
-  <div class="mini-brand">🏆 लीडरबोर्ड</div>
+<header class="gs-header leaderboard-header">
+  <div class="gs-brand">
+    <div class="gs-logo">
+      <img src="assets/images/ganit-setu-logo.webp" alt="गणित सेतु Logo">
+    </div>
+    <div>
+      <strong>गणित सेतु</strong>
+      <small>सीखें • अभ्यास करें • आगे बढ़ें</small>
+    </div>
+  </div>
+  <div class="leaderboard-title-wrap">
+    <h1>🏆 Overall Ranking</h1>
+    <p id="rankingDate">Frozen Ranking</p>
+  </div>
+  <a class="back-home-btn" href="home.html">⌂ Home</a>
 </header>
 
-<main class="page">
-<section class="panel">
-  <h1>लीडरबोर्ड</h1>
-  <p class="muted">केवल आपकी कक्षा और चुने गए उसी टेस्ट की Ranking दिखाई जाएगी।</p>
+<main class="leaderboard-container">
+  <section class="ranking-control-card">
+    <div class="ranking-heading">
+      <span class="ranking-kicker">🏆 GANIT SETU</span>
+      <h2>Overall Ranking</h2>
+      <p>आपकी कक्षा के विद्यार्थियों की Frozen Overall Ranking</p>
+    </div>
+    <div class="ranking-info">
+      <div class="class-badge">📚 <b id="classText">कक्षा —</b></div>
+      <div class="freeze-badge">🔒 Ranking Frozen</div>
+    </div>
+  </section>
 
-  <div style="margin:16px 0;">
-    <label for="leaderboardTestSelect"><b>टेस्ट चुनें:</b></label><br>
-    <select id="leaderboardTestSelect" style="width:100%;margin-top:8px;padding:12px;">
-      <option value="">टेस्ट लोड हो रहे हैं...</option>
-    </select>
-  </div>
+  <section class="podium-section" aria-label="Top 3">
+    <div class="podium" id="podium"></div>
+  </section>
 
-  <div class="podium" id="podium">
-    <div style="width:100%;text-align:center;padding:28px 12px;">लोड हो रहा है...</div>
-  </div>
+  <section class="top10-section">
+    <div class="top10-heading">
+      <div>
+        <span>TOP 10</span>
+        <h2>🏆 आज के Top 10 विद्यार्थी</h2>
+      </div>
+      <div class="overall-label">Overall %</div>
+    </div>
 
-  <h2 class="section-title">टॉप 10</h2>
-  <div class="list-table" id="topTen"></div>
-</section>
+    <div id="leaderboardMessage" class="leaderboard-message" role="status">
+      Ranking जाँच हो रही है...
+    </div>
+
+    <div id="leaderboardList" class="leaderboard-list" aria-live="polite"></div>
+  </section>
+
+  <section class="ranking-formula-card compact">
+    <b>🏆 Ranking:</b>
+    Overall % अधिक → ऊपर Rank • समान % → अधिक सही उत्तर → अधिक प्रश्न → कम समय
+  </section>
 </main>
+
+<nav class="bottom-nav" aria-label="मुख्य नेविगेशन">
+  <a href="home.html"><span class="nav-icon">⌂</span><span class="nav-label">होम</span></a>
+  <a href="leaderboard.html" class="active"><span class="nav-icon">🏆</span><span class="nav-label">रैंकिंग</span></a>
+  <a href="pragati.html"><span class="nav-icon">📈</span><span class="nav-label">प्रगति</span></a>
+  <a href="profile.html"><span class="nav-icon">👤</span><span class="nav-label">प्रोफाइल</span></a>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/leaderboard.js"></script>
-
-
-<nav class="bottom-nav" aria-label="मुख्य नेविगेशन">
-  <a href="home.html" data-page="home"><span class="nav-icon">⌂</span><span class="nav-label">होम</span></a>
-  <a href="leaderboard.html" data-page="leaderboard" class="active"><span class="nav-icon">🏆</span><span class="nav-label">रैंकिंग</span></a>
-  <a href="pragati.html" data-page="pragati"><span class="nav-icon">📈</span><span class="nav-label">प्रगति</span></a>
-  <a href="profile.html" data-page="profile"><span class="nav-icon">👤</span><span class="nav-label">प्रोफाइल</span></a>
-</nav>
-
 </body>
 </html>
