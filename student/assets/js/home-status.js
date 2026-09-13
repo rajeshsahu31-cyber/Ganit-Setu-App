@@ -102,27 +102,61 @@
     const chapterDone = chapters.size > 0;
     const dailyDone = dailyRows.length > 0;
 
-    setState('courseStatusCard', 'courseStatusBadge', 'courseStatusMark', courseDone, courseDone ? 'पूरा किया' : 'बाकी है', courseDone ? '✓' : '!');
-    setState('chapterStatusCard', 'chapterStatusBadge', 'chapterStatusMark', chapterDone, chapterDone ? 'आंशिक रूप से किया' : 'अभी नहीं किया', chapterDone ? '✓' : '!');
-    setState('dailyStatusCard', 'dailyStatusBadge', 'dailyStatusMark', dailyDone, dailyDone ? 'पूरा किया' : 'आज नहीं किया', dailyDone ? '✓' : '×');
+    setState('courseStatusCard', 'courseStatusBadge', 'courseStatusMark',
+      courseDone, courseDone ? 'पूरा किया' : 'अभी बाकी है', courseDone ? '✓' : '!');
+    setState('chapterStatusCard', 'chapterStatusBadge', 'chapterStatusMark',
+      chapterDone, chapterDone ? 'आंशिक रूप से किया' : 'अभी नहीं किया', chapterDone ? '✓' : '!');
+    setState('dailyStatusCard', 'dailyStatusBadge', 'dailyStatusMark',
+      dailyDone, dailyDone ? 'पूरा किया' : 'आज नहीं किया', dailyDone ? '✓' : '×');
 
-    const courseText = getEl('courseStatusText');
-    if (courseText) {
-      courseText.innerHTML = courseDone
-        ? '<div class="home-status-big">✓ <b>पूरा किया</b></div>'
-        : '<div class="home-status-big">अभी बाकी है</div>';
+    // COURSE: show the actual chapter range when the RPC supplies it.
+    const courseRow = courseRows[courseRows.length - 1];
+    const from = Number(courseRow?.chapter_from);
+    const to = Number(courseRow?.chapter_to);
+    const total = maxChapters();
+    const coursePercent = courseDone
+      ? (Number.isFinite(from) && Number.isFinite(to) && to >= from
+          ? Math.min(100, Math.round(((to - from + 1) / total) * 100))
+          : 100)
+      : 0;
+
+    const ring = getEl('courseProgressRing');
+    if (ring) ring.style.background =
+      `conic-gradient(#12b866 ${coursePercent * 3.6}deg,#d6eee4 ${coursePercent * 3.6}deg)`;
+
+    const pct = getEl('courseProgressPercent');
+    if (pct) pct.textContent = `${coursePercent}%`;
+
+    const range = getEl('courseChapterRange');
+    const count = getEl('courseChapterCount');
+    if (courseDone && range) {
+      if (Number.isFinite(from) && Number.isFinite(to) && to >= from) {
+        range.textContent = `अध्याय ${from}–${to}`;
+        if (count) count.textContent = `(${to - from + 1}/${total})`;
+      } else {
+        range.textContent = 'Course Test';
+        if (count) count.textContent = 'आज पूरा';
+      }
+    } else {
+      if (range) range.textContent = `अध्याय 1–${total}`;
+      if (count) count.textContent = `0/${total}`;
     }
 
-    const courseProgress = getEl('courseProgressText');
-    if (courseProgress) courseProgress.textContent = courseDone ? 'आज पूर्ण' : 'आज बाकी';
+    const courseTitle = getEl('courseEncourageTitle');
+    const courseSub = getEl('courseEncourageText');
+    if (courseTitle) courseTitle.textContent = courseDone ? 'बहुत अच्छा !' : 'अभी बाकी है';
+    if (courseSub) courseSub.textContent = courseDone ? 'अब अगले स्तर की ओर बढ़ें' : 'आज का Course Test दें';
 
+    // CHAPTER: always create exactly 12 dots for class 9 and 14 for class 10.
     renderChapterDots(chapters);
-    const chapterNote = getEl('chapterStatusText');
-    if (chapterNote) chapterNote.textContent = chapterDone ? `${chapters.size}/${maxChapters()} अध्याय किए` : `0/${maxChapters()} अध्याय किए`;
-
+    // DAILY
     const dailyText = getEl('dailyStatusText');
     const dailyAction = getEl('dailyActionText');
-    if (dailyText) dailyText.innerHTML = dailyDone ? '<strong>✓ आज का टेस्ट पूरा</strong>' : '<strong>आज का टेस्ट अभी बाकी है</strong>';
+    if (dailyText) {
+      dailyText.innerHTML = dailyDone
+        ? '<div class="daily-main-icon">📅</div><strong>आज का टेस्ट पूरा किया</strong>'
+        : '<div class="daily-main-icon">📅</div><strong>आज का टेस्ट अभी बाकी है</strong>';
+    }
     if (dailyAction) dailyAction.textContent = dailyDone ? 'बहुत अच्छा!' : 'आज ही दें →';
   }
 
@@ -160,7 +194,7 @@
     } catch (error) {
       console.error('Home test status load error:', error);
       const msg = 'जानकारी नहीं मिली';
-      ['courseStatusText', 'chapterStatusText', 'dailyStatusText'].forEach(id => {
+      ['courseStatusBadge', 'dailyStatusText'].forEach(id => {
         const el = getEl(id);
         if (el) el.textContent = msg;
       });
