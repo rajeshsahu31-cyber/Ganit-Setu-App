@@ -2,11 +2,12 @@
    GANIT SETU — HOME STATUS / TEST DASHBOARD
    FINAL CLEAN REPLACEMENT
    ---------------------------------------------------------
-   Based on the existing cleaned Home Status CSS.
-   Duplicate mobile/final-touch blocks removed.
-   Existing class names, colours and functionality preserved.
-   Mobile: 3 equal cards, no fixed 450px card height.
-   Final daily-card text alignment included.
+   - Existing colours preserved
+   - Desktop layout preserved
+   - Mobile: 3 equal cards
+   - No fixed 450px / 460px card height
+   - Bottom three encouragement boxes aligned
+   - Chapter: 12 = 6+6, 14 = 7+7
    ========================================================= */
 
 .home-test-status,
@@ -21,9 +22,7 @@
   margin:16px 0 18px;
 }
 
-/* =========================
-   SECTION HEADING
-   ========================= */
+/* ---------- SECTION HEADING ---------- */
 .home-test-status-head{
   display:flex;
   align-items:center;
@@ -65,9 +64,7 @@
   text-overflow:ellipsis;
 }
 
-/* =========================
-   THREE TEST CARDS
-   ========================= */
+/* ---------- THREE CARDS ---------- */
 .home-test-status-board,
 .home-test-status-grid{
   display:grid;
@@ -99,28 +96,21 @@
   pointer-events:none;
 }
 
-/* Existing colours — DO NOT CHANGE */
-.course-panel,
-#courseStatusCard{
+/* Existing colours */
+.course-panel,#courseStatusCard{
   background:linear-gradient(145deg,#dfffee 0%,#f5fffb 56%,#c8f7e1 100%);
   border:2px solid #8be2c4;
 }
-
-.chapter-panel,
-#chapterStatusCard{
+.chapter-panel,#chapterStatusCard{
   background:linear-gradient(145deg,#fff5d8 0%,#fffdf5 56%,#ffe5a8 100%);
   border:2px solid #f2cb76;
 }
-
-.daily-panel,
-#dailyStatusCard{
+.daily-panel,#dailyStatusCard{
   background:linear-gradient(145deg,#ffe8ef 0%,#fffafd 56%,#ffd4df 100%);
   border:2px solid #f2aabd;
 }
 
-/* =========================
-   CARD HEADER
-   ========================= */
+/* ---------- CARD HEADER ---------- */
 .home-status-panel-head{
   display:grid;
   grid-template-columns:38px minmax(0,1fr) 28px;
@@ -188,19 +178,13 @@
 }
 
 .course-panel .home-status-badge,
-#courseStatusCard .home-status-badge{
-  background:#10b968;
-}
+#courseStatusCard .home-status-badge{background:#10b968}
 
 .chapter-panel .home-status-badge,
-#chapterStatusCard .home-status-badge{
-  background:#f39a12;
-}
+#chapterStatusCard .home-status-badge{background:#f39a12}
 
 .daily-panel .home-status-badge,
-#dailyStatusCard .home-status-badge{
-  background:#ef2850;
-}
+#dailyStatusCard .home-status-badge{background:#ef2850}
 
 .home-status-check{
   width:28px;
@@ -218,23 +202,13 @@
 }
 
 .course-panel .home-status-check,
-#courseStatusCard .home-status-check{
-  background:#12b866;
-}
-
+#courseStatusCard .home-status-check{background:#12b866}
 .chapter-panel .home-status-check,
-#chapterStatusCard .home-status-check{
-  background:#f29a16;
-}
-
+#chapterStatusCard .home-status-check{background:#f29a16}
 .daily-panel .home-status-check,
-#dailyStatusCard .home-status-check{
-  background:#ef2850;
-}
+#dailyStatusCard .home-status-check{background:#ef2850}
 
-/* =========================
-   COURSE
-   ========================= */
+/* ---------- COURSE ---------- */
 .course-progress-box{
   min-width:0;
   min-height:150px;
@@ -305,9 +279,7 @@
   line-height:1.1;
 }
 
-/* =========================
-   LOWER ENCOURAGEMENT BOXES
-   ========================= */
+/* ---------- ENCOURAGEMENT BOXES ---------- */
 .course-encourage,
 .chapter-encourage,
 .daily-encourage{
@@ -411,9 +383,7 @@
   white-space:nowrap;
 }
 
-/* =========================
-   CHAPTER DOTS
-   ========================= */
+/* ---------- CHAPTER DOTS ---------- */
 .chapter-dots{
   display:grid;
   grid-template-columns:repeat(6,minmax(0,1fr));
@@ -437,22 +407,25 @@
   border-radius:50%;
   display:grid;
   place-items:center;
-  border:2px solid transparent;
-  color:#fff;
   font-size:12px;
   line-height:1;
   font-weight:900;
+  border:2px solid transparent;
   box-shadow:0 2px 6px rgba(20,40,60,.12);
 }
 
 .chapter-dot.done{
   background:#16b86b;
+  color:#fff;
   border-color:#0f9f59;
+  box-shadow:0 3px 10px rgba(18,184,107,.28);
 }
 
 .chapter-dot.pending{
   background:#ff3855;
+  color:#fff;
   border-color:#e62c47;
+  box-shadow:0 3px 10px rgba(239,49,82,.22);
 }
 
 .chapter-legend{
@@ -460,14 +433,17 @@
   align-items:center;
   justify-content:center;
   gap:10px;
-  margin:5px 0 4px;
-  color:#5b6c7f;
-  font-size:10px;
+  flex-wrap:wrap;
+  width:100%;
+  margin:8px 0 7px;
+  color:#53667c;
+  font-size:11px;
   line-height:1;
+  font-weight:700;
 }
 
 .chapter-legend span{
-  display:flex;
+  display:inline-flex;
   align-items:center;
   gap:4px;
   white-space:nowrap;
@@ -481,11 +457,10 @@
 }
 
 .chapter-legend .dot.done{background:#16b86b}
-.chapter-legend .dot.pending{background:#ff3855}
+.chapter-legend .dot.pending{background:#ff3f59}
+.chapter-legend b{font-weight:900}
 
-/* =========================
-   DAILY BODY
-   ========================= */
+/* ---------- DAILY BODY ---------- */
 .daily-status-body{
   width:100%;
   min-width:0;
@@ -523,9 +498,7 @@
   overflow-wrap:anywhere;
 }
 
-/* =========================
-   SUMMARY
-   ========================= */
+/* ---------- SUMMARY ---------- */
 .home-test-summary{
   margin:15px 0 19px;
   border-radius:20px;
@@ -557,10 +530,10 @@
   width:36px;
   height:36px;
   flex:0 0 36px;
-  border-radius:11px;
-  background:rgba(255,255,255,.18);
   display:grid;
   place-items:center;
+  border-radius:11px;
+  background:rgba(255,255,255,.18);
   font-size:21px;
 }
 
@@ -580,10 +553,10 @@
 
 .home-summary-pill{
   flex:0 0 auto;
+  padding:7px 10px;
+  border-radius:18px;
   background:rgba(255,255,255,.88);
   color:#1943a5;
-  border-radius:18px;
-  padding:7px 10px;
   font-size:9px;
   line-height:1;
   font-weight:900;
@@ -598,13 +571,13 @@
 
 .home-summary-card{
   min-width:0;
-  border-radius:13px;
-  padding:9px 6px;
-  background:rgba(255,255,255,.95);
   display:flex;
   align-items:center;
   justify-content:center;
   gap:7px;
+  padding:9px 6px;
+  border-radius:13px;
+  background:rgba(255,255,255,.95);
   box-shadow:inset 0 1px 0 #fff;
 }
 
@@ -612,9 +585,9 @@
   width:32px;
   height:32px;
   flex:0 0 32px;
-  border-radius:50%;
   display:grid;
   place-items:center;
+  border-radius:50%;
   font-size:19px;
   font-weight:900;
 }
@@ -657,31 +630,18 @@
 @media (max-width:700px){
 
   .home-test-status-head{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    align-items:center;
-    gap:6px;
+    gap:7px;
     margin-bottom:8px;
   }
 
   .home-test-status-title{
     font-size:22px;
-    min-width:0;
-    white-space:nowrap;
   }
 
-  /* Motto stays visible on mobile */
   .home-test-status-motto{
-    display:block;
-    width:auto;
-    max-width:none;
-    min-width:0;
-    padding:5px 7px;
-    font-size:7px;
-    line-height:1.05;
-    white-space:nowrap;
-    overflow:visible;
-    text-overflow:clip;
+    max-width:52%;
+    padding:7px 9px;
+    font-size:8px;
   }
 
   .home-test-status-board,
@@ -690,20 +650,19 @@
     align-items:stretch;
   }
 
-  /* No fixed card height: all three cards are equal because
-     the grid stretches them to the same row height. */
+  /*
+     No fixed card height.
+     Grid itself equalises the row height, while flex keeps
+     each bottom encouragement box at the same baseline.
+  */
   .home-status-panel,
   .home-status-card{
     height:auto !important;
     min-height:0 !important;
-    max-height:none !important;
+    display:flex !important;
+    flex-direction:column !important;
     padding:6px;
     border-radius:17px;
-  }
-
-  .home-status-panel{
-    display:flex;
-    flex-direction:column;
   }
 
   .home-status-panel-head{
@@ -731,19 +690,14 @@
 
   .home-status-badge{
     min-height:15px;
-    margin:3px auto 0;
+    margin:2px auto 0;
     padding:3px 4px;
-    font-size:clamp(6px,1.6vw,7.3px);
-    line-height:1.02;
+    font-size:clamp(6px,1.65vw,7.5px);
+    line-height:1;
     border-radius:12px;
   }
 
-  /* Chapter status badge was sitting slightly high on mobile */
-  .chapter-panel .home-status-badge,
-  #chapterStatusCard .home-status-badge{
-    margin-top:5px;
-  }
-
+  /* Tick / cross lower than heading */
   .home-status-check{
     width:21px;
     height:21px;
@@ -759,6 +713,7 @@
     max-height:92px;
     padding:6px;
     border-radius:12px;
+    flex:0 0 auto;
   }
 
   .course-progress-box{
@@ -768,7 +723,7 @@
   .course-progress-ring{
     width:52px;
     height:52px;
-    flex-basis:52px;
+    flex:0 0 52px;
   }
 
   .course-progress-ring:after{
@@ -794,23 +749,24 @@
     line-height:1.02;
   }
 
-  /* All three bottom boxes are exactly the same height */
+  /* All three bottom boxes: same size + same baseline */
   .course-encourage,
   .chapter-encourage,
   .daily-encourage{
     height:48px;
     min-height:48px;
     max-height:48px;
-    margin-top:5px;
+    margin-top:auto !important;
+    margin-bottom:0 !important;
     padding:4px;
     border-radius:11px;
-    align-items:center;
     flex:0 0 48px;
+    align-items:center;
   }
 
   .course-encourage,
   .chapter-encourage{
-    gap:4px;
+    gap:3px;
   }
 
   .course-encourage>span,
@@ -818,15 +774,14 @@
     width:18px;
     flex:0 0 18px;
     font-size:18px;
+    text-align:center;
   }
 
   .course-encourage b,
   .chapter-encourage b,
   .daily-encourage b{
-    min-height:16px;
-    display:flex;
-    align-items:center;
-    font-size:7.5px;
+    min-height:0;
+    font-size:7px;
     line-height:1.05;
   }
 
@@ -834,15 +789,38 @@
   .chapter-encourage small,
   .daily-encourage small{
     margin-top:1px;
-    font-size:6px;
-    line-height:1.05;
+    font-size:5.8px;
+    line-height:1.02;
   }
 
+  /* Daily: text + action stay aligned */
+  .daily-encourage{
+    gap:3px;
+  }
+
+  .daily-encourage>div:first-child{
+    flex:1 1 0;
+    min-width:0;
+    max-width:62%;
+  }
+
+  .daily-encourage>div:last-child,
+  .daily-encourage>#dailyActionText{
+    flex:0 0 auto;
+    max-width:38%;
+    font-size:6.2px;
+    line-height:1;
+    text-align:right;
+    white-space:nowrap;
+  }
+
+  /* Chapter: 12 = 6+6, 14 = 7+7 */
   .chapter-dots{
     grid-template-columns:repeat(6,minmax(0,1fr));
     gap:3px;
-    padding:6px 3px;
-    border-radius:12px;
+    padding:5px 3px;
+    border-radius:11px;
+    flex:0 0 auto;
   }
 
   .chapter-dots:has(.chapter-dot:nth-child(13)){
@@ -850,14 +828,15 @@
   }
 
   .chapter-dot{
-    font-size:6.8px;
+    font-size:6.5px;
     border-width:1px;
   }
 
   .chapter-legend{
     gap:4px;
-    margin:4px 0 3px;
-    font-size:6.7px;
+    margin:3px 0 2px;
+    font-size:6.2px;
+    flex:0 0 auto;
   }
 
   .chapter-legend span{
@@ -880,73 +859,6 @@
   .daily-status-body strong{
     font-size:8.5px;
     line-height:1.1;
-  }
-
-  /* Daily lower box:
-     icon | message
-     The right-side "आज ही दें →" is hidden on mobile because
-     it was squeezing the requested message. */
-  .daily-encourage{
-    display:grid !important;
-    grid-template-columns:20px minmax(0,1fr) !important;
-    column-gap:4px !important;
-    overflow:hidden !important;
-  }
-
-  .daily-encourage::before{
-    content:"🎯";
-    width:20px;
-    height:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:17px;
-    line-height:1;
-  }
-
-  .daily-encourage > div:first-child{
-    min-width:0;
-    width:100%;
-    max-width:none;
-    overflow:hidden;
-    text-align:left;
-  }
-
-  .daily-encourage > div:first-child > b{
-    display:block;
-    width:100%;
-    min-width:0;
-    font-size:0 !important;
-    line-height:1 !important;
-    white-space:normal;
-  }
-
-  .daily-encourage > div:first-child > b::after{
-    content:"रोज़ 5 प्रश्न, बड़ी सफलता!";
-    display:block;
-    width:100%;
-    font-size:6.4px;
-    line-height:1.05;
-    font-weight:900;
-    letter-spacing:-.2px;
-    white-space:nowrap;
-    overflow:visible;
-  }
-
-  .daily-encourage > div:first-child > small{
-    display:block;
-    width:100%;
-    margin-top:1px;
-    font-size:5.05px;
-    line-height:1.05;
-    letter-spacing:-.24px;
-    white-space:nowrap;
-    overflow:visible;
-    text-overflow:clip;
-  }
-
-  .daily-encourage > #dailyActionText{
-    display:none !important;
   }
 
   /* Summary compact */
@@ -1019,16 +931,8 @@
    ========================================================= */
 @media (max-width:370px){
 
-  .home-test-status-head{
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:4px;
-  }
-
   .home-test-status-motto{
-    display:block;
-    max-width:100%;
-    padding:4px 5px;
-    font-size:6px;
+    display:none;
   }
 
   .home-status-panel,
@@ -1061,13 +965,8 @@
   }
 
   .home-status-badge{
-    font-size:5.7px;
+    font-size:5.8px;
     padding:3px;
-  }
-
-  .chapter-panel .home-status-badge,
-  #chapterStatusCard .home-status-badge{
-    margin-top:4px;
   }
 
   .course-progress-box,
@@ -1146,34 +1045,388 @@
     font-size:8px;
   }
 
-  .daily-encourage{
-    grid-template-columns:18px minmax(0,1fr) !important;
-    column-gap:3px !important;
-  }
-
-  .daily-encourage::before{
-    width:18px;
-    height:18px;
-    font-size:15px;
-  }
-
-  .daily-encourage > div:first-child > b::after{
-    font-size:6.1px;
-    letter-spacing:-.25px;
-  }
-
-  .daily-encourage > div:first-child > small{
-    font-size:4.7px;
-    letter-spacing:-.28px;
+  .daily-encourage>div:last-child,
+  .daily-encourage>#dailyActionText{
+    font-size:5.8px;
   }
 }
 
-/* =========================
-   REDUCED MOTION
-   ========================= */
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
   .home-status-panel.is-pending,
   .home-status-panel.is-pending:after{
     animation:none!important;
+  }
+}
+
+
+/* =========================================================
+   FINAL REQUESTED CORRECTIONS ONLY
+   ---------------------------------------------------------
+   Card height/size is intentionally NOT changed here.
+   1) Mobile motto visible
+   2) Daily encouragement gets an icon
+   3) Daily "1" becomes "5"
+   4) Daily lower text/action align cleanly
+   ========================================================= */
+@media (max-width:700px){
+
+  /* Keep the top motto visible on mobile */
+  .home-test-status-motto{
+    display:block !important;
+    flex:0 1 auto !important;
+    max-width:52% !important;
+    min-width:0 !important;
+    padding:6px 7px !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  /* Daily lower box: same visual structure as the first two */
+  .daily-encourage{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:4px !important;
+    overflow:hidden !important;
+  }
+
+  /* Icon for Daily encouragement */
+  .daily-encourage::before{
+    content:"🎯";
+    width:18px !important;
+    min-width:18px !important;
+    flex:0 0 18px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:16px !important;
+    line-height:1 !important;
+  }
+
+  .daily-encourage > div:first-child{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    overflow:hidden !important;
+    text-align:left !important;
+  }
+
+  /* Replace only the visible "1" text with "5" */
+  .daily-encourage > div:first-child > b{
+    font-size:0 !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न, बड़ी सफलता!";
+    font-size:7px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    white-space:nowrap !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.8px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+  }
+
+  /* "आज ही दें →" stays on the right without pushing the text */
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:none !important;
+    margin-left:auto !important;
+    padding-left:3px !important;
+    font-size:6.2px !important;
+    line-height:1 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (max-width:370px){
+
+  /* Do NOT hide the motto on very small phones */
+  .home-test-status-motto{
+    display:block !important;
+    max-width:100% !important;
+    padding:5px 5px !important;
+    font-size:6.2px !important;
+    line-height:1.05 !important;
+  }
+
+  .daily-encourage::before{
+    width:17px !important;
+    min-width:17px !important;
+    flex-basis:17px !important;
+    font-size:15px !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    font-size:5.4px !important;
+  }
+
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    font-size:5.7px !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL TOUCH — MOBILE ALIGNMENT
+   Only the requested visual corrections.
+   Existing card heights/sizes remain unchanged.
+   ========================================================= */
+@media (max-width:700px){
+
+  /* Header: keep the motto completely visible and balanced */
+  .home-test-status-head{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto !important;
+    align-items:center !important;
+    gap:6px !important;
+  }
+
+  .home-test-status-title{
+    min-width:0 !important;
+    white-space:nowrap !important;
+  }
+
+  .home-test-status-motto{
+    display:block !important;
+    width:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    flex:none !important;
+    padding:5px 7px !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+
+  /* Daily bottom area: icon | message | action */
+  .daily-encourage{
+    display:grid !important;
+    grid-template-columns:20px minmax(0,1fr) auto !important;
+    align-items:center !important;
+    column-gap:4px !important;
+    overflow:hidden !important;
+  }
+
+  .daily-encourage::before{
+    content:"🎯" !important;
+    width:20px !important;
+    height:20px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:17px !important;
+    line-height:1 !important;
+  }
+
+  .daily-encourage > div:first-child{
+    min-width:0 !important;
+    max-width:none !important;
+    width:auto !important;
+    overflow:hidden !important;
+    text-align:left !important;
+  }
+
+  /* Exact requested wording: रोज़ 5 प्रश्न, बड़ी सफलता! */
+  .daily-encourage > div:first-child > b{
+    display:block !important;
+    width:100% !important;
+    font-size:0 !important;
+    line-height:1 !important;
+    white-space:normal !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न,\A बड़ी सफलता!" !important;
+    display:block !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    white-space:pre !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.7px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+  }
+
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    min-width:0 !important;
+    max-width:none !important;
+    width:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    font-size:6.2px !important;
+    line-height:1 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (max-width:370px){
+
+  .home-test-status-head{
+    grid-template-columns:minmax(0,1fr) auto !important;
+    gap:4px !important;
+  }
+
+  .home-test-status-motto{
+    font-size:6px !important;
+    padding:4px 5px !important;
+  }
+
+  .daily-encourage{
+    grid-template-columns:18px minmax(0,1fr) auto !important;
+    column-gap:3px !important;
+  }
+
+  .daily-encourage::before{
+    width:18px !important;
+    height:18px !important;
+    font-size:15px !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    font-size:5.2px !important;
+  }
+
+  .daily-encourage > #dailyActionText,
+  .daily-encourage > div:last-child{
+    font-size:5.7px !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL LAST TOUCH — DAILY CARD ONLY
+   No card height/width/colour changes.
+   ========================================================= */
+@media (max-width:700px){
+
+  /* The action text is optional and was causing the Daily
+     bottom line to collide. Keep the main message clean. */
+  .daily-encourage > #dailyActionText{
+    display:none !important;
+  }
+
+  .daily-encourage{
+    display:grid !important;
+    grid-template-columns:20px minmax(0,1fr) !important;
+    align-items:center !important;
+    gap:4px !important;
+    padding:4px 6px !important;
+    overflow:hidden !important;
+  }
+
+  .daily-encourage::before{
+    content:"🎯" !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:20px !important;
+    height:20px !important;
+    font-size:16px !important;
+    line-height:1 !important;
+  }
+
+  .daily-encourage > div:first-child{
+    min-width:0 !important;
+    width:100% !important;
+    max-width:none !important;
+    overflow:hidden !important;
+    text-align:left !important;
+  }
+
+  .daily-encourage > div:first-child > b{
+    display:block !important;
+    width:100% !important;
+    font-size:0 !important;
+    line-height:1 !important;
+    white-space:normal !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न,\A बड़ी सफलता!" !important;
+    display:block !important;
+    font-size:7px !important;
+    line-height:1.05 !important;
+    font-weight:900 !important;
+    white-space:pre !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.6px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media (max-width:370px){
+  .daily-encourage{
+    grid-template-columns:18px minmax(0,1fr) !important;
+    gap:3px !important;
+    padding:4px 5px !important;
+  }
+
+  .daily-encourage::before{
+    width:18px !important;
+    height:18px !important;
+    font-size:15px !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
+  }
+
+  .daily-encourage > div:first-child > small{
+    font-size:5.2px !important;
+  }
+}
+@media (max-width:700px){
+  .daily-encourage > div:first-child > small{
+    font-size:5px !important;
+    letter-spacing:-0.15px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+  }
+}
+
+@media (max-width:370px){
+  .daily-encourage > div:first-child > small{
+    font-size:4.8px !important;
+    letter-spacing:-0.18px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
   }
 }
