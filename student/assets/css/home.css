@@ -540,332 +540,192 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 
-/* ===== FINAL TOUCH: TEST CTA + RESULT BUTTON LAYOUT =====
-   IMPORTANT: visual/layout only. Existing HTML links and JS are untouched. */
+/* GS-FINAL-BOTH-SIDE-TEST-INDICATORS
+   Final Test CTA indicators.
+   Only visual enhancement; original link/functionality preserved. */
 
-@media (max-width:700px){
+.main-actions > .test-btn{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate;
+}
 
-  /* The three actions: Test full row; two result cards share the next row. */
-  .main-actions{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-    gap:12px !important;
-    width:100% !important;
+/* Keep the original pencil icon above the indicators */
+.main-actions > .test-btn > .test-main-icon{
+  position:relative;
+  z-index:5;
+}
+
+/* Both dedicated indicator hands stay INSIDE the blue Test button */
+.main-actions > .test-btn > .test-side-indicator{
+  position:absolute !important;
+  top:50% !important;
+  width:52px !important;
+  height:52px !important;
+  margin:0 !important;
+  padding:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:50% !important;
+  font-size:30px !important;
+  line-height:1 !important;
+
+  background:rgba(255,255,255,.16) !important;
+  border:2px solid rgba(255,255,255,.42) !important;
+
+  box-shadow:
+    0 0 0 9px rgba(255,255,255,.055),
+    inset 0 1px 0 rgba(255,255,255,.45),
+    0 0 22px rgba(255,255,255,.40) !important;
+
+  z-index:4 !important;
+  pointer-events:none !important;
+  transform-origin:center !important;
+}
+
+/* Left hand -> center */
+.main-actions > .test-btn > .test-indicator-left{
+  left:7% !important;
+  animation:gsTestHandLeft 1.15s ease-in-out infinite !important;
+}
+
+/* Right hand -> center */
+.main-actions > .test-btn > .test-indicator-right{
+  right:7% !important;
+  animation:gsTestHandRight 1.15s ease-in-out infinite !important;
+}
+
+/* Animated arrows between each hand and the center */
+.main-actions > .test-btn > .test-indicator-left::after{
+  content:"» » »";
+  position:absolute;
+  left:58px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:21px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:#fff;
+  text-shadow:0 0 9px rgba(255,255,255,.85);
+  white-space:nowrap;
+  animation:gsTestArrowsRight 1.15s ease-in-out infinite;
+}
+
+.main-actions > .test-btn > .test-indicator-right::after{
+  content:"« « «";
+  position:absolute;
+  right:58px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:21px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:#fff;
+  text-shadow:0 0 9px rgba(255,255,255,.85);
+  white-space:nowrap;
+  animation:gsTestArrowsLeft 1.15s ease-in-out infinite;
+}
+
+@keyframes gsTestHandLeft{
+  0%,100%{
+    transform:translateY(-50%) translateX(0) scale(.96);
+    opacity:.78;
   }
-
-  .main-actions > .test-btn{
-    grid-column:1 / -1 !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:128px !important;
-  }
-
-  .main-actions > .result-btn,
-  .main-actions > .previous-result-btn{
-    grid-column:auto !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:128px !important;
-    box-sizing:border-box !important;
-  }
-
-  /* Prevent the long previous-result title from pushing outside its card. */
-  .main-actions > .previous-result-btn b{
-    white-space:normal !important;
-    font-size:17px !important;
-    line-height:1.2 !important;
-  }
-
-  .main-actions > .result-btn b{
-    white-space:normal !important;
-    font-size:18px !important;
-    line-height:1.2 !important;
-  }
-
-  .main-actions > .result-btn small,
-  .main-actions > .previous-result-btn small{
-    font-size:11.5px !important;
-  }
-
-  /* Original Test CTA stays clean: one pencil icon + text in the centre. */
-  .main-actions > .test-btn{
-    position:relative !important;
-    overflow:hidden !important;
-  }
-
-  .main-actions > .test-btn > span{
-    position:relative !important;
-    z-index:5 !important;
-  }
-
-  /* Left indicator: hand and moving arrows toward Test */
-  .main-actions > .test-btn > span::before{
-    content:"👉  » » »" !important;
-    position:absolute !important;
-    top:50% !important;
-    left:calc(50% - 154px) !important;
-    transform:translateY(-50%) !important;
-    width:110px !important;
-    font-size:22px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
-    animation:gsTestLeft 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  /* Right indicator: moving arrows and hand toward Test */
-  .main-actions > .test-btn > span::after{
-    content:"« « «  👈" !important;
-    position:absolute !important;
-    top:50% !important;
-    right:calc(50% - 154px) !important;
-    transform:translateY(-50%) !important;
-    width:110px !important;
-    font-size:22px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
-    animation:gsTestRight 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  @keyframes gsTestLeft{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(9px);}
-  }
-
-  @keyframes gsTestRight{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
+  50%{
+    transform:translateY(-50%) translateX(9px) scale(1.08);
+    opacity:1;
   }
 }
 
-
-/* GS-CLEAN-TEST-INDICATORS-V2
-   Final override: exactly TWO indicators on the Test CTA.
-   The pencil icon remains untouched. */
-@media (max-width:700px){
-  /* Remove the previous pseudo-indicators that were attached to the pencil span. */
-  .main-actions > .test-btn > span::before,
-  .main-actions > .test-btn > span::after{
-    content:none !important;
-    display:none !important;
-    animation:none !important;
+@keyframes gsTestHandRight{
+  0%,100%{
+    transform:translateY(-50%) translateX(0) scale(.96);
+    opacity:.78;
   }
-
-  /* Use the text container for the two side indicators, so the pencil is shown only once. */
-  .main-actions > .test-btn > div{
-    position:relative !important;
-    z-index:2 !important;
-  }
-
-  .main-actions > .test-btn > div::before{
-    content:"👉  » » »" !important;
-    position:absolute !important;
-    right:calc(100% + 26px) !important;
-    top:50% !important;
-    transform:translateY(-50%) !important;
-    width:108px !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsCleanLeft 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  .main-actions > .test-btn > div::after{
-    content:"« « «  👈" !important;
-    position:absolute !important;
-    left:calc(100% + 26px) !important;
-    top:50% !important;
-    transform:translateY(-50%) !important;
-    width:108px !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsCleanRight 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-  }
-
-  /* Keep the important Test CTA visually compact and centered. */
-  .main-actions > .test-btn > span{
-    position:relative !important;
-    z-index:5 !important;
-  }
-
-  /* Bottom two cards: same row, and the long title stays on ONE line. */
-  .main-actions > .result-btn,
-  .main-actions > .previous-result-btn{
-    min-height:128px !important;
-    padding:14px 8px !important;
-  }
-
-  .main-actions > .result-btn b,
-  .main-actions > .previous-result-btn b{
-    font-size:13px !important;
-    line-height:1.15 !important;
-    white-space:nowrap !important;
-    letter-spacing:-.15px !important;
-  }
-
-  .main-actions > .result-btn small,
-  .main-actions > .previous-result-btn small{
-    font-size:10px !important;
-    white-space:nowrap !important;
-  }
-
-  .main-actions > .result-btn > span,
-  .main-actions > .previous-result-btn > span{
-    width:44px !important;
-    height:44px !important;
-    font-size:26px !important;
-  }
-
-  @keyframes gsCleanLeft{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1;transform:translateY(-50%) translateX(9px);}
-  }
-  @keyframes gsCleanRight{
-    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1;transform:translateY(-50%) translateX(-9px);}
+  50%{
+    transform:translateY(-50%) translateX(-9px) scale(1.08);
+    opacity:1;
   }
 }
 
-@media (max-width:360px){
-  .main-actions > .test-btn > div::before{right:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
-  .main-actions > .test-btn > div::after{left:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
-  .main-actions > .result-btn b,
-  .main-actions > .previous-result-btn b{font-size:12px !important;}
+@keyframes gsTestArrowsRight{
+  0%,100%{
+    opacity:.35;
+    transform:translateY(-50%) translateX(-4px);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-50%) translateX(6px);
+  }
 }
 
-/* =========================================================
-   FINAL CLEAN MOBILE ACTION BUTTON OVERRIDE
-   Test button: original single pencil + two side indicators.
-   Result buttons: one row, previous-result title one line.
-   No HTML/JS/functionality changes.
-   ========================================================= */
+@keyframes gsTestArrowsLeft{
+  0%,100%{
+    opacity:.35;
+    transform:translateY(-50%) translateX(4px);
+  }
+  50%{
+    opacity:1;
+    transform:translateY(-50%) translateX(-6px);
+  }
+}
 
-@media (max-width:700px){
-
-  /* ---- ACTION GRID ---- */
-  .main-actions{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-    gap:12px !important;
-    width:100% !important;
-    margin-top:20px !important;
-    align-items:stretch !important;
+/* Mobile: smaller, but still clearly visible and safely inside the button */
+@media(max-width:700px){
+  .main-actions > .test-btn > .test-side-indicator{
+    width:42px !important;
+    height:42px !important;
+    font-size:25px !important;
+    border-radius:14px !important;
   }
 
-  /* ---- TEST: compact single full-width card ---- */
-  .main-actions > .test-btn{
-    grid-column:1 / -1 !important;
-    width:100% !important;
-    height:142px !important;
-    min-height:142px !important;
-    max-height:142px !important;
-    box-sizing:border-box !important;
-    position:relative !important;
-    overflow:hidden !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-    align-items:center !important;
-    gap:7px !important;
-    padding:12px 18px !important;
-  }
-
-  /* Kill ALL older indicator pseudo-elements first.
-     This is what prevents 3-3 hands from appearing. */
-  .main-actions > .test-btn > span::before,
-  .main-actions > .test-btn > span::after,
-  .main-actions > .test-btn > div::before,
-  .main-actions > .test-btn > div::after{
-    content:none !important;
-    display:none !important;
-    animation:none !important;
-  }
-
-  /* The only two indicators: attached to the whole Test card,
-     so they can never become extra vertical children. */
-  .main-actions > .test-btn::before{
-    content:"👉  » » »" !important;
-    position:absolute !important;
+  .main-actions > .test-btn > .test-indicator-left{
     left:12px !important;
-    top:50% !important;
-    width:105px !important;
-    margin:0 !important;
-    padding:0 !important;
-    transform:translateY(-50%) !important;
-    color:#fff !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsFinalLeft 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-    z-index:3 !important;
   }
 
-  .main-actions > .test-btn::after{
-    content:"« « «  👈" !important;
-    position:absolute !important;
+  .main-actions > .test-btn > .test-indicator-right{
     right:12px !important;
-    top:50% !important;
-    width:105px !important;
-    margin:0 !important;
-    padding:0 !important;
-    transform:translateY(-50%) !important;
-    color:#fff !important;
-    font-size:20px !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    text-align:center !important;
-    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
-    animation:gsFinalRight 1.15s ease-in-out infinite !important;
-    pointer-events:none !important;
-    z-index:3 !important;
   }
 
-  .main-actions > .test-btn > span{
-    position:relative !important;
-    z-index:5 !important;
-    width:48px !important;
-    height:48px !important;
-    flex:0 0 48px !important;
-    font-size:29px !important;
-    margin:0 !important;
+  .main-actions > .test-btn > .test-indicator-left::after{
+    left:46px;
+    font-size:16px;
+    letter-spacing:0;
   }
 
-  .main-actions > .test-btn > div{
-    position:relative !important;
-    z-index:5 !important;
-    width:auto !important;
-    min-width:0 !important;
-    margin:0 !important;
+  .main-actions > .test-btn > .test-indicator-right::after{
+    right:46px;
+    font-size:16px;
+    letter-spacing:0;
+  }
+}
+/* ===== FINAL: TEST LOCK + TWO RESULT BUTTONS HORIZONTAL ===== */
+
+/* TEST BUTTON — इसे बिल्कुल न बदलें */
+.main-actions > .test-btn{
+  position:relative !important;
+}
+
+/* MOBILE: नीचे के दोनों बटन एक ही लाइन में */
+@media (max-width:700px){
+
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:12px !important;
+    width:100% !important;
   }
 
-  .main-actions > .test-btn b{
-    font-size:18px !important;
-    line-height:1.2 !important;
-    white-space:nowrap !important;
+  /* Test button पूरी पहली लाइन */
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
   }
 
-  .main-actions > .test-btn small{
-    font-size:12px !important;
-    margin-top:3px !important;
-    white-space:nowrap !important;
-  }
-
-  /* ---- TWO RESULT CARDS: SAME ROW ---- */
+  /* दोनों Result buttons दूसरी लाइन */
   .main-actions > .result-btn,
   .main-actions > .previous-result-btn{
     grid-column:auto !important;
@@ -875,195 +735,16 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     min-height:128px !important;
     max-height:128px !important;
     box-sizing:border-box !important;
-    padding:12px 6px !important;
-    gap:5px !important;
+    padding:10px 5px !important;
   }
 
-  .main-actions > .result-btn > span,
-  .main-actions > .previous-result-btn > span{
-    width:44px !important;
-    height:44px !important;
-    flex:0 0 44px !important;
-    font-size:25px !important;
-  }
-
+  /* नाम एक ही लाइन में */
   .main-actions > .result-btn b,
   .main-actions > .previous-result-btn b{
-    display:block !important;
-    width:100% !important;
     font-size:12px !important;
     line-height:1.15 !important;
     white-space:nowrap !important;
-    overflow:visible !important;
-    text-overflow:clip !important;
-    letter-spacing:-.25px !important;
-  }
-
-  .main-actions > .result-btn small,
-  .main-actions > .previous-result-btn small{
-    font-size:9.5px !important;
-    line-height:1.2 !important;
-    white-space:nowrap !important;
-  }
-
-  @keyframes gsFinalLeft{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(8px);}
-  }
-
-  @keyframes gsFinalRight{
-    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
-    50%{opacity:1; transform:translateY(-50%) translateX(-8px);}
-  }
-
-/* =========================================================
-   FINAL ACTION BUTTONS - ONLY TARGETED FIX
-   Original Home design preserved.
-   Test: full width on mobile + two real side indicators.
-   Results: two cards in one row on mobile.
-   ========================================================= */
-
-.main-actions > .main-action{
-  position:relative;
-  overflow:hidden;
-}
-
-.main-actions > .main-action::after{
-  pointer-events:none;
-}
-
-/* The two real indicator spans already exist in home.html. */
-.main-actions > .test-btn > .test-attention{
-  position:absolute !important;
-  top:50% !important;
-  z-index:4 !important;
-  width:auto !important;
-  height:auto !important;
-  padding:0 !important;
-  margin:0 !important;
-  border:0 !important;
-  border-radius:0 !important;
-  background:transparent !important;
-  box-shadow:none !important;
-  display:block !important;
-  font-size:24px !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-  color:#fff !important;
-  text-shadow:0 0 7px rgba(255,255,255,.85);
-  pointer-events:none !important;
-}
-
-.main-actions > .test-btn > .test-attention-left{
-  left:28px !important;
-  transform:translateY(-50%);
-  animation:gsAttentionLeft 1.15s ease-in-out infinite;
-}
-
-.main-actions > .test-btn > .test-attention-right{
-  right:28px !important;
-  transform:translateY(-50%);
-  animation:gsAttentionRight 1.15s ease-in-out infinite;
-}
-
-@keyframes gsAttentionLeft{
-  0%,100%{opacity:.45;transform:translateY(-50%) translateX(-4px) scale(.95)}
-  50%{opacity:1;transform:translateY(-50%) translateX(7px) scale(1.05)}
-}
-
-@keyframes gsAttentionRight{
-  0%,100%{opacity:.45;transform:translateY(-50%) translateX(4px) scale(.95)}
-  50%{opacity:1;transform:translateY(-50%) translateX(-7px) scale(1.05)}
-}
-
-@media(max-width:700px){
-  .main-actions{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-    gap:12px !important;
-    width:100% !important;
-  }
-
-  .main-actions > .test-btn{
-    grid-column:1 / -1 !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:142px !important;
-    height:142px !important;
-    padding:12px 18px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    justify-content:center !important;
-    align-items:center !important;
-    gap:7px !important;
-  }
-
-  .main-actions > .test-btn > .test-attention{
-    font-size:20px !important;
-  }
-
-  .main-actions > .test-btn > .test-attention-left{
-    left:13px !important;
-  }
-
-  .main-actions > .test-btn > .test-attention-right{
-    right:13px !important;
-  }
-
-  /* Pencil icon only: no pseudo-indicators on it. */
-  .main-actions > .test-btn > span:not(.test-attention){
-    position:relative !important;
-    z-index:5 !important;
-    width:48px !important;
-    height:48px !important;
-    flex:0 0 48px !important;
-    font-size:29px !important;
-    background:rgba(255,255,255,.20) !important;
-  }
-
-  .main-actions > .test-btn > div{
-    position:relative !important;
-    z-index:5 !important;
-    width:auto !important;
-    min-width:0 !important;
-    margin:0 !important;
-  }
-
-  .main-actions > .test-btn > div::before,
-  .main-actions > .test-btn > div::after,
-  .main-actions > .test-btn > span:not(.test-attention)::before,
-  .main-actions > .test-btn > span:not(.test-attention)::after{
-    content:none !important;
-    display:none !important;
-  }
-
-  /* Two bottom buttons stay side-by-side. */
-  .main-actions > .result-btn,
-  .main-actions > .previous-result-btn{
-    grid-column:auto !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:128px !important;
-    height:128px !important;
-    padding:12px 6px !important;
-    gap:5px !important;
-  }
-
-  .main-actions > .result-btn > span,
-  .main-actions > .previous-result-btn > span{
-    width:44px !important;
-    height:44px !important;
-    flex:0 0 44px !important;
-    font-size:25px !important;
-  }
-
-  .main-actions > .result-btn b,
-  .main-actions > .previous-result-btn b{
-    width:100% !important;
-    font-size:12px !important;
-    line-height:1.15 !important;
-    white-space:nowrap !important;
-    letter-spacing:-.25px !important;
+    letter-spacing:-.3px !important;
   }
 
   .main-actions > .result-btn small,
@@ -1071,18 +752,181 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     font-size:9.5px !important;
     white-space:nowrap !important;
   }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    font-size:25px !important;
+  }
 }
 
-@media(max-width:360px){
-  .main-actions > .test-btn > .test-attention{
-    font-size:17px !important;
-  }
-  .main-actions > .test-btn > .test-attention-left{left:7px !important}
-  .main-actions > .test-btn > .test-attention-right{right:7px !important}
+/* बहुत छोटे फोन */
+@media (max-width:360px){
   .main-actions > .result-btn b,
   .main-actions > .previous-result-btn b{
     font-size:11px !important;
-    letter-spacing:-.35px !important;
   }
 }
 
+/* =========================================================
+   GANIT SETU — CONTACT / SOCIAL ONLY
+   IMPORTANT: Main action buttons above are intentionally untouched.
+   ========================================================= */
+.gs-social-card{
+  margin:26px 0 30px !important;
+  padding:18px 14px 16px !important;
+  border:1px solid #dfe5ef !important;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#ffffff 0%,#f7f9ff 100%) !important;
+  box-shadow:0 7px 20px rgba(24,45,90,.08) !important;
+  text-align:center !important;
+}
+
+.gs-social-heading{
+  margin:0 0 15px !important;
+  padding:0 !important;
+}
+
+.gs-social-label{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 0 5px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  color:#2155c7 !important;
+  letter-spacing:.2px !important;
+}
+
+.gs-social-heading h2{
+  margin:0 !important;
+  font-size:20px !important;
+  line-height:1.25 !important;
+  color:#172033 !important;
+}
+
+.gs-social-heading p{
+  margin:5px 0 0 !important;
+  font-size:11px !important;
+  line-height:1.4 !important;
+  color:#687489 !important;
+}
+
+.gs-social-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:9px !important;
+  width:100% !important;
+  align-items:stretch !important;
+}
+
+.gs-social-btn{
+  min-width:0 !important;
+  height:70px !important;
+  box-sizing:border-box !important;
+  padding:8px 3px !important;
+  border-radius:15px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.5) !important;
+  box-shadow:0 5px 12px rgba(30,55,100,.14),inset 0 1px 0 rgba(255,255,255,.35) !important;
+  transition:transform .15s ease,box-shadow .15s ease !important;
+}
+
+.gs-social-btn:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 8px 16px rgba(30,55,100,.18),inset 0 1px 0 rgba(255,255,255,.4) !important;
+}
+
+.gs-social-btn:active{
+  transform:scale(.96) !important;
+}
+
+.gs-social-btn span{
+  width:34px !important;
+  height:34px !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:10px !important;
+  background:rgba(255,255,255,.20) !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35) !important;
+  color:#fff !important;
+  font-size:20px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+}
+
+.gs-social-btn b{
+  display:block !important;
+  margin:0 !important;
+  font-size:9.5px !important;
+  line-height:1 !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+  color:#fff !important;
+}
+
+/* Four clear, colorful social buttons */
+.gs-social-btn.youtube{
+  background:linear-gradient(135deg,#ff4545,#d90000) !important;
+}
+.gs-social-btn.facebook{
+  background:linear-gradient(135deg,#3184f5,#0b56c9) !important;
+}
+.gs-social-btn.whatsapp{
+  background:linear-gradient(135deg,#31db73,#079447) !important;
+}
+.gs-social-btn.instagram{
+  background:linear-gradient(135deg,#833ab4 0%,#e1306c 50%,#f77737 78%,#fcb045 100%) !important;
+}
+
+@media(max-width:700px){
+  .gs-social-card{
+    margin:22px 0 28px !important;
+    padding:17px 9px 15px !important;
+    border-radius:18px !important;
+  }
+
+  .gs-social-heading{margin-bottom:13px !important;}
+  .gs-social-heading h2{font-size:18px !important;}
+  .gs-social-heading p{font-size:10.5px !important;}
+
+  .gs-social-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+
+  .gs-social-btn{
+    height:66px !important;
+    padding:7px 2px !important;
+    border-radius:13px !important;
+    gap:4px !important;
+  }
+
+  .gs-social-btn span{
+    width:30px !important;
+    height:30px !important;
+    border-radius:9px !important;
+    font-size:18px !important;
+  }
+
+  .gs-social-btn b{font-size:8.5px !important;}
+}
+
+@media(max-width:360px){
+  .gs-social-card{padding-left:7px !important;padding-right:7px !important;}
+  .gs-social-grid{gap:5px !important;}
+  .gs-social-btn{height:62px !important;}
+  .gs-social-btn span{width:28px !important;height:28px !important;font-size:17px !important;}
+  .gs-social-btn b{font-size:8px !important;}
+}
