@@ -1,39 +1,26 @@
 /* ============================================
    GANIT SETU - TODAY'S TEST STATUS
-   केवल Profile के नीचे आज की Test Status
+   Home Page के 3 existing status cards को Supabase
+   से वास्तविक attempt data से भरना।
 
    IMPORTANT:
-   - इस file में Leaderboard / Top 10 / Rank का कोई code नहीं है।
-   - Course: आज attempt किया है या नहीं।
-   - Chapter Practice: आज जिस chapter का कम-से-कम एक test दिया है,
-     केवल वही chapter दिखेगा। बाकी chapters नहीं दिखेंगे।
-   - Daily: आज attempt किया है या नहीं।
-   - Pending test card को visually flash किया जाएगा।
+   - Existing Home Page HTML/design को नहीं बदला गया।
+   - Dynamic Banner / Ranking को नहीं छेड़ा गया।
+   - RPC: get_ganit_student_results ही उपयोग किया गया है।
    ============================================ */
 
 (function () {
-  function getEl(id) {
-    return document.getElementById(id);
-  }
+  function getEl(id) { return document.getElementById(id); }
 
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, function (c) {
-      return {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      }[c];
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];
     });
   }
 
   function todayIST() {
     return new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
+      timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'
     }).format(new Date());
   }
 
@@ -41,156 +28,148 @@
     if (!value) return '';
     const d = new Date(value);
     if (Number.isNaN(d.getTime())) return '';
-
     return new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
+      timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit'
     }).format(d);
   }
 
-  function getChapterNumber(title) {
-    const text = String(title || '');
-    const match = text.match(/Chapter\s+(\d+)/i);
+  function getChapterNumber(row) {
+    const direct = Number(row?.chapter_from ?? row?.chapter_number ?? row?.chapter);
+    if (Number.isFinite(direct) && direct > 0) return direct;
+
+    const text = String(row?.test_title || row?.title || row?.test_name || '');
+    let match = text.match(/(?:chapter|अध्याय)\s*[-:]?\s*(\d+)/i);
     return match ? Number(match[1]) : null;
   }
 
-  function statusCard(type, icon, title, body, done) {
-    return `
-      <article class="gs-status-card ${done ? 'is-done' : 'is-pending'}"
-               data-test-type="${escapeHtml(type)}">
-        <div class="gs-status-icon">${icon}</div>
+  function normalizeRow(row) {
+    const submitted = row?.submitted_at || row?.created_at || row?.test_time ||
+      (row?.test_date ? `${row.test_date}T00:00:00` : null);
+    return {
+      ...row,
+      test_type: String(row?.test_type || '').toLowerCase(),
+      submitted_at: submitted,
+      test_title: row?.test_title || row?.title || row?.test_name || ''
+    };
+  }
 
-        <div class="gs-status-content">
-          <div class="gs-status-title-row">
-            <h3>${escapeHtml(title)}</h3>
-            <span class="gs-status-badge">
-              ${done ? '✓ पूरा' : '⚠ अभी बाकी'}
-            </span>
-          </div>
+  function isSubmitted(row) {
+    const status = String(row?.status || '').toLowerCase();
+    // RPC में status न आए तो submitted_at होने को completed मानें।
+    return status === 'submitted' || !!row?.submitted_at;
+  }
 
-          <p>${body}</p>
-        </div>
-      </article>
-    `;
+  function setCard(cardId, textId, done, body) {
+    const card = getEl(cardId);
+    const text = getEl(textId);
+    if (!card || !text) return;
+
+    card.classList.toggle('is-done', !!done);
+    card.classList.toggle('is-pending', !done);
+    text.innerHTML = body;
   }
 
   function renderStatus(rows) {
-    const grid = getEl('gsTodayTestGrid');
-    if (!grid) return;
-
+    const normalized = (Array.isArray(rows) ? rows : []).map(normalizeRow);
     const today = todayIST();
 
-    const todayRows = (Array.isArray(rows) ? rows : []).filter(function (row) {
-      return String(row.status || '').toLowerCase() === 'submitted' &&
-             resultDateIST(row.submitted_at) === today;
+    const todayRows = normalized.filter(function (row) {
+      return isSubmitted(row) && resultDateIST(row.submitted_at) === today;
     });
 
-    /* ---------------- Course Test ---------------- */
+    // Course Test
     const courseRows = todayRows.filter(function (row) {
-      return String(row.test_type || '').toLowerCase() === 'course_progress';
+      return row.test_type === 'course_progress';
     });
 
-    /* ---------------- Chapter Practice ---------------- */
+    setCard(
+      'courseStatusCard',
+      'courseStatusText',
+      courseRows.length > 0,
+      courseRows.length
+        ? '✓ आज का Course Test <b>पूरा</b> कर लिया है।'
+        : '⚠ आज का Course Test अभी <b>Attempt नहीं किया</b> है।'
+    );
+
+    // Chapter Practice — आज attempt किए गए unique chapters
     const chapterRows = todayRows.filter(function (row) {
-      return String(row.test_type || '').toLowerCase() === 'chapter_practice';
+      return row.test_type === 'chapter_practice';
     });
 
-    /*
-      केवल वे chapters दिखेंगे जिनका आज कम-से-कम एक
-      Chapter Practice test दिया गया है।
-    */
     const chapterSet = new Set();
-
     chapterRows.forEach(function (row) {
-      const chapter = getChapterNumber(row.test_title);
+      const chapter = getChapterNumber(row);
       if (chapter) chapterSet.add(chapter);
     });
 
-    const chapters = Array.from(chapterSet).sort(function (a, b) {
-      return a - b;
-    });
+    const chapters = Array.from(chapterSet).sort(function (a, b) { return a - b; });
 
     let chapterBody;
-
     if (chapters.length) {
       chapterBody =
-        `आज आपने <b>${chapters.length}</b> अध्याय का Chapter Test दिया: ` +
-        `<b>${chapters.map(function (n) {
-          return `अध्याय ${n}`;
-        }).join(', ')}</b>`;
+        `✓ आज <b>${chapters.length}</b> अध्याय का Chapter Test पूरा किया: ` +
+        `<b>${chapters.map(function (n) { return 'अध्याय ' + n; }).join(', ')}</b>`;
     } else {
-      chapterBody = 'आज अभी किसी अध्याय का Chapter Test Attempt नहीं किया है।';
+      chapterBody = '⚠ आज अभी कोई Chapter Test <b>Attempt नहीं किया</b> है।';
     }
 
-    /* ---------------- Daily Test ---------------- */
+    setCard(
+      'chapterStatusCard',
+      'chapterStatusText',
+      chapters.length > 0,
+      chapterBody
+    );
+
+    // Daily Test
     const dailyRows = todayRows.filter(function (row) {
-      return String(row.test_type || '').toLowerCase() === 'daily';
+      return row.test_type === 'daily';
     });
 
-    grid.innerHTML = [
-      statusCard(
-        'course',
-        '📘',
-        'Course Test',
-        courseRows.length
-          ? 'आज का Course Test पूरा कर लिया है।'
-          : 'आज अभी कोई Course Test Attempt नहीं किया है।',
-        courseRows.length > 0
-      ),
-
-      statusCard(
-        'chapter',
-        '📗',
-        'Chapter Wise Test',
-        chapterBody,
-        chapters.length > 0
-      ),
-
-      statusCard(
-        'daily',
-        '📝',
-        'Daily Test',
-        dailyRows.length
-          ? 'आज का Daily Test पूरा कर लिया है।'
-          : 'आज अभी कोई Daily Test Attempt नहीं किया है।',
-        dailyRows.length > 0
-      )
-    ].join('');
+    setCard(
+      'dailyStatusCard',
+      'dailyStatusText',
+      dailyRows.length > 0,
+      dailyRows.length
+        ? '✓ आज का Daily Test <b>पूरा</b> कर लिया है।'
+        : '⚠ आज का Daily Test अभी <b>Attempt नहीं किया</b> है।'
+    );
   }
 
   async function loadTodayStatus() {
-    const grid = getEl('gsTodayTestGrid');
+    const courseCard = getEl('courseStatusCard');
+    const chapterCard = getEl('chapterStatusCard');
+    const dailyCard = getEl('dailyStatusCard');
 
-    if (!grid || typeof supabaseClient === 'undefined') return;
+    if ((!courseCard && !chapterCard && !dailyCard) || typeof supabaseClient === 'undefined') return;
 
     const studentCode = sessionStorage.getItem('ganit_setu_student_id');
 
     if (!studentCode) {
-      grid.innerHTML =
-        '<div class="gs-status-error">विद्यार्थी की जानकारी नहीं मिली।</div>';
+      setCard('courseStatusCard', 'courseStatusText', false, 'विद्यार्थी की जानकारी नहीं मिली।');
+      setCard('chapterStatusCard', 'chapterStatusText', false, 'विद्यार्थी की जानकारी नहीं मिली।');
+      setCard('dailyStatusCard', 'dailyStatusText', false, 'विद्यार्थी की जानकारी नहीं मिली।');
       return;
     }
 
     try {
-      const result = await supabaseClient.rpc(
-        'get_ganit_student_results',
-        {
-          p_student_code: studentCode
-        }
-      );
+      const result = await supabaseClient.rpc('get_ganit_student_results', {
+        p_student_code: studentCode
+      });
 
       if (result.error) throw result.error;
-
       renderStatus(result.data || []);
     } catch (error) {
-      console.error('Today test status load error:', error);
-
-      grid.innerHTML =
-        '<div class="gs-status-error">आज की टेस्ट स्थिति लोड नहीं हो सकी।</div>';
+      console.error('Home test status load error:', error);
+      const msg = 'टेस्ट की जानकारी लोड नहीं हो सकी।';
+      setCard('courseStatusCard', 'courseStatusText', false, msg);
+      setCard('chapterStatusCard', 'chapterStatusText', false, msg);
+      setCard('dailyStatusCard', 'dailyStatusText', false, msg);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', loadTodayStatus);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadTodayStatus, {once: true});
+  } else {
+    loadTodayStatus();
+  }
 })();
