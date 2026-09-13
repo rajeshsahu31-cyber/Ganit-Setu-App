@@ -23,3 +23,160 @@
    LEADERBOARD PROFILE PHOTOS
    ============================================ */
 .leader-podium-photo{width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--soft);display:grid;place-items:center;margin:10px auto;color:var(--blue);font-weight:800;border:2px solid #e1e8f5}.leader-podium-photo img{width:100%;height:100%;object-fit:cover;display:block}.rank-row{grid-template-columns:50px 48px 1.2fr 1fr}.leader-row-photo{width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--soft);display:grid;place-items:center;color:var(--blue);font-weight:800;font-size:12px}.leader-row-photo img{width:100%;height:100%;object-fit:cover;display:block}.rank-medal{display:flex;align-items:center}.rank-student,.rank-score{min-width:0}.rank-student small,.rank-score small{color:#69758b}@media(max-width:600px){.podium{gap:8px}.podium-card{width:32%;padding:12px 6px;font-size:12px}.leader-podium-photo{width:52px;height:52px}.rank-row{grid-template-columns:42px 42px minmax(0,1fr) auto;gap:7px;padding:11px 2px}.leader-row-photo{width:38px;height:38px}.rank-score{text-align:right;font-size:12px}.rank-student b{font-size:13px}}
+
+
+/* =========================================================
+   GANIT SETU LEADERBOARD — TOP 3 DESIGN ONLY
+   Existing data / ranking / JS untouched
+   ========================================================= */
+
+.podium{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:16px;
+  width:100%;
+  margin:28px 0 32px;
+  box-sizing:border-box;
+}
+
+.podium-card{
+  position:relative;
+  box-sizing:border-box;
+  flex:1 1 0;
+  width:auto;
+  max-width:31%;
+  min-width:0;
+  min-height:225px;
+  padding:16px 10px;
+  border:1px solid #d9e3ee;
+  border-radius:20px;
+  background:linear-gradient(145deg,#ffffff,#f6faff);
+  text-align:center;
+  box-shadow:0 8px 22px rgba(34,72,104,.12);
+  overflow:hidden;
+}
+
+.podium-card.first{
+  padding-top:24px;
+  min-height:250px;
+  transform:translateY(-8px);
+  box-shadow:0 13px 28px rgba(34,72,104,.16);
+}
+
+.podium-card.second,
+.podium-card.third{
+  padding-top:16px;
+}
+
+.podium-card .medal{
+  line-height:1;
+  margin-bottom:4px;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));
+}
+
+.podium-card b{
+  display:block;
+  margin:5px 0 3px;
+  font-size:15px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.podium-card small{
+  display:block;
+  line-height:1.45;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.leader-podium-photo{
+  width:72px;
+  height:72px;
+  margin:9px auto 8px;
+  border:3px solid #fff;
+  box-shadow:0 4px 12px rgba(30,70,100,.16);
+}
+
+.podium-card.first .leader-podium-photo{
+  width:82px;
+  height:82px;
+}
+
+/* Mobile: keep all three winners in one row */
+@media(max-width:600px){
+  .podium{
+    gap:7px;
+    margin:20px 0 26px;
+  }
+
+  .podium-card{
+    flex:1 1 0;
+    width:auto;
+    max-width:none;
+    min-height:205px;
+    padding:10px 5px;
+    border-radius:16px;
+    font-size:11px;
+  }
+
+  .podium-card.first{
+    min-height:222px;
+    padding-top:15px;
+    transform:translateY(-5px);
+  }
+
+  .leader-podium-photo,
+  .podium-card.first .leader-podium-photo{
+    width:58px;
+    height:58px;
+    margin:7px auto;
+  }
+
+  .podium-card b{
+    font-size:11px;
+    margin:4px 0 2px;
+  }
+
+  .podium-card small{
+    font-size:9px;
+    line-height:1.35;
+  }
+
+  .podium-card .medal{
+    font-size:26px;
+  }
+}
+
+@media(max-width:390px){
+  .podium{
+    gap:4px;
+  }
+
+  .podium-card{
+    min-height:190px;
+    padding-left:3px;
+    padding-right:3px;
+  }
+
+  .podium-card.first{
+    min-height:205px;
+  }
+
+  .leader-podium-photo,
+  .podium-card.first .leader-podium-photo{
+    width:50px;
+    height:50px;
+  }
+
+  .podium-card b{
+    font-size:10px;
+  }
+
+  .podium-card small{
+    font-size:8px;
+  }
+}
