@@ -1,13 +1,14 @@
-/* GANIT SETU — HOME STATUS / TEST DASHBOARD
-   CLEAN MOBILE VERSION
-   केवल layout/alignment cleanup.
-   Existing colours preserved.
-   12 chapters = 6 + 6 | 14 chapters = 7 + 7
-*/
+/* =========================================================
+   GANIT SETU — HOME STATUS / TEST DASHBOARD
+   FINAL CLEAN VERSION
+   - Mobile 3-column cards
+   - Compact card height
+   - Title / status icon spacing fixed
+   - 12 chapters = 6 + 6
+   - 14 chapters = 7 + 7
+   - Existing colours preserved
+   ========================================================= */
 
-/* =========================
-   BASE
-   ========================= */
 .home-test-status,
 .home-test-summary{
   width:100%;
@@ -88,7 +89,6 @@
   border-radius:20px;
   padding:10px;
   background:#fff;
-  box-sizing:border-box;
   box-shadow:0 7px 18px rgba(27,51,91,.09),inset 0 1px 0 rgba(255,255,255,.9);
 }
 
@@ -191,19 +191,13 @@
 }
 
 .course-panel .home-status-badge,
-#courseStatusCard .home-status-badge{
-  background:#10b968;
-}
+#courseStatusCard .home-status-badge{background:#10b968}
 
 .chapter-panel .home-status-badge,
-#chapterStatusCard .home-status-badge{
-  background:#f39a12;
-}
+#chapterStatusCard .home-status-badge{background:#f39a12}
 
 .daily-panel .home-status-badge,
-#dailyStatusCard .home-status-badge{
-  background:#ef2850;
-}
+#dailyStatusCard .home-status-badge{background:#ef2850}
 
 .home-status-check{
   width:28px;
@@ -221,22 +215,16 @@
 }
 
 .course-panel .home-status-check,
-#courseStatusCard .home-status-check{
-  background:#12b866;
-}
+#courseStatusCard .home-status-check{background:#12b866}
 
 .chapter-panel .home-status-check,
-#chapterStatusCard .home-status-check{
-  background:#f29a16;
-}
+#chapterStatusCard .home-status-check{background:#f29a16}
 
 .daily-panel .home-status-check,
-#dailyStatusCard .home-status-check{
-  background:#ef2850;
-}
+#dailyStatusCard .home-status-check{background:#ef2850}
 
 /* =========================
-   COURSE PROGRESS
+   COURSE
    ========================= */
 .course-progress-box{
   min-width:0;
@@ -311,7 +299,7 @@
 }
 
 /* =========================
-   LOWER ENCOURAGEMENT BOXES
+   LOWER BOXES
    ========================= */
 .course-encourage,
 .chapter-encourage,
@@ -319,7 +307,6 @@
   width:100%;
   min-width:0;
   border-radius:14px;
-  box-sizing:border-box;
   overflow:hidden;
 }
 
@@ -388,6 +375,33 @@
 
 .course-encourage small{color:#287458}
 .chapter-encourage small{color:#7c4b26}
+
+.daily-encourage{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:8px;
+  padding:9px;
+  min-height:58px;
+  background:rgba(255,255,255,.52);
+  color:#9a3450;
+}
+
+.daily-encourage b{color:#8e1d39}
+.daily-encourage small{color:#9a6271}
+
+.daily-encourage>div:first-child{
+  flex:1 1 auto;
+  min-width:0;
+}
+
+.daily-encourage>div:last-child,
+.daily-encourage>#dailyActionText{
+  flex:0 0 auto;
+  max-width:48%;
+  text-align:right;
+  white-space:nowrap;
+}
 
 /* =========================
    CHAPTER DOTS
@@ -469,7 +483,7 @@
 .chapter-legend b{font-weight:900}
 
 /* =========================
-   DAILY
+   DAILY BODY
    ========================= */
 .daily-status-body{
   width:100%;
@@ -506,33 +520,6 @@
   line-height:1.25;
   text-align:center;
   overflow-wrap:anywhere;
-}
-
-.daily-encourage{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  margin-top:8px;
-  padding:9px;
-  min-height:58px;
-  background:rgba(255,255,255,.52);
-  color:#9a3450;
-}
-
-.daily-encourage b{color:#8e1d39}
-.daily-encourage small{color:#9a6271}
-
-.daily-encourage>div:first-child{
-  flex:1 1 auto;
-  min-width:0;
-}
-
-.daily-encourage>div:last-child,
-.daily-encourage>#dailyActionText{
-  flex:0 0 auto;
-  max-width:48%;
-  text-align:right;
-  white-space:nowrap;
 }
 
 /* =========================
@@ -664,14 +651,13 @@
 }
 
 /* =========================================================
-   MOBILE — ONE CLEAN RULE SET
-   Desktop/laptop layout remains unchanged.
+   MOBILE
    ========================================================= */
 @media (max-width:700px){
 
   .home-test-status-head{
     gap:7px;
-    margin-bottom:9px;
+    margin-bottom:8px;
   }
 
   .home-test-status-title{
@@ -686,366 +672,81 @@
 
   .home-test-status-board,
   .home-test-status-grid{
-    gap:6px;
+    gap:5px;
   }
 
   .home-status-panel,
   .home-status-card{
-    padding:7px;
-    border-radius:18px;
+    padding:6px;
+    border-radius:17px;
   }
 
-  /* Header is a fixed 3-part grid.
-     The tick stays lower and away from the title. */
+  /* 3-part header: icon | title | check */
   .home-status-panel-head{
-    grid-template-columns:29px minmax(0,1fr) 22px;
-    gap:4px;
-    min-height:68px;
-    margin-bottom:7px;
-    align-items:start;
+    grid-template-columns:26px minmax(0,1fr) 21px;
+    gap:3px;
+    min-height:56px;
+    margin-bottom:5px;
   }
 
   .home-status-title-icon{
-    width:29px;
-    height:29px;
-    font-size:18px;
-    border-radius:9px;
+    width:26px;
+    height:26px;
+    font-size:16px;
+    border-radius:8px;
   }
 
   .home-status-title-wrap{
     min-width:0;
-    width:100%;
-    padding:1px 2px 0;
-    text-align:center;
+    padding:1px 0 0;
+    overflow:hidden;
   }
 
   .home-status-title-wrap h3{
     width:100%;
-    font-size:clamp(9px,2.55vw,11px);
-    line-height:1.05;
-    letter-spacing:-.15px;
+    font-size:clamp(8.5px,2.35vw,10.5px);
+    line-height:1;
+    letter-spacing:-.2px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:clip;
   }
 
   .home-status-badge{
-    max-width:100%;
-    min-height:18px;
-    margin:5px auto 0;
-    padding:4px 5px;
-    font-size:clamp(6.5px,1.85vw,8px);
-    line-height:1.08;
-    border-radius:15px;
-  }
-
-  /* Tick deliberately lower than the title line. */
-  .home-status-check{
-    width:22px;
-    height:22px;
-    margin-top:8px;
-    font-size:14px;
-    justify-self:end;
-  }
-
-  /* Equal middle area for Course and Daily. */
-  .course-progress-box,
-  .daily-status-body{
-    min-height:118px;
-    padding:7px;
+    min-height:16px;
+    margin:3px auto 0;
+    padding:3px 4px;
+    font-size:clamp(6px,1.65vw,7.5px);
+    line-height:1.05;
     border-radius:13px;
   }
 
-  .course-progress-box{
-    gap:5px;
-  }
-
-  .course-progress-ring{
-    width:66px;
-    height:66px;
-    flex-basis:66px;
-  }
-
-  .course-progress-ring:after{
-    inset:7px;
-  }
-
-  .course-progress-ring span{
-    font-size:13px;
-  }
-
-  .course-progress-info{
-    min-width:0;
-    max-width:calc(100% - 71px);
-  }
-
-  .course-progress-info b{
-    font-size:10px;
-    line-height:1.12;
-  }
-
-  .course-progress-info small{
-    font-size:7.5px;
-    line-height:1.15;
-    margin-top:3px;
-  }
-
-  /* Same bottom-box height and vertical alignment. */
-  .course-encourage,
-  .chapter-encourage,
-  .daily-encourage{
-    min-height:58px;
-    height:58px;
-    max-height:58px;
-    margin-top:6px;
-    padding:7px;
-    align-items:center;
-  }
-
-  .course-encourage,
-  .chapter-encourage{
-    gap:5px;
-  }
-
-  .course-encourage>span,
-  .chapter-encourage>span{
-    font-size:21px;
-    flex:0 0 21px;
-  }
-
-  .course-encourage>div,
-  .chapter-encourage>div,
-  .daily-encourage>div{
-    min-width:0;
-    max-width:100%;
-  }
-
-  .course-encourage b,
-  .chapter-encourage b,
-  .daily-encourage b{
-    font-size:8.5px;
-    line-height:1.12;
-  }
-
-  .course-encourage small,
-  .chapter-encourage small,
-  .daily-encourage small{
-    font-size:6.5px;
-    line-height:1.12;
-    margin-top:2px;
-  }
-
-  /* Chapter numbers: exactly 6+6 for 12,
-     exactly 7+7 for 14. */
-  .chapter-dots{
-    grid-template-columns:repeat(6,minmax(0,1fr));
-    gap:4px;
-    padding:7px 4px;
-  }
-
-  .chapter-dots:has(.chapter-dot:nth-child(13)){
-    grid-template-columns:repeat(7,minmax(0,1fr));
-  }
-
-  .chapter-dot{
-    font-size:7.5px;
-    border-width:1px;
-  }
-
-  .chapter-legend{
-    gap:6px;
-    margin:6px 0 5px;
-    font-size:7.5px;
-  }
-
-  .chapter-legend .dot{
-    width:6px;
-    height:6px;
-  }
-
-  .chapter-encourage{
-    margin-top:5px;
-  }
-
-  /* Keep the three lower texts on the same visual baseline. */
-  .course-encourage b,
-  .chapter-encourage b,
-  .daily-encourage b{
-    min-height:19px;
-    display:flex;
-    align-items:center;
-  }
-
-  .daily-status-body{
-    justify-content:center;
-  }
-
-  .daily-main-icon{
-    width:42px;
-    height:42px;
-    font-size:25px;
-    margin-bottom:6px;
-  }
-
-  .daily-status-body strong{
-    font-size:9.5px;
-    line-height:1.18;
-  }
-
-  .daily-encourage{
-    gap:4px;
-  }
-
-  .daily-encourage>div:first-child{
-    flex:1 1 0;
-    min-width:0;
-  }
-
-  .daily-encourage>div:last-child,
-  .daily-encourage>#dailyActionText{
-    flex:0 0 auto;
-    max-width:42%;
-    font-size:7.5px;
-    text-align:right;
-    white-space:nowrap;
-  }
-
-  /* Summary remains compact but readable. */
-  .home-test-summary{
-    padding:8px;
-    border-radius:17px;
-    margin-top:12px;
-  }
-
-  .home-summary-head{
-    padding-bottom:7px;
-  }
-
-  .home-summary-icon{
-    width:29px;
-    height:29px;
-    flex-basis:29px;
-    font-size:17px;
-  }
-
-  .home-summary-title{
-    gap:7px;
-  }
-
-  .home-summary-title h2{
-    font-size:17px;
-  }
-
-  .home-summary-title p{
-    font-size:8px;
-  }
-
-  .home-summary-pill{
-    font-size:7px;
-    padding:6px 8px;
-  }
-
-  .home-summary-grid{
-    gap:5px;
-  }
-
-  .home-summary-card{
-    padding:7px 3px;
-    gap:4px;
-    border-radius:11px;
-  }
-
-  .home-summary-card .summary-icon{
-    width:25px;
-    height:25px;
-    flex-basis:25px;
-    font-size:14px;
-  }
-
-  .home-summary-card small{
-    font-size:6.5px;
-  }
-
-  .home-summary-card strong{
-    font-size:16px;
-  }
-
-  .home-summary-card em{
-    font-size:5.2px;
-  }
-}
-
-/* =========================
-   NARROW PHONES
-   ========================= */
-@media (max-width:430px){
-
-  .home-test-status-title{
-    font-size:20px;
-  }
-
-  .home-test-status-motto{
-    max-width:49%;
-    padding:6px 7px;
-    font-size:7px;
-  }
-
-  .home-test-status-board,
-  .home-test-status-grid{
-    gap:4px;
-  }
-
-  .home-status-panel,
-  .home-status-card{
-    padding:6px;
-    border-radius:16px;
-  }
-
-  .home-status-panel-head{
-    grid-template-columns:27px minmax(0,1fr) 21px;
-    gap:3px;
-    min-height:65px;
-    padding:0;
-    margin-bottom:6px;
-  }
-
-  .home-status-title-icon{
-    width:27px;
-    height:27px;
-    font-size:17px;
-  }
-
+  /* check deliberately lower than title */
   .home-status-check{
     width:21px;
     height:21px;
-    margin-top:8px;
+    margin-top:7px;
     font-size:13px;
+    justify-self:end;
   }
 
-  .home-status-title-wrap{
-    padding:1px 1px 0;
-  }
-
-  .home-status-title-wrap h3{
-    font-size:clamp(8.8px,2.45vw,10.5px);
-  }
-
-  .home-status-badge{
-    min-height:17px;
-    margin-top:4px;
-    padding:3px 5px;
-    font-size:clamp(6.3px,1.75vw,7.5px);
-  }
-
+  /* Reduce total card height */
   .course-progress-box,
   .daily-status-body{
-    min-height:110px;
+    min-height:100px;
+    height:100px;
+    padding:6px;
+    border-radius:12px;
+  }
+
+  .course-progress-box{
+    gap:4px;
   }
 
   .course-progress-ring{
-    width:58px;
-    height:58px;
-    flex-basis:58px;
+    width:56px;
+    height:56px;
+    flex:0 0 56px;
   }
 
   .course-progress-ring:after{
@@ -1057,57 +758,87 @@
   }
 
   .course-progress-info{
-    max-width:calc(100% - 63px);
+    max-width:calc(100% - 60px);
   }
 
   .course-progress-info b{
-    font-size:9px;
+    font-size:8.5px;
+    line-height:1.08;
   }
 
   .course-progress-info small{
-    font-size:7px;
+    margin-top:2px;
+    font-size:6.8px;
+    line-height:1.05;
   }
 
+  /* All 3 lower boxes: same height and same vertical position */
   .course-encourage,
   .chapter-encourage,
   .daily-encourage{
-    height:56px;
-    min-height:56px;
-    max-height:56px;
-    padding:6px;
+    height:50px;
+    min-height:50px;
+    max-height:50px;
+    margin-top:5px;
+    padding:5px;
+    border-radius:12px;
+    align-items:center;
+  }
+
+  .course-encourage,
+  .chapter-encourage{
+    gap:4px;
   }
 
   .course-encourage>span,
   .chapter-encourage>span{
-    font-size:19px;
-    flex-basis:19px;
+    font-size:18px;
+    flex:0 0 18px;
   }
 
   .course-encourage b,
   .chapter-encourage b,
   .daily-encourage b{
-    font-size:8px;
+    min-height:16px;
+    display:flex;
+    align-items:center;
+    font-size:7.5px;
+    line-height:1.05;
   }
 
   .course-encourage small,
   .chapter-encourage small,
   .daily-encourage small{
-    font-size:6.2px;
+    margin-top:1px;
+    font-size:6px;
+    line-height:1.05;
   }
 
+  /* Chapter: exactly 6+6 for 12 and 7+7 for 14 */
   .chapter-dots{
+    grid-template-columns:repeat(6,minmax(0,1fr));
     gap:3px;
     padding:6px 3px;
+    border-radius:12px;
+  }
+
+  .chapter-dots:has(.chapter-dot:nth-child(13)){
+    grid-template-columns:repeat(7,minmax(0,1fr));
   }
 
   .chapter-dot{
     font-size:6.8px;
+    border-width:1px;
   }
 
   .chapter-legend{
     gap:4px;
-    margin:5px 0;
-    font-size:6.8px;
+    margin:4px 0 3px;
+    font-size:6.7px;
+  }
+
+  .chapter-legend span{
+    gap:3px;
   }
 
   .chapter-legend .dot{
@@ -1118,18 +849,98 @@
   .daily-main-icon{
     width:38px;
     height:38px;
-    font-size:23px;
-    margin-bottom:5px;
+    font-size:22px;
+    margin-bottom:4px;
+    border-radius:10px;
   }
 
   .daily-status-body strong{
-    font-size:9px;
+    font-size:8.5px;
+    line-height:1.1;
+  }
+
+  .daily-encourage{
+    gap:3px;
+  }
+
+  .daily-encourage>div:first-child{
+    flex:1 1 0;
+    min-width:0;
+    max-width:58%;
   }
 
   .daily-encourage>div:last-child,
   .daily-encourage>#dailyActionText{
-    max-width:43%;
+    flex:0 0 auto;
+    max-width:40%;
+    font-size:6.5px;
+    line-height:1;
+    text-align:right;
+    white-space:nowrap;
+  }
+
+  /* Compact summary */
+  .home-test-summary{
+    padding:8px;
+    border-radius:17px;
+    margin-top:10px;
+  }
+
+  .home-summary-head{
+    padding:1px 3px 6px;
+  }
+
+  .home-summary-icon{
+    width:28px;
+    height:28px;
+    flex-basis:28px;
+    font-size:16px;
+  }
+
+  .home-summary-title{
+    gap:6px;
+  }
+
+  .home-summary-title h2{
+    font-size:16px;
+  }
+
+  .home-summary-title p{
     font-size:7px;
+  }
+
+  .home-summary-pill{
+    font-size:7px;
+    padding:5px 7px;
+  }
+
+  .home-summary-grid{
+    gap:4px;
+  }
+
+  .home-summary-card{
+    padding:6px 2px;
+    gap:3px;
+    border-radius:10px;
+  }
+
+  .home-summary-card .summary-icon{
+    width:23px;
+    height:23px;
+    flex-basis:23px;
+    font-size:13px;
+  }
+
+  .home-summary-card small{
+    font-size:6px;
+  }
+
+  .home-summary-card strong{
+    font-size:15px;
+  }
+
+  .home-summary-card em{
+    display:none;
   }
 }
 
@@ -1142,56 +953,120 @@
     display:none;
   }
 
+  .home-status-panel,
+  .home-status-card{
+    padding:5px;
+    border-radius:15px;
+  }
+
   .home-status-panel-head{
-    grid-template-columns:25px minmax(0,1fr) 20px;
-    min-height:63px;
+    grid-template-columns:24px minmax(0,1fr) 20px;
+    gap:2px;
+    min-height:53px;
   }
 
   .home-status-title-icon{
-    width:25px;
-    height:25px;
-    font-size:16px;
+    width:24px;
+    height:24px;
+    font-size:15px;
   }
 
   .home-status-check{
     width:20px;
     height:20px;
-    margin-top:7px;
+    margin-top:6px;
     font-size:12px;
   }
 
   .home-status-title-wrap h3{
-    font-size:8.3px;
-  }
-
-  .home-status-badge{
-    font-size:6px;
-    padding:3px 4px;
-  }
-
-  .course-progress-ring{
-    width:52px;
-    height:52px;
-    flex-basis:52px;
-  }
-
-  .course-progress-info{
-    max-width:calc(100% - 57px);
-  }
-
-  .course-progress-info b{
     font-size:8px;
   }
 
-  .chapter-dot{
+  .home-status-badge{
+    font-size:5.8px;
+    padding:3px;
+  }
+
+  .course-progress-box,
+  .daily-status-body{
+    height:94px;
+    min-height:94px;
+  }
+
+  .course-progress-ring{
+    width:51px;
+    height:51px;
+    flex-basis:51px;
+  }
+
+  .course-progress-ring:after{
+    inset:5px;
+  }
+
+  .course-progress-info{
+    max-width:calc(100% - 55px);
+  }
+
+  .course-progress-info b{
+    font-size:7.8px;
+  }
+
+  .course-progress-info small{
     font-size:6.2px;
   }
 
-  .home-summary-card em{
-    display:none;
+  .course-encourage,
+  .chapter-encourage,
+  .daily-encourage{
+    height:47px;
+    min-height:47px;
+    max-height:47px;
+    padding:4px;
+  }
+
+  .course-encourage>span,
+  .chapter-encourage>span{
+    font-size:17px;
+    flex-basis:17px;
+  }
+
+  .course-encourage b,
+  .chapter-encourage b,
+  .daily-encourage b{
+    font-size:7px;
+  }
+
+  .course-encourage small,
+  .chapter-encourage small,
+  .daily-encourage small{
+    font-size:5.6px;
+  }
+
+  .chapter-dot{
+    font-size:6px;
+  }
+
+  .chapter-legend{
+    font-size:6.2px;
+  }
+
+  .daily-main-icon{
+    width:34px;
+    height:34px;
+    font-size:20px;
+  }
+
+  .daily-status-body strong{
+    font-size:8px;
+  }
+
+  .daily-encourage>div:last-child,
+  .daily-encourage>#dailyActionText{
+    font-size:6px;
   }
 }
 
+/* Respect reduced-motion preference */
 @media (prefers-reduced-motion:reduce){
   .home-status-panel.is-pending,
   .home-status-panel.is-pending:after{
