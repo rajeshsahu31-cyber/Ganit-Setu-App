@@ -1,225 +1,1088 @@
-/* =====================================================
-   GANIT SETU - FINAL LEADERBOARD RESPONSIVE
-   ===================================================== */
-.leaderboard-container{max-width:1100px;margin:auto;padding:18px 16px 90px}
-.leaderboard-header{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.leaderboard-title-wrap{flex:1;min-width:190px;text-align:center}
-.leaderboard-title-wrap h1{margin:0;font-size:28px}
-.leaderboard-title-wrap p{margin:3px 0;font-size:11px}
-.back-home-btn{white-space:nowrap}
-.ranking-control-card{background:#fff;border:1px solid #d8e5ef;border-radius:16px;padding:15px;display:flex;justify-content:space-between;gap:15px;align-items:center;box-shadow:0 5px 15px rgba(0,0,0,.08)}
-.ranking-kicker{font-size:10px;font-weight:800;color:#1764a5}
-.ranking-heading h2{margin:2px 0;font-size:22px}
-.ranking-heading p{margin:0;color:#687b8b;font-size:11px}
-.ranking-info{display:flex;gap:8px;align-items:center}
-.class-badge,.freeze-badge{padding:8px 11px;border-radius:10px;background:#edf6ff;color:#1764a5;font-size:11px;white-space:nowrap}
-.freeze-badge{background:#eef8ee;color:#24743a}
-.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
-.podium-card{min-width:0;text-align:center;border-radius:20px;padding:12px 8px;background:linear-gradient(#f9fcff,#c6d3df);border:2px solid #c5d1dc;box-shadow:0 8px 18px rgba(0,0,0,.16)}
-.podium-card.first{order:2;background:linear-gradient(#fff9bd,#ffd14b);border-color:#dcae27;transform:translateY(-7px);padding-top:17px}
-.podium-card.second{order:1}.podium-card.third{order:3;background:linear-gradient(#fff0e4,#efb084);border-color:#d49a70}
-.podium-card.empty{opacity:.65}
-.podium-medal{font-size:32px;line-height:1.05}
-.podium-photo{width:76px;height:76px;border-radius:50%;object-fit:cover;margin:5px auto;border:4px solid #fff;background:#dce8f1;display:flex;align-items:center;justify-content:center;font-weight:900;color:#41627b}
-.first .podium-photo{width:92px;height:92px}
-.podium-name{font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.podium-school,.podium-class{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.podium-score{background:#fff;border-radius:12px;padding:5px;margin-top:6px;font-size:19px;font-weight:900}
-.first .podium-score{background:#ffe27b}
-.podium-meta{font-size:9px;margin-top:4px;font-weight:700}
-.top10-section{background:#fff;border-radius:16px;border:1px solid #d8e5ef;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.08)}
-.top10-heading{padding:11px 14px;background:#07375f;color:#fff;display:flex;justify-content:space-between;align-items:center}
-.top10-heading span{font-size:9px;opacity:.8}.top10-heading h2{margin:1px 0;font-size:18px}.overall-label{font-size:11px;font-weight:800}
-.leaderboard-message{padding:8px 12px;font-size:9px;color:#5e7181;background:#f7fbfe;border-bottom:1px solid #e0ebf2}
-.rank-row{display:grid;grid-template-columns:42px 48px minmax(180px,1.7fr) 82px 112px 150px;gap:7px;align-items:center;padding:8px 10px;min-height:65px;border-bottom:1px solid #e1eaf0}
-.rank-row:nth-child(even){background:#f6fafd}.rank-row:last-child{border-bottom:0}
-.rank-no{text-align:center;font-size:15px;font-weight:900;color:#2d5876}
-.rank-photo,.rank-photo-placeholder{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#dce8f1;display:flex;align-items:center;justify-content:center;color:#49677d;font-size:10px;font-weight:900}
-.rank-student{min-width:0}.rank-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-school{font-size:9px;color:#647889;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-class{font-size:8px;color:#8a98a4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rank-overall{text-align:center;background:#fff0bd;border-radius:8px;padding:6px 2px}.rank-overall strong{display:block;font-size:12px}.rank-overall small{font-size:7px;color:#6d7881}
-.rank-metrics{display:flex;justify-content:center;gap:10px;text-align:center}.metric b{display:block;font-size:7px;color:#72808c}.metric span{font-size:9px;font-weight:800}
-.rank-status{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}.test-status{border-radius:6px;padding:4px 5px;font-size:7px;font-weight:800;white-space:nowrap}.test-status.done{background:#e5f6e8;color:#24743a}.test-status.pending{background:#eef1f4;color:#77828b}
-.empty-row{opacity:.75;background:#fafcfd!important}
-.ranking-formula-card.compact{margin-top:10px;padding:8px 11px;border-radius:10px;background:#5a290d;color:#fff;font-size:9px;text-align:center}.ranking-formula-card.compact b{color:#ffd54b}
-@media(max-width:700px){
- .leaderboard-container{padding:9px 7px 82px}
- .leaderboard-header{gap:8px;padding:8px 10px}
- .leaderboard-title-wrap h1{font-size:21px}.leaderboard-title-wrap p{font-size:8px}
- .back-home-btn{font-size:10px;padding:6px 8px}
- .ranking-control-card{padding:9px;border-radius:12px}.ranking-heading h2{font-size:16px}.ranking-heading p{font-size:8px}.ranking-kicker{font-size:7px}
- .ranking-info{gap:4px}.class-badge,.freeze-badge{font-size:8px;padding:6px 7px}
- .podium{gap:5px;margin:10px 0}.podium-card{border-radius:14px;padding:7px 3px}.podium-card.first{padding-top:10px}
- .podium-medal{font-size:23px}.podium-photo{width:50px;height:50px}.first .podium-photo{width:62px;height:62px}
- .podium-name{font-size:9px}.podium-school,.podium-class{font-size:6.5px}.podium-score{font-size:13px;padding:4px;margin-top:4px}.podium-meta{font-size:6.5px}
- .top10-heading{padding:8px 9px}.top10-heading h2{font-size:13px}.overall-label{font-size:8px}
- .leaderboard-message{font-size:7px;padding:6px 8px}
- .rank-row{grid-template-columns:22px 30px minmax(0,1fr) 48px 55px 69px;gap:3px;padding:6px 4px;min-height:52px}
- .rank-no{font-size:10px}.rank-photo,.rank-photo-placeholder{width:29px;height:29px;font-size:7px}
- .rank-name{font-size:8px}.rank-school{font-size:6.3px}.rank-class{font-size:5.8px}
- .rank-overall{padding:4px 1px}.rank-overall strong{font-size:8px}.rank-overall small{font-size:5.5px}
- .rank-metrics{gap:3px}.metric b{font-size:5.5px}.metric span{font-size:6.5px}
- .rank-status{gap:2px}.test-status{padding:3px 3px;font-size:5.5px}
- .ranking-formula-card.compact{font-size:6.5px;padding:6px}
-}
-@media(max-width:390px){
- .leaderboard-title-wrap h1{font-size:19px}
- .rank-row{grid-template-columns:20px 28px minmax(0,1fr) 45px 50px 62px}
- .rank-name{font-size:7.5px}.rank-school{font-size:5.8px}.rank-class{font-size:5.4px}
- .rank-overall strong{font-size:7.5px}.metric span{font-size:6px}.test-status{font-size:5px}
+/* नया Home Page - हल्का, साफ और अलग CSS */
+:root{
+  --gs-blue:#2155c7;
+  --gs-blue-dark:#173f9c;
+  --gs-soft:#eef3ff;
+  --gs-line:#dfe5ef;
+  --gs-text:#172033;
+  --gs-muted:#687489;
+  --gs-white:#ffffff;
 }
 
-/* =====================================================
-   TOP 3 — FINAL VISUAL POLISH
-   DATA / RANKING / JAVASCRIPT UNTOUCHED
-   ===================================================== */
-.podium{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  align-items:end;
-  gap:12px;
-  margin:22px 0 28px;
+body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sans Devanagari',sans-serif}
+.gs-header{height:64px;background:var(--gs-white);border-bottom:1px solid var(--gs-line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,5vw);position:sticky;top:0;z-index:10}
+.gs-brand{display:flex;align-items:center;gap:10px}
+.gs-logo{width:38px;height:38px;display:grid;place-items:center;flex:none;overflow:hidden}
+.gs-logo img{width:100%;height:100%;object-fit:contain;display:block;background:transparent}
+.gs-brand strong{display:block;font-size:17px}.gs-brand small{display:block;color:var(--gs-muted);font-size:11px;margin-top:2px}
+
+.welcome-card{margin-bottom:14px;background:linear-gradient(135deg,#ffffff,#f2f6ff);border:1px solid var(--gs-line);border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 25px rgba(24,45,90,.04)}
+.welcome-card span{font-size:10px;letter-spacing:2px;color:var(--gs-blue);font-weight:800}.welcome-card h2{font-size:22px;margin:4px 0}.welcome-card p{margin:0;color:var(--gs-muted);font-size:12px}.welcome-badge{width:48px;height:48px;display:grid;place-items:center;flex:none;overflow:hidden}
+.welcome-badge img{width:100%;height:100%;object-fit:contain;display:block}
+
+.home-container{width:min(1080px,92%);margin:24px auto 40px}
+.student-profile-card{background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:16px;display:grid;grid-template-columns:78px minmax(0,1fr);grid-template-areas:"photo details" "photo rank";column-gap:14px;row-gap:10px;align-items:start;box-shadow:0 8px 25px rgba(24,45,90,.05)}
+.student-photo{grid-area:photo;width:72px;height:72px;border-radius:50%;background:var(--gs-soft);border:3px solid #dbe5ff;color:var(--gs-blue);display:grid;place-items:center;font-weight:800;font-size:20px;overflow:hidden;align-self:center}
+.student-photo img{width:100%;height:100%;object-fit:cover}
+.student-details{grid-area:details;min-width:0;text-align:left}
+.profile-label{font-size:13px;color:var(--gs-blue);font-weight:800;margin:0 0 4px;text-align:left}
+.student-details h1{font-size:21px;margin:0 0 7px;text-align:left;line-height:1.2}
+.student-meta{display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:var(--gs-muted);font-size:12px;text-align:left}
+.student-meta span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.my-rank-box{grid-area:rank;background:var(--gs-soft);border-radius:12px;padding:9px 13px;text-align:left;width:100%;box-sizing:border-box;border-left:4px solid var(--gs-blue)}
+.my-rank-box small{display:block;color:var(--gs-muted);font-size:11px}
+.my-rank-box strong{display:block;color:var(--gs-blue);font-size:22px;margin-top:1px}
+
+@media(max-width:480px){
+  .student-profile-card{grid-template-columns:70px minmax(0,1fr);grid-template-areas:"photo details" "rank rank";padding:14px;column-gap:12px}
+  .student-photo{width:64px;height:64px;align-self:start}
+  .student-details h1{font-size:19px}
+  .student-meta{font-size:11.5px}
+  .my-rank-box{margin-top:2px}
 }
-.podium-card{
+
+.leaderboard-section{margin-top:22px}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px}.section-title p{margin:0;color:var(--gs-muted);font-size:12px}.section-title h2{margin:4px 0 0;font-size:24px}.section-title a{font-size:13px;color:var(--gs-blue);font-weight:700;text-decoration:none}
+
+.top-three{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:14px;align-items:end}
+.champion-card{background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:16px;text-align:center;box-shadow:0 5px 16px rgba(23,32,51,.04)}
+/* Top 3 के लिए हल्के अलग रंग */
+.champion-card.rank-1{background:linear-gradient(135deg,#fffaf0,#fff4cf);border-color:#e8c86c}
+.champion-card.rank-2{background:linear-gradient(135deg,#ffffff,#f0f3f7);border-color:#c9d0d8}
+.champion-card.rank-3{background:linear-gradient(135deg,#fffaf7,#f7e5d7);border-color:#d7a77e}
+.champion-card.rank-1 .champion-score{color:#a96e00}.champion-card.rank-2 .champion-score{color:#586575}.champion-card.rank-3 .champion-score{color:#9a5b2f}
+.champion-card.first{padding-top:24px}
+.medal{font-size:26px}.champion-photo{width:58px;height:58px;border-radius:50%;margin:8px auto;background:#eef3ff;display:grid;place-items:center;color:var(--gs-blue);font-weight:800;overflow:hidden}.champion-photo img{width:100%;height:100%;object-fit:cover}
+.champion-card h3{font-size:15px;margin:5px 0;word-break:break-word}.champion-card small{color:var(--gs-muted);font-size:12px}.champion-score{margin-top:7px;color:var(--gs-blue);font-weight:800;font-size:13px}.champion-details{margin-top:7px;text-align:left;display:grid;gap:3px}.champion-details span{display:block;color:var(--gs-muted);font-size:11px;line-height:1.35;word-break:break-word}
+
+.winner-slider{margin-top:16px;background:#fff;border:1px solid var(--gs-line);border-radius:18px;padding:15px}
+.slider-title{display:flex;justify-content:space-between;margin-bottom:10px;font-weight:700}.slider-title small{color:var(--gs-muted);font-weight:400}
+.winner-track{display:flex;gap:10px;overflow:hidden;padding-bottom:4px}.winner-track::-webkit-scrollbar{height:5px}.winner-track::-webkit-scrollbar-thumb{background:#cdd7eb;border-radius:10px}
+.winner-card{min-width:270px;border:1px solid var(--gs-line);border-radius:14px;padding:11px;display:flex;align-items:flex-start;gap:9px;scroll-snap-align:start;background:linear-gradient(180deg,#fff,#fbfcff)}.winner-number{font-weight:800;color:var(--gs-blue);padding-top:3px}.mini-photo{width:42px;height:42px;border-radius:50%;background:var(--gs-soft);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none;color:var(--gs-blue)}.winner-info{min-width:0}.winner-card b{font-size:13px;display:block;margin-bottom:3px}.winner-score{font-size:11px;font-weight:700;color:var(--gs-blue);margin-bottom:3px}.winner-card small{color:var(--gs-muted);font-size:10px;display:block;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;word-break:break-word}
+
+.main-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.main-action{background:#fff;border:1px solid var(--gs-line);border-radius:17px;padding:17px;display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--gs-text);transition:.2s}.main-action:hover{transform:translateY(-2px);border-color:#b7c7ef}.main-action>span{font-size:27px}.main-action b{display:block;font-size:16px}.main-action small{display:block;color:var(--gs-muted);margin-top:3px;font-size:12px}
+.test-btn{border-left:4px solid #2155c7}.result-btn{border-left:4px solid #258a61}.winner-btn{border-left:4px solid #b88713}
+
+
+/* =========================================================
+   GANIT SETU - MOBILE TOP 3 (REFERENCE LAYOUT)
+   LEFT: 2nd | CENTER: 1st | RIGHT: 3rd
+   ========================================================= */
+@media (max-width:700px){
+
+  html,body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  .home-container{
+    width:100%;
+    max-width:100%;
+    margin:16px 0 32px;
+    padding:0 12px;
+  }
+
+  /* ===== TOP 3: तीनों एक ही row में ===== */
+  .top-three{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:8px !important;
+    align-items:stretch !important;
+    width:100% !important;
+  }
+
+  /* Order बिल्कुल reference image जैसा */
+  .champion-card.rank-2{order:1 !important;}
+  .champion-card.rank-1,
+  .champion-card.first{order:2 !important;}
+  .champion-card.rank-3{order:3 !important;}
+
+  .champion-card,
+  .champion-card.rank-1,
+  .champion-card.rank-2,
+  .champion-card.rank-3,
+  .champion-card.first{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    padding:12px 6px !important;
+    margin:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    text-align:center !important;
+    overflow:hidden !important;
+  }
+
+  /* 1st बीच वाला थोड़ा highlight, लेकिन size समान */
+  .champion-card.rank-1,
+  .champion-card.first{
+    padding-top:12px !important;
+  }
+
+  .champion-card .medal{
+    font-size:38px !important;
+    line-height:1 !important;
+    margin:0 0 8px !important;
+  }
+
+  .champion-card .champion-photo{
+    width:48px !important;
+    height:48px !important;
+    min-width:48px !important;
+    margin:0 0 7px !important;
+    font-size:16px !important;
+  }
+
+  .champion-card h3{
+    width:100% !important;
+    margin:0 0 4px !important;
+    font-size:15px !important;
+    line-height:1.25 !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .champion-card > small{
+    display:block !important;
+    width:100% !important;
+    margin:0 0 4px !important;
+    font-size:11px !important;
+    line-height:1.25 !important;
+    white-space:normal !important;
+  }
+
+  .champion-card .champion-score{
+    width:100% !important;
+    margin:3px 0 5px !important;
+    font-size:13px !important;
+    line-height:1.25 !important;
+    white-space:normal !important;
+  }
+
+  /* School/detail lines को mobile Top 3 में छुपाया गया है,
+     ताकि cards reference image जैसे compact रहें */
+  .champion-card .champion-details{
+    display:none !important;
+  }
+
+  /* यदि class/time अलग elements में हों तो compact रखें */
+  .champion-card .champion-class,
+  .champion-card .champion-time{
+    width:100% !important;
+    font-size:11px !important;
+    line-height:1.3 !important;
+    white-space:normal !important;
+  }
+
+  /* ===== बहुत छोटे mobile के लिए ===== */
+  @media (max-width:420px){
+    .top-three{gap:7px !important;}
+
+    .champion-card,
+    .champion-card.rank-1,
+    .champion-card.rank-2,
+    .champion-card.rank-3,
+    .champion-card.first{
+      padding:10px 5px !important;
+      border-radius:16px !important;
+    }
+
+    .champion-card .medal{
+      font-size:34px !important;
+      margin-bottom:7px !important;
+    }
+
+    .champion-card .champion-photo{
+      width:46px !important;
+      height:46px !important;
+      min-width:46px !important;
+    }
+
+    .champion-card h3{font-size:14px !important;}
+    .champion-card > small{font-size:10px !important;}
+    .champion-card .champion-score{font-size:12px !important;}
+  }
+
+  /* ===== बाकी page responsive ===== */
+  .winner-slider{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+  }
+
+  .winner-track{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .winner-card{
+    min-width:min(82vw,300px);
+    width:min(82vw,300px);
+    max-width:min(82vw,300px);
+  }
+
+  .winner-info{min-width:0;}
+
+  .main-actions{
+    grid-template-columns:1fr;
+  }
+
+  .main-action{padding:14px;}
+}
+
+
+/* ===== PROFESSIONAL STUDENT MENU ===== */
+.gs-menu-wrap{position:relative}.gs-menu-btn{width:42px;height:42px;border:1px solid var(--gs-line);border-radius:12px;background:#fff;color:var(--gs-blue);font-size:22px;cursor:pointer;display:grid;place-items:center}.gs-menu-btn:hover{background:var(--gs-soft)}.gs-dropdown{position:absolute;right:0;top:50px;width:245px;background:#fff;border:1px solid var(--gs-line);border-radius:16px;padding:8px;box-shadow:0 16px 40px rgba(23,32,51,.14);display:none;z-index:100}.gs-dropdown.open{display:block}.gs-dropdown a,.gs-logout-btn{width:100%;display:flex;align-items:center;gap:11px;padding:12px;border-radius:10px;border:0;background:transparent;color:var(--gs-text);font:inherit;font-size:14px;text-align:left;cursor:pointer}.gs-dropdown a:hover,.gs-logout-btn:hover{background:var(--gs-soft);color:var(--gs-blue)}.gs-menu-divider{height:1px;background:var(--gs-line);margin:6px 4px}.gs-logout-btn{color:#b42318}.gs-logout-btn:hover{background:#fff1f0;color:#b42318}
+
+/* Profile photos in Home leaderboard */
+.mini-photo{overflow:hidden}
+.mini-photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+
+/* ============================================
+   PROFILE FINAL LAYOUT
+   Left details | Right large photo
+   Rank below in balanced box
+============================================ */
+.student-profile-card{
+  background:#fff;
+  border:1px solid var(--gs-line);
+  border-radius:18px;
+  padding:16px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 100px;
+  grid-template-areas:
+    "details photo"
+    "rank rank";
+  column-gap:14px;
+  row-gap:14px;
+  align-items:center;
+  box-shadow:0 8px 25px rgba(24,45,90,.05);
+}
+
+.student-details{
+  grid-area:details;
   min-width:0;
-  min-height:258px;
+  text-align:left;
+  align-self:center;
+}
+
+.profile-label{
+  font-size:13px;
+  color:var(--gs-blue);
+  font-weight:800;
+  margin:0 0 5px;
+  text-align:left;
+}
+
+.student-details h1{
+  font-size:21px;
+  margin:0 0 8px;
+  text-align:left;
+  line-height:1.2;
+}
+
+.student-meta{
   display:flex;
   flex-direction:column;
-  align-items:center;
-  box-sizing:border-box;
-  padding:13px 9px 14px;
-  border-radius:22px;
-  text-align:center;
+  align-items:flex-start;
+  gap:5px;
+  color:var(--gs-muted);
+  font-size:12px;
+  text-align:left;
+}
+
+.student-meta span{
+  display:block;
+  max-width:100%;
   overflow:hidden;
-  position:relative;
-  border-width:2px;
-  box-shadow:0 10px 24px rgba(28,65,92,.14);
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
-.podium-card.second{
-  order:1;
-  background:linear-gradient(160deg,#fff 0%,#eef5fb 58%,#d7e4ef 100%);
-  border-color:#c7d5e0;
-}
-.podium-card.first{
-  order:2;
-  min-height:294px;
-  padding-top:16px;
-  transform:translateY(-9px);
-  background:linear-gradient(160deg,#fffdf0 0%,#fff2a9 48%,#ffd044 100%);
-  border-color:#e0ad16;
-  box-shadow:0 14px 30px rgba(190,145,20,.22);
-}
-.podium-card.third{
-  order:3;
-  background:linear-gradient(160deg,#fffaf6 0%,#ffe0c9 52%,#f0aa76 100%);
-  border-color:#dda071;
-}
-.podium-medal{
-  font-size:30px;
-  line-height:1;
-  height:34px;
-  margin-bottom:4px;
-  filter:drop-shadow(0 2px 2px rgba(0,0,0,.16));
-}
-.podium-card.first .podium-medal{font-size:34px;height:38px}
-.podium-photo{
-  width:70px;
-  height:70px;
-  flex:0 0 auto;
-  margin:5px auto 7px;
+
+.student-photo{
+  grid-area:photo;
+  width:96px;
+  height:96px;
   border-radius:50%;
-  object-fit:cover;
-  border:4px solid #fff;
-  background:#dce8f1;
-  box-shadow:0 4px 12px rgba(26,62,88,.18);
-}
-.podium-card.first .podium-photo{
-  width:84px;
-  height:84px;
-  margin-top:5px;
-}
-.podium-name{
-  width:100%;
-  font-weight:900;
-  font-size:15px;
-  line-height:1.2;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.podium-school,.podium-class{
-  width:100%;
-  font-size:10px;
-  line-height:1.35;
-  margin-top:2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.podium-score{
-  width:calc(100% - 10px);
-  box-sizing:border-box;
-  margin-top:8px;
-  padding:6px 5px;
-  border-radius:18px;
-  background:#fff;
-  font-size:21px;
-  line-height:1.1;
-  font-weight:900;
-  box-shadow:0 2px 7px rgba(40,65,80,.08);
-}
-.podium-card.first .podium-score{background:rgba(255,255,255,.82)}
-.podium-meta{
-  margin-top:6px;
-  font-size:10px;
-  line-height:1.3;
+  background:var(--gs-soft);
+  border:4px solid #dbe5ff;
+  color:var(--gs-blue);
+  display:grid;
+  place-items:center;
   font-weight:800;
+  font-size:25px;
+  overflow:hidden;
+  justify-self:end;
+  align-self:center;
+}
+
+.student-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.my-rank-box{
+  grid-area:rank;
+  background:var(--gs-soft);
+  border-radius:14px;
+  padding:11px 16px;
+  text-align:center;
+  width:100%;
+  box-sizing:border-box;
+  border-left:none;
+  min-width:0;
+}
+
+.my-rank-box small{
+  display:block;
+  color:var(--gs-muted);
+  font-size:11px;
+}
+
+.my-rank-box strong{
+  display:block;
+  color:var(--gs-blue);
+  font-size:24px;
+  margin-top:2px;
+}
+
+@media(max-width:480px){
+  .student-profile-card{
+    grid-template-columns:minmax(0,1fr) 92px;
+    padding:14px;
+    column-gap:12px;
+  }
+
+  .student-photo{
+    width:88px;
+    height:88px;
+    font-size:23px;
+  }
+
+  .student-details h1{
+    font-size:19px;
+  }
+
+  .student-meta{
+    font-size:11.5px;
+  }
+
+  .my-rank-box{
+    padding:10px 14px;
+  }
+}
+
+/* ===== HOME TOP-10 DETAILS: compact, mobile-safe ===== */
+.winner-card{box-sizing:border-box;min-width:320px;max-width:360px;}
+.winner-info{flex:1;min-width:0;overflow:hidden;}
+.winner-name{white-space:normal !important;overflow-wrap:anywhere !important;word-break:break-word !important;line-height:1.25 !important;}
+.winner-school,.winner-test{white-space:normal !important;overflow-wrap:anywhere !important;word-break:break-word !important;line-height:1.3 !important;}
+.winner-meta{display:grid;grid-template-columns:1fr 1fr;gap:3px 7px;margin:4px 0;min-width:0;}
+.winner-meta span{min-width:0;font-size:10.5px;line-height:1.3;color:var(--gs-muted);white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
+.winner-test{margin-top:2px;}
+
+@media(max-width:700px){
+  .winner-card{min-width:min(86vw,330px);width:min(86vw,330px);max-width:min(86vw,330px);padding:9px;gap:7px;}
+  .winner-number{font-size:12px;flex:none;}
+  .mini-photo{width:40px;height:40px;}
+  .winner-card b{font-size:12px;}
+  .winner-school,.winner-test{font-size:9.5px !important;}
+  .winner-meta span{font-size:9.5px;}
+}
+
+@media(max-width:360px){
+  .winner-card{min-width:88vw;width:88vw;max-width:88vw;padding:8px;}
+  .winner-meta{gap:2px 5px;}
+  .winner-meta span{font-size:9px;}
+  .winner-school,.winner-test{font-size:9px !important;}
+}
+
+/* ============================================
+   DYNAMIC IMAGE BANNER
+   No default image / no banner text
+============================================ */
+.gs-banner-slider{
+  margin-bottom:14px;
+  background:#fff;
+  border:1px solid var(--gs-line);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 8px 25px rgba(24,45,90,.05);
+}
+.gs-banner-viewport{width:100%;overflow:hidden;}
+.gs-banner-track{display:flex;width:100%;transition:transform .45s ease;will-change:transform;}
+.gs-banner-slide{flex:0 0 100%;width:100%;line-height:0;}
+.gs-banner-slide a{display:block;width:100%;}
+.gs-banner-slide img{display:block;width:100%;height:auto;max-height:230px;object-fit:cover;}
+.gs-banner-controls{height:40px;display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;}
+.gs-banner-controls button{width:30px;height:30px;border:1px solid var(--gs-line);border-radius:50%;background:#fff;color:var(--gs-blue);font-size:21px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;}
+.gs-banner-controls button:hover{background:var(--gs-soft);}
+.gs-banner-dots{display:flex;align-items:center;justify-content:center;gap:6px;}
+.gs-banner-dots button{width:7px;height:7px;border:0;border-radius:50%;background:#cbd5e7;padding:0;cursor:pointer;}
+.gs-banner-dots button.active{width:9px;height:9px;background:var(--gs-blue);}
+@media(max-width:480px){
+  .gs-banner-slider{border-radius:15px;margin-bottom:12px;}
+  .gs-banner-slide img{max-height:190px;}
+  .gs-banner-controls{height:36px;gap:12px;}
+}
+
+
+/* GS-THREE-ACTION-CARDS */
+.main-actions > .main-action{
+  position:relative;
+  min-height:142px;
+  box-sizing:border-box;
+  padding:18px 14px !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+  gap:8px !important;
+  border:0 !important;
+  border-radius:22px !important;
+  color:#fff !important;
+  overflow:hidden !important;
+  box-shadow:0 8px 20px rgba(30,55,100,.18), inset 0 1px 0 rgba(255,255,255,.42) !important;
+  transform:translateZ(0);
+}
+.main-actions > .main-action::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.18) 42%,transparent 62%);
+  transform:translateX(-100%);
+  pointer-events:none;
+}
+.main-actions > .main-action:hover::after{
+  transform:translateX(100%);
+  transition:transform .7s ease;
+}
+.main-actions > .main-action > span{
+  position:relative;
+  z-index:1;
+  width:52px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:16px;
+  font-size:31px !important;
+  background:rgba(255,255,255,.20);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38);
+}
+.main-actions > .main-action > div{
+  position:relative;
+  z-index:1;
+  width:100%;
+  min-width:0;
+}
+.main-actions > .main-action b{
+  display:block;
+  font-size:19px !important;
+  line-height:1.25 !important;
+  font-weight:800 !important;
+  color:#fff !important;
+  text-align:center !important;
   white-space:nowrap;
 }
-@media(max-width:700px){
-  .podium{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:7px;
-    margin:18px 0 24px;
-  }
-  .podium-card,.podium-card.second,.podium-card.third{
-    min-height:235px;
-    padding:9px 5px 10px;
-    border-radius:18px;
-  }
-  .podium-card.first{
-    min-height:250px;
-    padding-top:11px;
-    transform:translateY(-6px);
-  }
-  .podium-medal{font-size:25px;height:28px;margin-bottom:2px}
-  .podium-card.first .podium-medal{font-size:28px;height:31px}
-  .podium-photo,.podium-card.first .podium-photo{
-    width:58px;height:58px;border-width:3px;margin:4px auto 6px;
-  }
-  .podium-card.first .podium-photo{width:68px;height:68px}
-  .podium-name{font-size:11px}
-  .podium-school,.podium-class{font-size:7.5px}
-  .podium-score{
-    width:calc(100% - 5px);
-    margin-top:6px;
-    padding:5px 2px;
-    border-radius:15px;
-    font-size:16px;
-  }
-  .podium-meta{margin-top:5px;font-size:7.5px}
+.main-actions > .main-action small{
+  display:block;
+  margin-top:4px !important;
+  font-size:12.5px !important;
+  line-height:1.35 !important;
+  color:rgba(255,255,255,.94) !important;
+  text-align:center !important;
 }
-@media(max-width:390px){
-  .podium{gap:5px;margin-top:16px}
-  .podium-card,.podium-card.second,.podium-card.third{
-    min-height:220px;
-    padding-left:3px;padding-right:3px;border-radius:16px;
+.main-actions > .test-btn{
+  background:linear-gradient(135deg,#0d8cf2 0%,#0756d9 52%,#1737b8 100%) !important;
+}
+.main-actions > .result-btn{
+  background:linear-gradient(135deg,#18c978 0%,#07945f 55%,#057447 100%) !important;
+}
+.main-actions > .previous-result-btn{
+  background:linear-gradient(135deg,#a84df4 0%,#7430df 52%,#5520ba 100%) !important;
+}
+.main-actions > .main-action:active{
+  transform:scale(.985) !important;
+  box-shadow:0 4px 12px rgba(30,55,100,.18) !important;
+}
+@media (max-width:700px){
+  .main-actions{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:14px !important;
+    width:100% !important;
+    margin-top:20px !important;
   }
-  .podium-card.first{min-height:235px}
-  .podium-photo,.podium-card.first .podium-photo{width:52px;height:52px}
-  .podium-card.first .podium-photo{width:61px;height:61px}
-  .podium-name{font-size:10px}
-  .podium-school,.podium-class{font-size:6.5px}
-  .podium-score{font-size:14px}
-  .podium-meta{font-size:6.5px}
+  .main-actions > .main-action{
+    width:100% !important;
+    min-height:128px !important;
+    padding:16px 18px !important;
+  }
+  .main-actions > .main-action > span{
+    width:48px;
+    height:48px;
+    font-size:29px !important;
+  }
+  .main-actions > .main-action b{
+    font-size:18px !important;
+  }
+}
+
+
+/* ===== FINAL TOUCH: TEST CTA + RESULT BUTTON LAYOUT =====
+   IMPORTANT: visual/layout only. Existing HTML links and JS are untouched. */
+
+@media (max-width:700px){
+
+  /* The three actions: Test full row; two result cards share the next row. */
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+  }
+
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Prevent the long previous-result title from pushing outside its card. */
+  .main-actions > .previous-result-btn b{
+    white-space:normal !important;
+    font-size:17px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn b{
+    white-space:normal !important;
+    font-size:18px !important;
+    line-height:1.2 !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:11.5px !important;
+  }
+
+  /* Original Test CTA stays clean: one pencil icon + text in the centre. */
+  .main-actions > .test-btn{
+    position:relative !important;
+    overflow:hidden !important;
+  }
+
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Left indicator: hand and moving arrows toward Test */
+  .main-actions > .test-btn > span::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    top:50% !important;
+    left:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Right indicator: moving arrows and hand toward Test */
+  .main-actions > .test-btn > span::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    top:50% !important;
+    right:calc(50% - 154px) !important;
+    transform:translateY(-50%) !important;
+    width:110px !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.7)) !important;
+    animation:gsTestRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  @keyframes gsTestLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(9px);}
+  }
+
+  @keyframes gsTestRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-9px);}
+  }
+}
+
+
+/* GS-CLEAN-TEST-INDICATORS-V2
+   Final override: exactly TWO indicators on the Test CTA.
+   The pencil icon remains untouched. */
+@media (max-width:700px){
+  /* Remove the previous pseudo-indicators that were attached to the pencil span. */
+  .main-actions > .test-btn > span::before,
+  .main-actions > .test-btn > span::after{
+    content:none !important;
+    display:none !important;
+    animation:none !important;
+  }
+
+  /* Use the text container for the two side indicators, so the pencil is shown only once. */
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  .main-actions > .test-btn > div::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    right:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  .main-actions > .test-btn > div::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    left:calc(100% + 26px) !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:108px !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsCleanRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+  }
+
+  /* Keep the important Test CTA visually compact and centered. */
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+  }
+
+  /* Bottom two cards: same row, and the long title stays on ONE line. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    min-height:128px !important;
+    padding:14px 8px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:13px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.15px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:10px !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    font-size:26px !important;
+  }
+
+  @keyframes gsCleanLeft{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(9px);}
+  }
+  @keyframes gsCleanRight{
+    0%,100%{opacity:.55;transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1;transform:translateY(-50%) translateX(-9px);}
+  }
+}
+
+@media (max-width:360px){
+  .main-actions > .test-btn > div::before{right:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .test-btn > div::after{left:calc(100% + 15px) !important;font-size:17px !important;width:90px !important;}
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{font-size:12px !important;}
+}
+
+/* =========================================================
+   FINAL CLEAN MOBILE ACTION BUTTON OVERRIDE
+   Test button: original single pencil + two side indicators.
+   Result buttons: one row, previous-result title one line.
+   No HTML/JS/functionality changes.
+   ========================================================= */
+
+@media (max-width:700px){
+
+  /* ---- ACTION GRID ---- */
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+    margin-top:20px !important;
+    align-items:stretch !important;
+  }
+
+  /* ---- TEST: compact single full-width card ---- */
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    height:142px !important;
+    min-height:142px !important;
+    max-height:142px !important;
+    box-sizing:border-box !important;
+    position:relative !important;
+    overflow:hidden !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:7px !important;
+    padding:12px 18px !important;
+  }
+
+  /* Kill ALL older indicator pseudo-elements first.
+     This is what prevents 3-3 hands from appearing. */
+  .main-actions > .test-btn > span::before,
+  .main-actions > .test-btn > span::after,
+  .main-actions > .test-btn > div::before,
+  .main-actions > .test-btn > div::after{
+    content:none !important;
+    display:none !important;
+    animation:none !important;
+  }
+
+  /* The only two indicators: attached to the whole Test card,
+     so they can never become extra vertical children. */
+  .main-actions > .test-btn::before{
+    content:"👉  » » »" !important;
+    position:absolute !important;
+    left:12px !important;
+    top:50% !important;
+    width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:translateY(-50%) !important;
+    color:#fff !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalLeft 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+    z-index:3 !important;
+  }
+
+  .main-actions > .test-btn::after{
+    content:"« « «  👈" !important;
+    position:absolute !important;
+    right:12px !important;
+    top:50% !important;
+    width:105px !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:translateY(-50%) !important;
+    color:#fff !important;
+    font-size:20px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    text-align:center !important;
+    filter:drop-shadow(0 0 7px rgba(255,255,255,.75)) !important;
+    animation:gsFinalRight 1.15s ease-in-out infinite !important;
+    pointer-events:none !important;
+    z-index:3 !important;
+  }
+
+  .main-actions > .test-btn > span{
+    position:relative !important;
+    z-index:5 !important;
+    width:48px !important;
+    height:48px !important;
+    flex:0 0 48px !important;
+    font-size:29px !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:5 !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn b{
+    font-size:18px !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
+
+  .main-actions > .test-btn small{
+    font-size:12px !important;
+    margin-top:3px !important;
+    white-space:nowrap !important;
+  }
+
+  /* ---- TWO RESULT CARDS: SAME ROW ---- */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:128px !important;
+    min-height:128px !important;
+    max-height:128px !important;
+    box-sizing:border-box !important;
+    padding:12px 6px !important;
+    gap:5px !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    flex:0 0 44px !important;
+    font-size:25px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    display:block !important;
+    width:100% !important;
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    letter-spacing:-.25px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
+
+  @keyframes gsFinalLeft{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(-5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(8px);}
+  }
+
+  @keyframes gsFinalRight{
+    0%,100%{opacity:.55; transform:translateY(-50%) translateX(5px);}
+    50%{opacity:1; transform:translateY(-50%) translateX(-8px);}
+  }
+
+/* =========================================================
+   FINAL ACTION BUTTONS - ONLY TARGETED FIX
+   Original Home design preserved.
+   Test: full width on mobile + two real side indicators.
+   Results: two cards in one row on mobile.
+   ========================================================= */
+
+.main-actions > .main-action{
+  position:relative;
+  overflow:hidden;
+}
+
+.main-actions > .main-action::after{
+  pointer-events:none;
+}
+
+/* The two real indicator spans already exist in home.html. */
+.main-actions > .test-btn > .test-attention{
+  position:absolute !important;
+  top:50% !important;
+  z-index:4 !important;
+  width:auto !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  display:block !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  color:#fff !important;
+  text-shadow:0 0 7px rgba(255,255,255,.85);
+  pointer-events:none !important;
+}
+
+.main-actions > .test-btn > .test-attention-left{
+  left:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionLeft 1.15s ease-in-out infinite;
+}
+
+.main-actions > .test-btn > .test-attention-right{
+  right:28px !important;
+  transform:translateY(-50%);
+  animation:gsAttentionRight 1.15s ease-in-out infinite;
+}
+
+@keyframes gsAttentionLeft{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(-4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(7px) scale(1.05)}
+}
+
+@keyframes gsAttentionRight{
+  0%,100%{opacity:.45;transform:translateY(-50%) translateX(4px) scale(.95)}
+  50%{opacity:1;transform:translateY(-50%) translateX(-7px) scale(1.05)}
+}
+
+@media(max-width:700px){
+  .main-actions{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .main-actions > .test-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:142px !important;
+    height:142px !important;
+    padding:12px 18px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:7px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention{
+    font-size:20px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-left{
+    left:13px !important;
+  }
+
+  .main-actions > .test-btn > .test-attention-right{
+    right:13px !important;
+  }
+
+  /* Pencil icon only: no pseudo-indicators on it. */
+  .main-actions > .test-btn > span:not(.test-attention){
+    position:relative !important;
+    z-index:5 !important;
+    width:48px !important;
+    height:48px !important;
+    flex:0 0 48px !important;
+    font-size:29px !important;
+    background:rgba(255,255,255,.20) !important;
+  }
+
+  .main-actions > .test-btn > div{
+    position:relative !important;
+    z-index:5 !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .main-actions > .test-btn > div::before,
+  .main-actions > .test-btn > div::after,
+  .main-actions > .test-btn > span:not(.test-attention)::before,
+  .main-actions > .test-btn > span:not(.test-attention)::after{
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Two bottom buttons stay side-by-side. */
+  .main-actions > .result-btn,
+  .main-actions > .previous-result-btn{
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:128px !important;
+    height:128px !important;
+    padding:12px 6px !important;
+    gap:5px !important;
+  }
+
+  .main-actions > .result-btn > span,
+  .main-actions > .previous-result-btn > span{
+    width:44px !important;
+    height:44px !important;
+    flex:0 0 44px !important;
+    font-size:25px !important;
+  }
+
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    width:100% !important;
+    font-size:12px !important;
+    line-height:1.15 !important;
+    white-space:nowrap !important;
+    letter-spacing:-.25px !important;
+  }
+
+  .main-actions > .result-btn small,
+  .main-actions > .previous-result-btn small{
+    font-size:9.5px !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media(max-width:360px){
+  .main-actions > .test-btn > .test-attention{
+    font-size:17px !important;
+  }
+  .main-actions > .test-btn > .test-attention-left{left:7px !important}
+  .main-actions > .test-btn > .test-attention-right{right:7px !important}
+  .main-actions > .result-btn b,
+  .main-actions > .previous-result-btn b{
+    font-size:11px !important;
+    letter-spacing:-.35px !important;
+  }
 }
 
