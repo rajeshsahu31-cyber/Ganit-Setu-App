@@ -1413,3 +1413,20 @@
     font-size:5.2px !important;
   }
 }
+@media (max-width:700px){
+  .daily-encourage > div:first-child > small{
+    font-size:5px !important;
+    letter-spacing:-0.15px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+  }
+}
+
+@media (max-width:370px){
+  .daily-encourage > div:first-child > small{
+    font-size:4.8px !important;
+    letter-spacing:-0.18px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+  }
+}
