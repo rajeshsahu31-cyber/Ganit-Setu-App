@@ -1058,33 +1058,43 @@
     animation:none!important;
   }
 }
-/* ===== FINAL DAILY MOBILE ALIGNMENT ===== */
+
+
+/* =========================================================
+   FINAL REQUESTED CORRECTIONS ONLY
+   ---------------------------------------------------------
+   Card height/size is intentionally NOT changed here.
+   1) Mobile motto visible
+   2) Daily encouragement gets an icon
+   3) Daily "1" becomes "5"
+   4) Daily lower text/action align cleanly
+   ========================================================= */
 @media (max-width:700px){
 
-  /* Mobile motto वापस दिखे */
+  /* Keep the top motto visible on mobile */
   .home-test-status-motto{
     display:block !important;
-    max-width:100% !important;
-    width:auto !important;
-    margin:0 !important;
-    padding:6px 8px !important;
+    flex:0 1 auto !important;
+    max-width:52% !important;
+    min-width:0 !important;
+    padding:6px 7px !important;
     font-size:7px !important;
-    line-height:1.1 !important;
+    line-height:1.05 !important;
     white-space:nowrap !important;
-    text-align:center !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
   }
 
-  /* Daily नीचे वाला box */
+  /* Daily lower box: same visual structure as the first two */
   .daily-encourage{
     display:flex !important;
     align-items:center !important;
     justify-content:flex-start !important;
     gap:4px !important;
-    padding:4px 5px !important;
     overflow:hidden !important;
   }
 
-  /* पहले दो boxes जैसा icon */
+  /* Icon for Daily encouragement */
   .daily-encourage::before{
     content:"🎯";
     width:18px !important;
@@ -1102,53 +1112,56 @@
     min-width:0 !important;
     max-width:none !important;
     overflow:hidden !important;
+    text-align:left !important;
   }
 
-  .daily-encourage b{
+  /* Replace only the visible "1" text with "5" */
+  .daily-encourage > div:first-child > b{
+    font-size:0 !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+  }
+
+  .daily-encourage > div:first-child > b::after{
+    content:"रोज़ 5 प्रश्न, बड़ी सफलता!";
     font-size:7px !important;
     line-height:1.05 !important;
+    font-weight:900 !important;
     white-space:nowrap !important;
   }
 
-  .daily-encourage small{
-    font-size:5.6px !important;
+  .daily-encourage > div:first-child > small{
+    display:block !important;
+    margin-top:1px !important;
+    font-size:5.8px !important;
     line-height:1.05 !important;
     white-space:nowrap !important;
   }
 
-  /* आज ही दें — अलग और साफ */
+  /* "आज ही दें →" stays on the right without pushing the text */
   .daily-encourage > #dailyActionText,
   .daily-encourage > div:last-child{
     flex:0 0 auto !important;
+    width:auto !important;
     max-width:none !important;
     margin-left:auto !important;
     padding-left:3px !important;
-    font-size:6px !important;
+    font-size:6.2px !important;
     line-height:1 !important;
     text-align:right !important;
     white-space:nowrap !important;
   }
-
-  /* 1 की जगह 5 */
-  .daily-encourage b{
-    font-size:0 !important;
-  }
-
-  .daily-encourage b::after{
-    content:"रोज़ 5 प्रश्न, बड़ी सफलता!" !important;
-    font-size:7px !important;
-    line-height:1.05 !important;
-  }
 }
 
-/* बहुत छोटे मोबाइल में भी motto छिपे नहीं */
 @media (max-width:370px){
 
+  /* Do NOT hide the motto on very small phones */
   .home-test-status-motto{
     display:block !important;
     max-width:100% !important;
-    font-size:6.5px !important;
-    padding:5px 6px !important;
+    padding:5px 5px !important;
+    font-size:6.2px !important;
+    line-height:1.05 !important;
   }
 
   .daily-encourage::before{
@@ -1158,12 +1171,12 @@
     font-size:15px !important;
   }
 
-  .daily-encourage b::after{
-    font-size:6.6px !important;
+  .daily-encourage > div:first-child > b::after{
+    font-size:6.5px !important;
   }
 
-  .daily-encourage small{
-    font-size:5.3px !important;
+  .daily-encourage > div:first-child > small{
+    font-size:5.4px !important;
   }
 
   .daily-encourage > #dailyActionText,
