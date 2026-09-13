@@ -1,0 +1,389 @@
+/* =========================================================
+   GANIT SETU — HOME MOBILE STATUS FIX
+   ---------------------------------------------------------
+   Load AFTER home.css and home-status.css.
+   Only fixes mobile layout/alignment.
+   Colors, functionality, desktop layout and images are not changed.
+   ========================================================= */
+
+/* Keep every card's content inside its own width */
+.home-test-status,
+.home-test-status *{
+  box-sizing:border-box;
+}
+
+.home-status-panel{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+.home-status-panel-head{
+  min-width:0 !important;
+  position:relative !important;
+  align-items:flex-start !important;
+}
+
+.home-status-title-icon{
+  flex:0 0 auto !important;
+}
+
+.home-status-title-wrap{
+  min-width:0 !important;
+  flex:1 1 auto !important;
+  overflow:hidden !important;
+}
+
+.home-status-title-wrap h3{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+.home-status-badge{
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+.home-status-check{
+  flex:0 0 auto !important;
+  position:relative !important;
+  z-index:3 !important;
+}
+
+/* ---------------------------------------------------------
+   MOBILE ONLY
+   --------------------------------------------------------- */
+@media (max-width:700px){
+
+  /* Three cards remain equal width */
+  .home-test-status-board{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:7px !important;
+    width:100% !important;
+    align-items:stretch !important;
+  }
+
+  .home-status-panel{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    margin:0 !important;
+  }
+
+  /* Header: icon → title/badge → check.
+     Check is deliberately a little lower so it does not touch heading. */
+  .home-status-panel-head{
+    display:grid !important;
+    grid-template-columns:30px minmax(0,1fr) 32px !important;
+    column-gap:4px !important;
+    width:100% !important;
+    min-width:0 !important;
+    align-items:start !important;
+    padding:9px 7px 0 !important;
+  }
+
+  .home-status-title-icon{
+    width:30px !important;
+    height:30px !important;
+    min-width:30px !important;
+    min-height:30px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:23px !important;
+    line-height:1 !important;
+  }
+
+  .home-status-title-wrap{
+    width:100% !important;
+    min-width:0 !important;
+    padding-top:2px !important;
+    overflow:hidden !important;
+  }
+
+  .home-status-title-wrap h3{
+    width:100% !important;
+    margin:0 !important;
+    font-size:clamp(13px,3.55vw,16px) !important;
+    line-height:1.05 !important;
+    letter-spacing:-.25px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  .home-status-badge{
+    display:block !important;
+    width:max-content !important;
+    max-width:100% !important;
+    margin:5px auto 0 !important;
+    padding:4px 7px !important;
+    font-size:clamp(9px,2.65vw,11px) !important;
+    line-height:1.05 !important;
+    text-align:center !important;
+    white-space:normal !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .home-status-check{
+    width:32px !important;
+    height:32px !important;
+    min-width:32px !important;
+    min-height:32px !important;
+    margin:5px 0 0 !important;
+    justify-self:end !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    font-size:20px !important;
+    line-height:1 !important;
+  }
+
+  /* Course content stays inside card */
+  .course-progress-box{
+    min-width:0 !important;
+    width:100% !important;
+  }
+
+  .course-progress-info{
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow:hidden !important;
+  }
+
+  .course-progress-info b,
+  .course-progress-info small{
+    display:block !important;
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+    word-break:break-word !important;
+  }
+
+  /* Encourage blocks: same visual baseline, text cannot escape */
+  .course-encourage,
+  .chapter-encourage,
+  .daily-encourage{
+    min-width:0 !important;
+    width:calc(100% - 14px) !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    overflow:hidden !important;
+  }
+
+  .course-encourage > div,
+  .chapter-encourage > div,
+  .daily-encourage > div{
+    min-width:0 !important;
+    overflow:hidden !important;
+  }
+
+  .course-encourage b,
+  .course-encourage small,
+  .chapter-encourage b,
+  .chapter-encourage small,
+  .daily-encourage b,
+  .daily-encourage small,
+  #dailyActionText{
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+    word-break:break-word !important;
+    line-height:1.15 !important;
+  }
+
+  /* Chapter dots: flex-wrap gives exactly 6+6 for 12
+     and 7+7 for 14 when the available card width permits. */
+  .chapter-dots{
+    display:grid !important;
+    grid-template-columns:repeat(7,minmax(0,1fr)) !important;
+    gap:5px 4px !important;
+    width:calc(100% - 18px) !important;
+    margin:18px auto 8px !important;
+    justify-items:center !important;
+    align-items:center !important;
+  }
+
+  /* For 12 chapters the last 5 items start the second row,
+     but JS-created dots are allowed to occupy the grid naturally.
+     Force 12/14 layouts through the number of children. */
+  .chapter-dots:has(> :nth-child(12):last-child){
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+  }
+
+  .chapter-dots:has(> :nth-child(14):last-child){
+    grid-template-columns:repeat(7,minmax(0,1fr)) !important;
+  }
+
+  .chapter-dots > *{
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+
+  .chapter-legend{
+    width:100% !important;
+    min-width:0 !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:4px 10px !important;
+    margin:7px 0 0 !important;
+  }
+
+  .chapter-legend span{
+    min-width:0 !important;
+    white-space:nowrap !important;
+  }
+
+  /* The target box is kept below the legend instead of
+     being allowed to climb upward on narrow screens. */
+  .chapter-encourage{
+    min-height:78px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:7px !important;
+    padding:9px 8px !important;
+    margin-top:10px !important;
+  }
+
+  .chapter-encourage > span{
+    flex:0 0 auto !important;
+    font-size:28px !important;
+    line-height:1 !important;
+  }
+
+  .chapter-encourage > div{
+    flex:1 1 auto !important;
+    text-align:left !important;
+  }
+
+  .chapter-encourage b{
+    display:block !important;
+    font-size:clamp(11px,3.0vw,13px) !important;
+  }
+
+  .chapter-encourage small{
+    display:block !important;
+    margin-top:3px !important;
+    font-size:clamp(9px,2.5vw,11px) !important;
+  }
+
+  /* Daily body is allowed to breathe without pushing bottom
+     text outside the card. */
+  .daily-status-body{
+    min-width:0 !important;
+    width:100% !important;
+    overflow:hidden !important;
+  }
+
+  .daily-status-body strong{
+    display:block !important;
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+    word-break:break-word !important;
+  }
+
+  .daily-encourage{
+    min-height:78px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:5px !important;
+    padding:9px 8px !important;
+    margin-top:10px !important;
+  }
+
+  .daily-encourage > div{
+    flex:1 1 auto !important;
+    text-align:left !important;
+  }
+
+  .daily-encourage #dailyActionText{
+    flex:0 0 auto !important;
+    max-width:42% !important;
+    text-align:right !important;
+    font-size:clamp(9px,2.5vw,11px) !important;
+  }
+
+  /* Course bottom message gets the same vertical treatment */
+  .course-encourage{
+    min-height:78px !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:7px !important;
+    padding:9px 8px !important;
+    margin-top:10px !important;
+  }
+
+  .course-encourage > span{
+    flex:0 0 auto !important;
+    font-size:27px !important;
+    line-height:1 !important;
+  }
+
+  .course-encourage > div{
+    flex:1 1 auto !important;
+  }
+
+  .course-encourage b{
+    display:block !important;
+    font-size:clamp(11px,3vw,13px) !important;
+  }
+
+  .course-encourage small{
+    display:block !important;
+    margin-top:3px !important;
+    font-size:clamp(9px,2.5vw,11px) !important;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width:360px){
+  .home-test-status-board{
+    gap:5px !important;
+  }
+
+  .home-status-panel-head{
+    grid-template-columns:27px minmax(0,1fr) 29px !important;
+    column-gap:3px !important;
+    padding-left:5px !important;
+    padding-right:5px !important;
+  }
+
+  .home-status-title-icon{
+    width:27px !important;
+    height:27px !important;
+    min-width:27px !important;
+    min-height:27px !important;
+    font-size:20px !important;
+  }
+
+  .home-status-check{
+    width:29px !important;
+    height:29px !important;
+    min-width:29px !important;
+    min-height:29px !important;
+    font-size:18px !important;
+  }
+
+  .home-status-title-wrap h3{
+    font-size:12px !important;
+  }
+
+  .home-status-badge{
+    font-size:8.5px !important;
+    padding:3px 5px !important;
+  }
+
+  .chapter-dots{
+    gap:4px 3px !important;
+    width:calc(100% - 12px) !important;
+  }
+}
