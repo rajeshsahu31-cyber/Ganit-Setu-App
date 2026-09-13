@@ -650,132 +650,86 @@ async function getHomeStudentClass() {
 
 async function loadHomeLeaderboard() {
 
-  setHomeLeaderboardMessage(
-    'Overall Ranking लोड हो रही है...'
-  );
+  setHomeLeaderboardMessage('Overall Ranking लोड हो रही है...');
 
+  const classLevel = await getHomeStudentClass();
 
-  const classLevel =
-    await getHomeStudentClass();
-
-
-  if (
-    classLevel !== 9 &&
-    classLevel !== 10
-  ) {
-
-    setHomeLeaderboardMessage(
-      '<b>Student की Class जानकारी नहीं मिली।</b>'
-    );
-
+  if (classLevel !== 9 && classLevel !== 10) {
+    setHomeLeaderboardMessage('<b>Student की Class जानकारी नहीं मिली।</b>');
     return;
   }
 
+  /*
+     IMPORTANT:
+     Home और full Leaderboard में Overall Ranking के लिए एक ही source
+     उपयोग होना चाहिए। Full Leaderboard का final/frozen source
+     `ganit_daily_rankings` है। इसलिए Home अब अलग RPC formula से
+     Overall % नहीं निकालेगा। इससे दोनों जगह 25.74/24.74 जैसा mismatch
+     नहीं होगा।
+  */
+  const rankDate = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date());
 
-  /* ==========================================
-     नया Overall Ranking Function
-     ========================================== */
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.rpc(
-      'get_ganit_overall_leaderboard',
-      {
-        p_class_level: classLevel
-      }
-    );
-
+  const { data, error } = await supabaseClient
+    .from('ganit_daily_rankings')
+    .select('rank_date,class_level,full_name,student_code,overall_percentage,total_correct,total_questions,total_time_seconds')
+    .eq('rank_date', rankDate)
+    .eq('class_level', classLevel);
 
   if (error) {
-
-    console.error(
-      'Overall leaderboard error:',
-      error
-    );
-
-
+    console.error('Home frozen leaderboard error:', error);
     setHomeLeaderboardMessage(
-      `<b>Overall Ranking load नहीं हुई:</b>
-       ${escapeHomeHtml(error.message)}`
+      `<b>Overall Ranking load नहीं हुई:</b> ${escapeHomeHtml(error.message)}`
     );
-
     return;
   }
-
 
   if (!data || !data.length) {
-
-    setHomeLeaderboardMessage(
-      '<b>अभी Overall Ranking उपलब्ध नहीं है।</b>'
-    );
-
+    setHomeLeaderboardMessage('<b>अभी Overall Ranking उपलब्ध नहीं है।</b>');
     return;
   }
 
+  /* वही ordering जो full Leaderboard में है */
+  const sorted = data.slice().sort((a, b) => {
+    const p = Number(b.overall_percentage || 0) - Number(a.overall_percentage || 0);
+    if (p) return p;
 
-  /* ==========================================
-     DATA
-     ========================================== */
+    const c = Number(b.total_correct || 0) - Number(a.total_correct || 0);
+    if (c) return c;
 
-  homeWinnerData =
-    data.slice(0, 10);
+    const q = Number(b.total_questions || 0) - Number(a.total_questions || 0);
+    if (q) return q;
 
+    const t = Number(a.total_time_seconds || 0) - Number(b.total_time_seconds || 0);
+    if (t) return t;
+
+    return String(a.student_code || '').localeCompare(String(b.student_code || ''));
+  });
+
+  homeWinnerData = sorted.slice(0, 10).map((r, index) => ({
+    ...r,
+    rank_no: index + 1
+  }));
 
   setHomeDateFromResults();
 
-
-  renderTopThree(
-    homeWinnerData
-  );
-
-
-  renderTopTen(
-    homeWinnerData
-  );
-
-
-  updateMyRank(
-    homeWinnerData
-  );
-
-
+  renderTopThree(homeWinnerData);
+  renderTopTen(homeWinnerData);
+  updateMyRank(homeWinnerData);
   startAutoScroll();
 
-
-  /* ==========================================
-     STUDENT PHOTO / SCHOOL DATA
-     ========================================== */
-
+  /* Student profile से photo/school/class जोड़ें; ranking values नहीं बदलें */
   try {
-
-    homeWinnerData =
-      await addHomeProfilePhotos(
-        homeWinnerData
-      );
-
-
-    renderTopThree(
-      homeWinnerData
-    );
-
-
-    renderTopTen(
-      homeWinnerData
-    );
-
-
-    updateMyRank(
-      homeWinnerData
-    );
-
+    homeWinnerData = await addHomeProfilePhotos(homeWinnerData);
+    renderTopThree(homeWinnerData);
+    renderTopTen(homeWinnerData);
+    updateMyRank(homeWinnerData);
   } catch (e) {
-
-    console.error(
-      'Home photo enhancement error:',
-      e
-    );
+    console.error('Home photo enhancement error:', e);
   }
 }
 
