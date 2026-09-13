@@ -232,41 +232,113 @@
   <!-- ==========================================
        TODAY'S TEST STATUS
        Profile के ठीक नीचे
+       Leaderboard / Top 10 यहाँ नहीं है
        ========================================== -->
 
-  <section class="gs-today-status" id="gsTodayStatus" aria-label="आज की टेस्ट स्थिति">
-    <div class="gs-today-status-head">
+  <section
+    class="home-test-status"
+    id="homeTestStatus"
+    aria-label="आज की टेस्ट स्थिति"
+  >
+
+    <div class="home-test-status-head">
+
       <div>
-        <span class="gs-today-status-label">📅 आज की टेस्ट स्थिति</span>
-        <h2>आज आपने कौन-कौन से टेस्ट दिए?</h2>
+
+        <span>
+          📋 आज की स्थिति
+        </span>
+
+        <h2>
+          आज के टेस्ट
+        </h2>
+
       </div>
+
     </div>
-    <div class="gs-today-test-grid" id="gsTodayTestGrid">
-      <div class="gs-status-loading">टेस्ट स्थिति लोड हो रही है...</div>
+
+
+    <div class="home-test-status-grid">
+
+
+      <div
+        class="home-status-card"
+        id="courseStatusCard"
+      >
+
+        <div class="home-status-icon">
+          📘
+        </div>
+
+        <div class="home-status-content">
+
+          <b>
+            Course Test
+          </b>
+
+          <small id="courseStatusText">
+            जाँच हो रही है...
+          </small>
+
+        </div>
+
+      </div>
+
+
+
+      <div
+        class="home-status-card"
+        id="chapterStatusCard"
+      >
+
+        <div class="home-status-icon">
+          📖
+        </div>
+
+        <div class="home-status-content">
+
+          <b>
+            Chapter Test
+          </b>
+
+          <small id="chapterStatusText">
+            जाँच हो रही है...
+          </small>
+
+        </div>
+
+      </div>
+
+
+
+      <div
+        class="home-status-card"
+        id="dailyStatusCard"
+      >
+
+        <div class="home-status-icon">
+          📝
+        </div>
+
+        <div class="home-status-content">
+
+          <b>
+            Daily Test
+          </b>
+
+          <small id="dailyStatusText">
+            जाँच हो रही है...
+          </small>
+
+        </div>
+
+      </div>
+
+
     </div>
+
   </section>
 
-  <!-- ==========================================
-       OVERALL LEADERBOARD
-       ========================================== -->
-
-  <section class="leaderboard-section">
-    <div class="section-title">
-      <div>
-        <p id="testDateText">तीनों टेस्ट के आधार पर Overall Ranking</p>
-        <h2>🏆 लीडरबोर्ड</h2>
-      </div>
-      <a href="leaderboard.html">पूरा देखें →</a>
-    </div>
-    <div class="top-three" id="topThree"></div>
-    <div class="winner-slider">
-      <div class="slider-title">
-        <span>Top 10 विजेता</span>
-        <small>Rank 4 से 10 • स्वतः स्क्रॉल</small>
-      </div>
-      <div class="winner-track" id="winnerTrack"></div>
-    </div>
-  </section>
 
 
   <!-- ==========================================
@@ -281,12 +353,13 @@
       href="test-types.html"
     >
 
-      <span class="test-attention test-attention-left" aria-hidden="true">👉</span>
-      <span class="test-attention test-attention-right" aria-hidden="true">👈</span>
+      <span class="test-side-indicator test-indicator-left" aria-hidden="true">👉</span>
 
-      <span>
+      <span class="test-main-icon">
         📝
       </span>
+
+      <span class="test-side-indicator test-indicator-right" aria-hidden="true">👈</span>
 
       <div>
 
@@ -361,29 +434,73 @@
        ========================================== -->
 
   <section class="gs-social-card" aria-label="गणित सेतु से जुड़ें">
+
     <div class="gs-social-heading">
+
       <div>
-        <span class="gs-social-label">🔗 हमसे जुड़े रहें</span>
-        <h2>गणित सेतु से जुड़ें</h2>
-        <p>नए टेस्ट, नोट्स और महत्वपूर्ण अपडेट के लिए</p>
+
+        <span class="gs-social-label">
+          🔗 हमसे जुड़े रहें
+        </span>
+
+        <h2>
+          गणित सेतु से जुड़ें
+        </h2>
+
+        <p>
+          नए टेस्ट, नोट्स और महत्वपूर्ण अपडेट के लिए
+        </p>
+
       </div>
+
     </div>
 
     <div class="gs-social-grid">
+
       <!-- वास्तविक Ganit Setu links बाद में यहाँ डालें -->
-      <a class="gs-social-btn youtube" id="socialYoutube" href="contact.html" aria-label="YouTube">
-        <span>▶</span><b>YouTube</b>
+
+      <a
+        class="gs-social-btn youtube"
+        id="socialYoutube"
+        href="contact.html"
+        aria-label="YouTube"
+      >
+        <span>▶</span>
+        <b>YouTube</b>
       </a>
-      <a class="gs-social-btn facebook" id="socialFacebook" href="contact.html" aria-label="Facebook">
-        <span>f</span><b>Facebook</b>
+
+      <a
+        class="gs-social-btn facebook"
+        id="socialFacebook"
+        href="contact.html"
+        aria-label="Facebook"
+      >
+        <span>f</span>
+        <b>Facebook</b>
       </a>
-      <a class="gs-social-btn whatsapp" id="socialWhatsapp" href="contact.html" aria-label="WhatsApp">
-        <span>◉</span><b>WhatsApp</b>
+
+      <a
+        class="gs-social-btn whatsapp"
+        id="socialWhatsapp"
+        href="contact.html"
+        aria-label="WhatsApp"
+      >
+        <span>◉</span>
+        <b>WhatsApp</b>
       </a>
-      <a class="gs-social-btn instagram" id="socialInstagram" href="contact.html" aria-label="Instagram">
-        <span>◎</span><b>Instagram</b>
+
+      <a
+        class="gs-social-btn instagram"
+        id="socialInstagram"
+        href="contact.html"
+        aria-label="Instagram"
+      >
+        <span>◎</span>
+        <b>Instagram</b>
       </a>
+
     </div>
+
   </section>
 
 
@@ -405,7 +522,6 @@
 
 <script src="assets/js/profile.js"></script>
 
-<script src="assets/js/leaderboard-home.js"></script>
 <script src="assets/js/home-status.js"></script>
 
 
@@ -488,16 +604,44 @@
 
 <script>
 (async function(){
+
 try{
- const {data,error}=await supabaseClient.from("contact_settings")
- .select("youtube_url,facebook_url,whatsapp_url,instagram_url").eq("id",1).maybeSingle();
+
+ const {data,error}=await supabaseClient
+ .from("contact_settings")
+ .select("youtube_url,facebook_url,whatsapp_url,instagram_url")
+ .eq("id",1)
+ .maybeSingle();
+
  if(error||!data)return;
- [["socialYoutube",data.youtube_url],["socialFacebook",data.facebook_url],
-  ["socialWhatsapp",data.whatsapp_url],["socialInstagram",data.instagram_url]].forEach(([id,url])=>{
-   const el=document.getElementById(id); if(el&&url){el.href=url;el.target="_blank";el.rel="noopener noreferrer";}
-  });
-}catch(e){console.warn("Social links load failed:",e);}
+
+ [
+  ["socialYoutube",data.youtube_url],
+  ["socialFacebook",data.facebook_url],
+  ["socialWhatsapp",data.whatsapp_url],
+  ["socialInstagram",data.instagram_url]
+ ].forEach(([id,url])=>{
+
+   const el=document.getElementById(id);
+
+   if(el&&url){
+
+     el.href=url;
+     el.target="_blank";
+     el.rel="noopener noreferrer";
+
+   }
+
+ });
+
+}catch(e){
+
+ console.warn("Social links load failed:",e);
+
+}
+
 })();
 </script>
+
 </body>
 </html>
