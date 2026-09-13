@@ -731,11 +731,17 @@
 
   .home-status-badge{
     min-height:15px;
-    margin:2px auto 0;
+    margin:3px auto 0;
     padding:3px 4px;
-    font-size:clamp(6px,1.65vw,7.5px);
-    line-height:1;
+    font-size:clamp(6px,1.6vw,7.3px);
+    line-height:1.02;
     border-radius:12px;
+  }
+
+  /* Chapter status badge was sitting slightly high on mobile */
+  .chapter-panel .home-status-badge,
+  #chapterStatusCard .home-status-badge{
+    margin-top:5px;
   }
 
   .home-status-check{
@@ -919,20 +925,21 @@
     content:"रोज़ 5 प्रश्न, बड़ी सफलता!";
     display:block;
     width:100%;
-    font-size:7px;
+    font-size:6.4px;
     line-height:1.05;
     font-weight:900;
-    letter-spacing:-.15px;
+    letter-spacing:-.2px;
     white-space:nowrap;
+    overflow:visible;
   }
 
   .daily-encourage > div:first-child > small{
     display:block;
     width:100%;
     margin-top:1px;
-    font-size:5.15px;
+    font-size:5.05px;
     line-height:1.05;
-    letter-spacing:-.22px;
+    letter-spacing:-.24px;
     white-space:nowrap;
     overflow:visible;
     text-overflow:clip;
@@ -1054,8 +1061,13 @@
   }
 
   .home-status-badge{
-    font-size:5.8px;
+    font-size:5.7px;
     padding:3px;
+  }
+
+  .chapter-panel .home-status-badge,
+  #chapterStatusCard .home-status-badge{
+    margin-top:4px;
   }
 
   .course-progress-box,
@@ -1146,13 +1158,13 @@
   }
 
   .daily-encourage > div:first-child > b::after{
-    font-size:6.5px;
-    letter-spacing:-.2px;
+    font-size:6.1px;
+    letter-spacing:-.25px;
   }
 
   .daily-encourage > div:first-child > small{
-    font-size:4.85px;
-    letter-spacing:-.25px;
+    font-size:4.7px;
+    letter-spacing:-.28px;
   }
 }
 
