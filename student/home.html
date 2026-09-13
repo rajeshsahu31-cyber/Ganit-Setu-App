@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/home.css">
   <link rel="stylesheet" href="assets/css/bottom-nav.css">
-  <link rel="stylesheet" href="assets/css/home-status.css">
 </head>
 
 <body>
@@ -93,13 +92,7 @@
 
 <main class="home-container">
 
-
-  <!-- ==========================================
-       DYNAMIC IMAGE BANNER
-       Admin Panel → home_banners से images आएँगी
-       कोई fixed/default text या image नहीं
-       ========================================== -->
-
+  <!-- DYNAMIC IMAGE BANNER -->
   <section
     class="gs-banner-slider"
     id="gsBannerSlider"
@@ -132,17 +125,11 @@
   </section>
 
 
-  <!-- ==========================================
-       WELCOME
-       ========================================== -->
-
+  <!-- WELCOME -->
   <section class="welcome-card">
 
     <div>
-
-      <span>
-        WELCOME
-      </span>
+      <span>WELCOME</span>
 
       <h2>
         नमस्ते,
@@ -153,36 +140,25 @@
       <p>
         गणित सीखें, अभ्यास करें और आगे बढ़ें
       </p>
-
     </div>
 
-
     <div class="welcome-badge">
-
       <img
         src="assets/images/ganit-setu-logo.webp"
         alt="गणित सेतु Logo"
       >
-
     </div>
 
   </section>
 
 
-
-  <!-- ==========================================
-       STUDENT PROFILE
-       ========================================== -->
-
+  <!-- STUDENT PROFILE -->
   <section class="student-profile-card">
-
 
     <div
       class="student-photo"
       id="studentPhoto"
-    >
-    </div>
-
+    ></div>
 
     <div class="student-details">
 
@@ -191,7 +167,6 @@
       </p>
 
       <h1 id="studentName"></h1>
-
 
       <div class="student-meta">
 
@@ -214,155 +189,65 @@
 
     </div>
 
-
+    <!-- केवल विद्यार्थी की अपनी frozen rank -->
     <div class="my-rank-box">
 
       <small>
         मेरी रैंक
       </small>
 
-      <strong id="myRank"></strong>
+      <strong id="myRank">जाँच हो रही है...</strong>
 
     </div>
 
   </section>
 
 
-
-  <!-- ==========================================
-       TODAY'S TEST STATUS
-       Profile के ठीक नीचे
-       Leaderboard / Top 10 यहाँ नहीं है
-       ========================================== -->
-
+  <!-- आज के टेस्ट की स्थिति -->
   <section
     class="home-test-status"
     id="homeTestStatus"
-    aria-label="आज की टेस्ट स्थिति"
+    aria-label="आज के टेस्ट की स्थिति"
   >
 
     <div class="home-test-status-head">
-
       <div>
-
-        <span>
-          📋 आज की स्थिति
-        </span>
-
-        <h2>
-          आज के टेस्ट
-        </h2>
-
+        <span>📋 आज की स्थिति</span>
+        <h2>आज के टेस्ट</h2>
       </div>
-
     </div>
 
-
-    <div class="home-test-status-grid">
-
-
-      <div
-        class="home-status-card"
-        id="courseStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📘
-        </div>
-
-        <div class="home-status-content">
-
-          <b>
-            Course Test
-          </b>
-
-          <small id="courseStatusText">
-            जाँच हो रही है...
-          </small>
-
-        </div>
-
-      </div>
-
-
-
-      <div
-        class="home-status-card"
-        id="chapterStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📖
-        </div>
-
-        <div class="home-status-content">
-
-          <b>
-            Chapter Test
-          </b>
-
-          <small id="chapterStatusText">
-            जाँच हो रही है...
-          </small>
-
-        </div>
-
-      </div>
-
-
-
-      <div
-        class="home-status-card"
-        id="dailyStatusCard"
-      >
-
-        <div class="home-status-icon">
-          📝
-        </div>
-
-        <div class="home-status-content">
-
-          <b>
-            Daily Test
-          </b>
-
-          <small id="dailyStatusText">
-            जाँच हो रही है...
-          </small>
-
-        </div>
-
-      </div>
-
-
-    </div>
+    <div
+      class="home-test-status-grid"
+      id="homeTestStatusGrid"
+    ></div>
 
   </section>
 
 
-
-  <!-- ==========================================
-       MAIN ACTIONS
-       ========================================== -->
-
+  <!-- MAIN ACTIONS -->
   <section class="main-actions">
-
 
     <a
       class="main-action test-btn"
       href="test-types.html"
     >
 
-      <span class="test-side-indicator test-indicator-left" aria-hidden="true">👉</span>
+      <span
+        class="test-side-indicator test-indicator-left"
+        aria-hidden="true"
+      >👉</span>
 
       <span class="test-main-icon">
         📝
       </span>
 
-      <span class="test-side-indicator test-indicator-right" aria-hidden="true">👈</span>
+      <span
+        class="test-side-indicator test-indicator-right"
+        aria-hidden="true"
+      >👈</span>
 
       <div>
-
         <b>
           टेस्ट दें
         </b>
@@ -370,11 +255,9 @@
         <small>
           अभ्यास और परीक्षा
         </small>
-
       </div>
 
     </a>
-
 
 
     <a
@@ -387,7 +270,6 @@
       </span>
 
       <div>
-
         <b>
           मेरे परिणाम
         </b>
@@ -395,11 +277,9 @@
         <small>
           अपनी प्रगति देखें
         </small>
-
       </div>
 
     </a>
-
 
 
     <a
@@ -412,7 +292,6 @@
       </span>
 
       <div>
-
         <b>
           पिछला परिणाम जानें
         </b>
@@ -420,25 +299,21 @@
         <small>
           पुराने टेस्ट का रिकॉर्ड देखें
         </small>
-
       </div>
 
     </a>
 
-
   </section>
 
 
-  <!-- ==========================================
-       GANIT SETU SOCIAL / CONTACT
-       ========================================== -->
-
-  <section class="gs-social-card" aria-label="गणित सेतु से जुड़ें">
+  <!-- GANIT SETU SOCIAL / CONTACT -->
+  <section
+    class="gs-social-card"
+    aria-label="गणित सेतु से जुड़ें"
+  >
 
     <div class="gs-social-heading">
-
       <div>
-
         <span class="gs-social-label">
           🔗 हमसे जुड़े रहें
         </span>
@@ -450,14 +325,10 @@
         <p>
           नए टेस्ट, नोट्स और महत्वपूर्ण अपडेट के लिए
         </p>
-
       </div>
-
     </div>
 
     <div class="gs-social-grid">
-
-      <!-- वास्तविक Ganit Setu links बाद में यहाँ डालें -->
 
       <a
         class="gs-social-btn youtube"
@@ -500,36 +371,30 @@
       </a>
 
     </div>
-
   </section>
 
 
 </main>
 
 
-
-<!-- ==========================================
-     SUPABASE
-     ========================================== -->
-
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="assets/js/supabase.js"></script>
 
 <script src="assets/js/home.js"></script>
 
+<!-- Home पर केवल विद्यार्थी की अपनी frozen rank -->
+<script src="assets/js/leaderboard-home.js"></script>
+
+<script src="assets/js/home-status.js"></script>
+
 <script src="assets/js/menu.js"></script>
 
 <script src="assets/js/profile.js"></script>
 
-<script src="assets/js/home-status.js"></script>
 
-
-
-<!-- ==========================================
-     BOTTOM NAVIGATION
-     ========================================== -->
-
+<!-- BOTTOM NAVIGATION -->
 <nav
   class="bottom-nav"
   aria-label="मुख्य नेविगेशन"
@@ -540,7 +405,6 @@
     data-page="home"
     class="active"
   >
-
     <span class="nav-icon">
       ⌂
     </span>
@@ -548,7 +412,6 @@
     <span class="nav-label">
       होम
     </span>
-
   </a>
 
 
@@ -556,7 +419,6 @@
     href="leaderboard.html"
     data-page="leaderboard"
   >
-
     <span class="nav-icon">
       🏆
     </span>
@@ -564,7 +426,6 @@
     <span class="nav-label">
       रैंकिंग
     </span>
-
   </a>
 
 
@@ -572,7 +433,6 @@
     href="pragati.html"
     data-page="pragati"
   >
-
     <span class="nav-icon">
       📈
     </span>
@@ -580,7 +440,6 @@
     <span class="nav-label">
       प्रगति
     </span>
-
   </a>
 
 
@@ -588,7 +447,6 @@
     href="profile.html"
     data-page="profile"
   >
-
     <span class="nav-icon">
       👤
     </span>
@@ -596,50 +454,45 @@
     <span class="nav-label">
       प्रोफाइल
     </span>
-
   </a>
 
 </nav>
 
 
+<!-- SOCIAL LINKS -->
 <script>
 (async function(){
+  try{
+    const { data, error } = await supabaseClient
+      .from("contact_settings")
+      .select(
+        "youtube_url,facebook_url,whatsapp_url,instagram_url"
+      )
+      .eq("id", 1)
+      .maybeSingle();
 
-try{
+    if(error || !data) return;
 
- const {data,error}=await supabaseClient
- .from("contact_settings")
- .select("youtube_url,facebook_url,whatsapp_url,instagram_url")
- .eq("id",1)
- .maybeSingle();
+    [
+      ["socialYoutube", data.youtube_url],
+      ["socialFacebook", data.facebook_url],
+      ["socialWhatsapp", data.whatsapp_url],
+      ["socialInstagram", data.instagram_url]
+    ].forEach(([id, url]) => {
 
- if(error||!data)return;
+      const el = document.getElementById(id);
 
- [
-  ["socialYoutube",data.youtube_url],
-  ["socialFacebook",data.facebook_url],
-  ["socialWhatsapp",data.whatsapp_url],
-  ["socialInstagram",data.instagram_url]
- ].forEach(([id,url])=>{
+      if(el && url){
+        el.href = url;
+        el.target = "_blank";
+        el.rel = "noopener noreferrer";
+      }
 
-   const el=document.getElementById(id);
+    });
 
-   if(el&&url){
-
-     el.href=url;
-     el.target="_blank";
-     el.rel="noopener noreferrer";
-
-   }
-
- });
-
-}catch(e){
-
- console.warn("Social links load failed:",e);
-
-}
-
+  }catch(e){
+    console.warn("Social links load failed:", e);
+  }
 })();
 </script>
 
