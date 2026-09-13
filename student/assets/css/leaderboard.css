@@ -1,0 +1,69 @@
+/* =====================================================
+   GANIT SETU - FINAL LEADERBOARD RESPONSIVE
+   ===================================================== */
+.leaderboard-container{max-width:1100px;margin:auto;padding:18px 16px 90px}
+.leaderboard-header{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.leaderboard-title-wrap{flex:1;min-width:190px;text-align:center}
+.leaderboard-title-wrap h1{margin:0;font-size:28px}
+.leaderboard-title-wrap p{margin:3px 0;font-size:11px}
+.back-home-btn{white-space:nowrap}
+.ranking-control-card{background:#fff;border:1px solid #d8e5ef;border-radius:16px;padding:15px;display:flex;justify-content:space-between;gap:15px;align-items:center;box-shadow:0 5px 15px rgba(0,0,0,.08)}
+.ranking-kicker{font-size:10px;font-weight:800;color:#1764a5}
+.ranking-heading h2{margin:2px 0;font-size:22px}
+.ranking-heading p{margin:0;color:#687b8b;font-size:11px}
+.ranking-info{display:flex;gap:8px;align-items:center}
+.class-badge,.freeze-badge{padding:8px 11px;border-radius:10px;background:#edf6ff;color:#1764a5;font-size:11px;white-space:nowrap}
+.freeze-badge{background:#eef8ee;color:#24743a}
+.podium{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:12px;align-items:end;margin:18px 0}
+.podium-card{min-width:0;text-align:center;border-radius:20px;padding:12px 8px;background:linear-gradient(#f9fcff,#c6d3df);border:2px solid #c5d1dc;box-shadow:0 8px 18px rgba(0,0,0,.16)}
+.podium-card.first{order:2;background:linear-gradient(#fff9bd,#ffd14b);border-color:#dcae27;transform:translateY(-7px);padding-top:17px}
+.podium-card.second{order:1}.podium-card.third{order:3;background:linear-gradient(#fff0e4,#efb084);border-color:#d49a70}
+.podium-card.empty{opacity:.65}
+.podium-medal{font-size:32px;line-height:1.05}
+.podium-photo{width:76px;height:76px;border-radius:50%;object-fit:cover;margin:5px auto;border:4px solid #fff;background:#dce8f1;display:flex;align-items:center;justify-content:center;font-weight:900;color:#41627b}
+.first .podium-photo{width:92px;height:92px}
+.podium-name{font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.podium-school,.podium-class{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.podium-score{background:#fff;border-radius:12px;padding:5px;margin-top:6px;font-size:19px;font-weight:900}
+.first .podium-score{background:#ffe27b}
+.podium-meta{font-size:9px;margin-top:4px;font-weight:700}
+.top10-section{background:#fff;border-radius:16px;border:1px solid #d8e5ef;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.08)}
+.top10-heading{padding:11px 14px;background:#07375f;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.top10-heading span{font-size:9px;opacity:.8}.top10-heading h2{margin:1px 0;font-size:18px}.overall-label{font-size:11px;font-weight:800}
+.leaderboard-message{padding:8px 12px;font-size:9px;color:#5e7181;background:#f7fbfe;border-bottom:1px solid #e0ebf2}
+.rank-row{display:grid;grid-template-columns:42px 48px minmax(180px,1.7fr) 82px 112px 150px;gap:7px;align-items:center;padding:8px 10px;min-height:65px;border-bottom:1px solid #e1eaf0}
+.rank-row:nth-child(even){background:#f6fafd}.rank-row:last-child{border-bottom:0}
+.rank-no{text-align:center;font-size:15px;font-weight:900;color:#2d5876}
+.rank-photo,.rank-photo-placeholder{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#dce8f1;display:flex;align-items:center;justify-content:center;color:#49677d;font-size:10px;font-weight:900}
+.rank-student{min-width:0}.rank-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-school{font-size:9px;color:#647889;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-class{font-size:8px;color:#8a98a4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-overall{text-align:center;background:#fff0bd;border-radius:8px;padding:6px 2px}.rank-overall strong{display:block;font-size:12px}.rank-overall small{font-size:7px;color:#6d7881}
+.rank-metrics{display:flex;justify-content:center;gap:10px;text-align:center}.metric b{display:block;font-size:7px;color:#72808c}.metric span{font-size:9px;font-weight:800}
+.rank-status{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}.test-status{border-radius:6px;padding:4px 5px;font-size:7px;font-weight:800;white-space:nowrap}.test-status.done{background:#e5f6e8;color:#24743a}.test-status.pending{background:#eef1f4;color:#77828b}
+.empty-row{opacity:.75;background:#fafcfd!important}
+.ranking-formula-card.compact{margin-top:10px;padding:8px 11px;border-radius:10px;background:#5a290d;color:#fff;font-size:9px;text-align:center}.ranking-formula-card.compact b{color:#ffd54b}
+@media(max-width:700px){
+ .leaderboard-container{padding:9px 7px 82px}
+ .leaderboard-header{gap:8px;padding:8px 10px}
+ .leaderboard-title-wrap h1{font-size:21px}.leaderboard-title-wrap p{font-size:8px}
+ .back-home-btn{font-size:10px;padding:6px 8px}
+ .ranking-control-card{padding:9px;border-radius:12px}.ranking-heading h2{font-size:16px}.ranking-heading p{font-size:8px}.ranking-kicker{font-size:7px}
+ .ranking-info{gap:4px}.class-badge,.freeze-badge{font-size:8px;padding:6px 7px}
+ .podium{gap:5px;margin:10px 0}.podium-card{border-radius:14px;padding:7px 3px}.podium-card.first{padding-top:10px}
+ .podium-medal{font-size:23px}.podium-photo{width:50px;height:50px}.first .podium-photo{width:62px;height:62px}
+ .podium-name{font-size:9px}.podium-school,.podium-class{font-size:6.5px}.podium-score{font-size:13px;padding:4px;margin-top:4px}.podium-meta{font-size:6.5px}
+ .top10-heading{padding:8px 9px}.top10-heading h2{font-size:13px}.overall-label{font-size:8px}
+ .leaderboard-message{font-size:7px;padding:6px 8px}
+ .rank-row{grid-template-columns:22px 30px minmax(0,1fr) 48px 55px 69px;gap:3px;padding:6px 4px;min-height:52px}
+ .rank-no{font-size:10px}.rank-photo,.rank-photo-placeholder{width:29px;height:29px;font-size:7px}
+ .rank-name{font-size:8px}.rank-school{font-size:6.3px}.rank-class{font-size:5.8px}
+ .rank-overall{padding:4px 1px}.rank-overall strong{font-size:8px}.rank-overall small{font-size:5.5px}
+ .rank-metrics{gap:3px}.metric b{font-size:5.5px}.metric span{font-size:6.5px}
+ .rank-status{gap:2px}.test-status{padding:3px 3px;font-size:5.5px}
+ .ranking-formula-card.compact{font-size:6.5px;padding:6px}
+}
+@media(max-width:390px){
+ .leaderboard-title-wrap h1{font-size:19px}
+ .rank-row{grid-template-columns:20px 28px minmax(0,1fr) 45px 50px 62px}
+ .rank-name{font-size:7.5px}.rank-school{font-size:5.8px}.rank-class{font-size:5.4px}
+ .rank-overall strong{font-size:7.5px}.metric span{font-size:6px}.test-status{font-size:5px}
+}
