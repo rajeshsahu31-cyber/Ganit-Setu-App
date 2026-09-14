@@ -288,6 +288,28 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   margin:0 0 8px;
   text-align:left;
   line-height:1.2;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.student-details h1::before{
+  content:"👋";
+  display:inline-block;
+  font-size:25px;
+  line-height:1;
+  flex:none;
+  transform-origin:70% 80%;
+  animation:profileHandWave 2.8s ease-in-out infinite;
+}
+
+@keyframes profileHandWave{
+  0%,75%,100%{transform:rotate(0deg)}
+  79%{transform:rotate(14deg)}
+  83%{transform:rotate(-10deg)}
+  87%{transform:rotate(8deg)}
+  91%{transform:rotate(-4deg)}
+  95%{transform:rotate(0deg)}
 }
 
 .student-meta{
@@ -929,4 +951,19 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   .gs-social-btn{height:62px !important;}
   .gs-social-btn span{width:28px !important;height:28px !important;font-size:17px !important;}
   .gs-social-btn b{font-size:8px !important;}
+}
+
+/* ===== MERGED WELCOME + PROFILE ===== */
+.profile-welcome-text{
+  margin:0 0 8px;
+  color:var(--gs-muted);
+  font-size:11px;
+  line-height:1.2;
+}
+
+@media(max-width:480px){
+  .profile-welcome-text{
+    font-size:10px;
+    margin-bottom:6px;
+  }
 }
