@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="hi">
 <head>
@@ -181,6 +180,57 @@ body{
     .gs-test-arrow{width:34px;height:34px;font-size:25px;}
     .gs-test-footer{padding-top:10px;font-size:10px;}
   }
+
+
+/* ============================================
+   YOUR PREPARATION — dynamic, compact summary
+   Uses the same student-results RPC/source as Home/Results.
+   Chapter slots are reserved for the student's full syllabus:
+   Class 9 = 6 + 6, Class 10 = 7 + 7.
+   ============================================ */
+.gs-prep-summary{
+  width:100%;
+  margin:14px 0 0;
+  padding:13px;
+  border:2px solid #cfe3f8;
+  border-radius:22px;
+  background:linear-gradient(145deg,#f7fbff 0%,#ffffff 58%,#eef7ff 100%);
+  box-shadow:0 8px 22px rgba(27,51,91,.08),inset 0 1px 0 rgba(255,255,255,.95);
+}
+.gs-prep-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.gs-prep-title{display:flex;align-items:center;gap:8px;color:#17365d}
+.gs-prep-title-icon{font-size:24px}
+.gs-prep-title strong{font-size:21px;font-weight:900}
+.gs-prep-stats{display:grid;grid-template-columns:1.45fr 1fr 1fr;gap:9px;align-items:stretch}
+.gs-prep-stat{min-width:0;border-radius:17px;padding:11px 9px;display:flex;gap:9px;align-items:flex-start;border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1px 0 #fff,0 3px 9px rgba(35,60,90,.06)}
+.gs-prep-chapters{background:linear-gradient(145deg,#eafff4,#f8fffc)}
+.gs-prep-total{background:linear-gradient(145deg,#edf7ff,#f8fbff)}
+.gs-prep-best{background:linear-gradient(145deg,#fff7df,#fffdf7)}
+.gs-prep-stat-icon{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.8);font-size:22px}
+.gs-prep-stat-body{min-width:0;flex:1}
+.gs-prep-stat-body strong{display:block;font-size:13px;line-height:1.2;color:#17365d;margin-bottom:5px}
+.gs-prep-stat-body>b{display:block;font-size:25px;line-height:1.05;color:#17365d}
+.gs-prep-stat-body small{display:block;margin-top:4px;font-size:9.5px;line-height:1.25;color:#5d7692;font-weight:700}
+.gs-completed-chapters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:27px;gap:5px;min-height:59px;align-content:start}
+.gs-completed-chapters[data-cols="7"]{grid-template-columns:repeat(7,minmax(0,1fr))}
+.gs-completed-chapters .gs-chapter-num{height:27px;display:grid;place-items:center;border-radius:9px;background:#fff;border:1px solid #bfe8d4;color:#087a4a;font-size:12px;font-weight:900;box-shadow:0 2px 5px rgba(27,91,65,.06)}
+.gs-chapter-placeholder{grid-column:1/-1;align-self:center;color:#7890a7;font-size:10px;font-weight:700}
+.gs-prep-message{margin-top:9px;padding:9px 10px;border-radius:13px;text-align:center;background:linear-gradient(90deg,#eef8ff,#fff9e8,#fff0f5);color:#5d7692;font-size:10.5px;font-weight:800}
+@media(max-width:560px){
+  .gs-prep-summary{margin-top:11px;padding:10px;border-radius:19px}
+  .gs-prep-head{margin-bottom:8px}
+  .gs-prep-title{gap:6px}.gs-prep-title-icon{font-size:20px}.gs-prep-title strong{font-size:18px}
+  .gs-prep-stats{grid-template-columns:1.35fr .82fr .82fr;gap:6px}
+  .gs-prep-stat{padding:8px 6px;gap:6px;border-radius:14px}
+  .gs-prep-stat-icon{width:29px;height:29px;flex-basis:29px;border-radius:9px;font-size:17px}
+  .gs-prep-stat-body strong{font-size:10px;margin-bottom:4px}
+  .gs-prep-stat-body>b{font-size:20px}
+  .gs-prep-stat-body small{font-size:8px;margin-top:3px}
+  .gs-completed-chapters{grid-auto-rows:23px;gap:4px;min-height:50px}
+  .gs-completed-chapters .gs-chapter-num{height:23px;border-radius:7px;font-size:10px}
+  .gs-chapter-placeholder{font-size:8.5px}
+  .gs-prep-message{margin-top:7px;padding:7px 6px;font-size:9px;border-radius:11px}
+}
 </style>
 
 </head>
@@ -221,6 +271,46 @@ body{
     <span class="gs-test-arrow">›</span>
   </button>
 
+  <!-- PREPARATION SUMMARY — same result source as Home/Results -->
+  <section class="gs-prep-summary" id="gsPrepSummary" aria-label="आपकी तैयारी">
+    <div class="gs-prep-head">
+      <div class="gs-prep-title"><span class="gs-prep-title-icon">📊</span><strong>आपकी तैयारी</strong></div>
+    </div>
+
+    <div class="gs-prep-stats">
+      <div class="gs-prep-stat gs-prep-chapters">
+        <div class="gs-prep-stat-icon">📚</div>
+        <div class="gs-prep-stat-body">
+          <strong>अध्याय अभ्यास</strong>
+          <div id="gsCompletedChapters" class="gs-completed-chapters" data-cols="6">
+            <span class="gs-chapter-placeholder">लोड हो रहा है…</span>
+          </div>
+          <small id="gsChapterCount">0 अध्याय पूरे</small>
+        </div>
+      </div>
+
+      <div class="gs-prep-stat gs-prep-total">
+        <div class="gs-prep-stat-icon">📝</div>
+        <div class="gs-prep-stat-body">
+          <strong>कुल टेस्ट</strong>
+          <b id="gsTotalTests">—</b>
+          <small>अब तक दिए गए</small>
+        </div>
+      </div>
+
+      <div class="gs-prep-stat gs-prep-best">
+        <div class="gs-prep-stat-icon">🏆</div>
+        <div class="gs-prep-stat-body">
+          <strong>Best Score</strong>
+          <b id="gsBestScore">—</b>
+          <small>सबसे अच्छा प्रदर्शन</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="gs-prep-message">🌟 नियमित अभ्यास से ही बनती है मजबूत नींव</div>
+  </section>
+
   <div class="gs-test-footer">📖 सीखें • अभ्यास करें • आगे बढ़ें</div>
 </section>
 
@@ -239,5 +329,65 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
+<script id="gs-preparation-summary">
+(function(){
+  function normalizeClass(v){
+    const m=String(v??'').match(/(?:9|10)/);
+    return m?Number(m[0]):0;
+  }
+  function isSubmitted(r){
+    const status=String(r?.status||'').toLowerCase();
+    return status==='submitted' || !!r?.submitted_at;
+  }
+  function chapterNumber(r){
+    const direct=Number(r?.chapter_from ?? r?.chapter_number ?? r?.chapter);
+    if(Number.isInteger(direct) && direct>0) return direct;
+    const text=String(r?.test_title||r?.title||r?.test_name||'');
+    const m=text.match(/(?:chapter|अध्याय)\s*[-:]?\s*(\d+)/i);
+    return m?Number(m[1]):null;
+  }
+  async function loadPrep(){
+    const code=sessionStorage.getItem('ganit_setu_student_id');
+    if(!code || typeof supabaseClient==='undefined') return;
+    try{
+      const {data:rows,error}=await supabaseClient.rpc('get_ganit_student_results',{p_student_code:code});
+      if(error) throw error;
+      const all=(Array.isArray(rows)?rows:[]).filter(isSubmitted);
+      const studentClass=Number(sessionStorage.getItem('ganit_setu_student_class'));
+      const cls=(studentClass===9||studentClass===10)?studentClass:normalizeClass(all[0]?.class_level);
+      const max=cls===9?12:14;
+      const chapters=new Set();
+      all.forEach(r=>{
+        if(String(r?.test_type||'').toLowerCase()==='chapter_practice'){
+          const n=chapterNumber(r);
+          if(Number.isInteger(n)&&n>=1&&n<=max) chapters.add(n);
+        }
+      });
+      const list=document.getElementById('gsCompletedChapters');
+      const count=document.getElementById('gsChapterCount');
+      const total=document.getElementById('gsTotalTests');
+      const best=document.getElementById('gsBestScore');
+      if(list){
+        list.dataset.cols=cls===10?'7':'6';
+        const sorted=[...chapters].sort((a,b)=>a-b);
+        list.innerHTML=sorted.length
+          ? sorted.map(n=>`<span class="gs-chapter-num">${n}</span>`).join('')
+          : '<span class="gs-chapter-placeholder">अभी कोई अध्याय टेस्ट नहीं</span>';
+      }
+      if(count) count.textContent=`${chapters.size} अध्याय पूरे`;
+      if(total) total.textContent=String(all.length);
+      if(best){
+        const p=all.map(r=>Number(r?.percentage)).filter(Number.isFinite);
+        best.textContent=p.length?Math.max(...p).toFixed(0)+'%':'—';
+      }
+    }catch(e){
+      console.error('Preparation summary load error:',e);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadPrep,{once:true});
+  else loadPrep();
+})();
+</script>
 </body>
 </html>
