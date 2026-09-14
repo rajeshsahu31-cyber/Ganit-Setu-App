@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="hi">
 <head>
@@ -125,79 +126,60 @@ body{
 </style>
 
 <style id="gs-test-selection-final">
-  .gs-test-selection {
-    min-height: calc(100vh - 90px);
-    padding: 18px 14px 28px;
+  .gs-test-selection{
+    min-height:calc(100vh - 90px);
+    padding:18px 14px 28px;
     display:flex;
     flex-direction:column;
     box-sizing:border-box;
   }
-  .gs-test-selection h1 {
-    text-align:center;
-    margin:4px 0 5px;
-    font-size:clamp(24px,7vw,34px);
-    font-weight:900;
+  .gs-test-selection h1{
+    text-align:center;margin:4px 0 5px;font-size:clamp(24px,7vw,34px);
+    font-weight:900;color:#14243c;
   }
-  .gs-test-selection .sub {
-    text-align:center;
-    margin:0 0 18px;
-    font-size:14px;
-    opacity:.78;
+  .gs-test-selection .sub{
+    text-align:center;margin:0 0 18px;font-size:14px;color:#5d7692;opacity:.9;
   }
-  .gs-test-card {
-    width:100%;
-    min-height:150px;
-    border:0;
-    border-radius:24px;
-    margin:7px 0;
-    padding:18px 16px;
-    display:grid;
-    grid-template-columns:72px 1fr 44px;
-    align-items:center;
-    gap:13px;
-    text-align:left;
-    cursor:pointer;
-    box-shadow:0 9px 22px rgba(0,0,0,.13);
-    transition:transform .15s ease;
-    box-sizing:border-box;
+  .gs-test-card{
+    position:relative;width:100%;min-height:150px;margin:7px 0;padding:18px 16px;
+    display:grid;grid-template-columns:64px minmax(0,1fr) 42px;align-items:center;gap:13px;
+    text-align:left;cursor:pointer;box-sizing:border-box;text-decoration:none;color:#17365d;
+    border-radius:20px;overflow:hidden;
+    box-shadow:0 8px 20px rgba(27,51,91,.10),inset 0 1px 0 rgba(255,255,255,.95);
+    transition:transform .15s ease,box-shadow .15s ease;
   }
-  .gs-test-card:active { transform:scale(.985); }
-  .gs-test-icon {
-    width:64px;height:64px;border-radius:50%;
-    display:grid;place-items:center;
-    font-size:31px;
-    background:rgba(255,255,255,.72);
+  .gs-test-card::before{
+    content:"";position:absolute;inset:0;border:2px solid rgba(255,255,255,.74);
+    border-radius:inherit;pointer-events:none;
   }
-  .gs-test-card h2 {
-    margin:0 0 8px;
-    font-size:clamp(19px,5.3vw,27px);
-    font-weight:900;
+  .gs-test-card:active{transform:scale(.985);}
+  .gs-test-card:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(27,51,91,.14),inset 0 1px 0 rgba(255,255,255,.95);}
+  .gs-test-icon{
+    width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:29px;
+    background:rgba(255,255,255,.78);box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07);
   }
-  .gs-test-card p {
-    margin:0;
-    font-size:13px;
-    line-height:1.45;
-    font-weight:600;
+  .gs-test-card h2{margin:0 0 7px;font-size:clamp(18px,5vw,25px);line-height:1.22;font-weight:900;color:#17365d;}
+  .gs-test-card p{margin:0;font-size:13px;line-height:1.45;font-weight:600;color:#5d7692;}
+  .gs-test-arrow{
+    width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(255,255,255,.80);font-size:28px;line-height:1;font-weight:900;color:#17365d;
+    box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07);
   }
-  .gs-test-arrow {
-    width:42px;height:42px;border-radius:50%;
-    display:grid;place-items:center;
-    background:rgba(255,255,255,.76);
-    font-size:28px;font-weight:900;
-  }
-  .gs-daily { background:linear-gradient(135deg,#ffd66b,#f6a33b); }
-  .gs-chapter { background:linear-gradient(135deg,#8ed4ff,#4b8fe8); }
-  .gs-course { background:linear-gradient(135deg,#a9e8a0,#58b96b); }
-  .gs-test-footer {
-    margin-top:auto;
-    text-align:center;
-    padding-top:18px;
-    font-size:12px;
-    opacity:.65;
-  }
-  @media (min-width:700px) {
-    .gs-test-selection { max-width:760px; margin:auto; }
-    .gs-test-card { min-height:165px; }
+  .gs-course{background:linear-gradient(145deg,#dfffee 0%,#f5fffb 56%,#c8f7e1 100%);border:2px solid #8be2c4;}
+  .gs-chapter{background:linear-gradient(145deg,#fff5d8 0%,#fffdf5 56%,#ffe5a8 100%);border:2px solid #f2cb76;}
+  .gs-daily{background:linear-gradient(145deg,#ffe8ef 0%,#fffafd 56%,#ffd4df 100%);border:2px solid #f2aabd;}
+  .gs-test-footer{margin-top:auto;text-align:center;padding-top:18px;font-size:12px;color:#5d7692;opacity:.7;}
+  @media (min-width:700px){.gs-test-selection{max-width:760px;margin:auto}.gs-test-card{min-height:165px;}}
+  @media (max-width:560px){
+    .gs-test-selection{padding:10px 9px 18px;}
+    .gs-test-selection h1{font-size:23px;}
+    .gs-test-selection .sub{font-size:11px;margin-bottom:11px;}
+    .gs-test-card{min-height:0;margin:5px 0;padding:13px 12px;grid-template-columns:50px minmax(0,1fr) 36px;gap:10px;border-radius:18px;}
+    .gs-test-icon{width:48px;height:48px;border-radius:13px;font-size:24px;}
+    .gs-test-card h2{font-size:16px;margin-bottom:4px;}
+    .gs-test-card p{font-size:10.5px;line-height:1.4;}
+    .gs-test-arrow{width:34px;height:34px;font-size:25px;}
+    .gs-test-footer{padding-top:10px;font-size:10px;}
   }
 </style>
 
@@ -209,15 +191,17 @@ body{
   <h1>Test चुनें</h1>
   <p class="sub">अपनी तैयारी को एक नई दिशा दें</p>
 
-  <button class="gs-test-card gs-daily" type="button" data-test="daily">
-    <span class="gs-test-icon">📅</span>
+  <!-- COURSE TEST — TOP -->
+  <button class="gs-test-card gs-course" type="button" data-test="course">
+    <span class="gs-test-icon">📊</span>
     <span>
-      <h2>Daily Test</h2>
-      <p>रोज़ थोड़ा अभ्यास करें और<br>अपनी तैयारी मजबूत करें।</p>
+      <h2>Course Progress Test</h2>
+      <p>अब तक पढ़े अध्यायों से प्रश्न देकर<br>अपनी पूरी तैयारी जाँचें।</p>
     </span>
     <span class="gs-test-arrow">›</span>
   </button>
 
+  <!-- CHAPTER TEST — MIDDLE -->
   <button class="gs-test-card gs-chapter" type="button" data-test="chapter">
     <span class="gs-test-icon">📖</span>
     <span>
@@ -227,11 +211,12 @@ body{
     <span class="gs-test-arrow">›</span>
   </button>
 
-  <button class="gs-test-card gs-course" type="button" data-test="course">
-    <span class="gs-test-icon">📊</span>
+  <!-- DAILY TEST — BOTTOM -->
+  <button class="gs-test-card gs-daily" type="button" data-test="daily">
+    <span class="gs-test-icon">📝</span>
     <span>
-      <h2>Course Progress Test</h2>
-      <p>अब तक पढ़े अध्यायों से प्रश्न देकर<br>अपनी पूरी तैयारी जाँचें।</p>
+      <h2>Daily Test</h2>
+      <p>रोज़ थोड़ा अभ्यास करें और<br>अपनी तैयारी मजबूत करें।</p>
     </span>
     <span class="gs-test-arrow">›</span>
   </button>
