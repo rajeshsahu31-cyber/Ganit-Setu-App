@@ -792,8 +792,8 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 }
 
 /* =========================================================
-   GANIT SETU — CONTACT / SOCIAL ONLY
-   IMPORTANT: Main action buttons above are intentionally untouched.
+   GANIT SETU — SOCIAL / CONTACT FINAL TOUCH
+   Four equal, circular, glossy social buttons.
    ========================================================= */
 .gs-social-card{
   margin:26px 0 30px !important;
@@ -801,12 +801,12 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   border:1px solid #dfe5ef !important;
   border-radius:20px !important;
   background:linear-gradient(180deg,#ffffff 0%,#f7f9ff 100%) !important;
-  box-shadow:0 7px 20px rgba(24,45,90,.08) !important;
+  box-shadow:0 8px 22px rgba(24,45,90,.09) !important;
   text-align:center !important;
 }
 
 .gs-social-heading{
-  margin:0 0 15px !important;
+  margin:0 0 16px !important;
   padding:0 !important;
 }
 
@@ -838,78 +838,82 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 .gs-social-grid{
   display:grid !important;
   grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:9px !important;
+  gap:12px !important;
   width:100% !important;
-  align-items:stretch !important;
+  align-items:start !important;
 }
 
 .gs-social-btn{
   min-width:0 !important;
-  height:70px !important;
+  height:82px !important;
   box-sizing:border-box !important;
-  padding:8px 3px !important;
-  border-radius:15px !important;
+  padding:7px 2px 6px !important;
+  border-radius:16px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
   justify-content:center !important;
-  gap:5px !important;
+  gap:6px !important;
   color:#fff !important;
   text-decoration:none !important;
   overflow:hidden !important;
-  border:1px solid rgba(255,255,255,.5) !important;
-  box-shadow:0 5px 12px rgba(30,55,100,.14),inset 0 1px 0 rgba(255,255,255,.35) !important;
-  transition:transform .15s ease,box-shadow .15s ease !important;
+  border:1px solid rgba(255,255,255,.58) !important;
+  box-shadow:0 7px 15px rgba(30,55,100,.15),inset 0 1px 0 rgba(255,255,255,.42) !important;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease !important;
 }
 
 .gs-social-btn:hover{
-  transform:translateY(-2px) !important;
-  box-shadow:0 8px 16px rgba(30,55,100,.18),inset 0 1px 0 rgba(255,255,255,.4) !important;
+  transform:translateY(-3px) !important;
+  filter:saturate(1.08) !important;
+  box-shadow:0 10px 20px rgba(30,55,100,.20),inset 0 1px 0 rgba(255,255,255,.48) !important;
 }
 
 .gs-social-btn:active{
   transform:scale(.96) !important;
 }
 
-.gs-social-btn span{
-  width:34px !important;
-  height:34px !important;
-  margin:0 !important;
+.gs-social-btn .gs-social-icon{
+  width:43px !important;
+  height:43px !important;
+  flex:0 0 43px !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  border-radius:10px !important;
-  background:rgba(255,255,255,.20) !important;
-  border:1px solid rgba(255,255,255,.28) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35) !important;
-  color:#fff !important;
-  font-size:20px !important;
-  font-weight:900 !important;
-  line-height:1 !important;
+  border-radius:50% !important;
+  background:rgba(255,255,255,.18) !important;
+  border:1px solid rgba(255,255,255,.38) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 5px rgba(0,0,0,.10) !important;
+}
+
+.gs-social-btn .gs-social-icon svg{
+  width:24px !important;
+  height:24px !important;
+  display:block !important;
+  fill:currentColor !important;
 }
 
 .gs-social-btn b{
   display:block !important;
   margin:0 !important;
-  font-size:9.5px !important;
+  font-size:10px !important;
   line-height:1 !important;
   font-weight:800 !important;
   white-space:nowrap !important;
   color:#fff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.18) !important;
 }
 
-/* Four clear, colorful social buttons */
 .gs-social-btn.youtube{
-  background:linear-gradient(135deg,#ff4545,#d90000) !important;
+  background:linear-gradient(145deg,#ff5555 0%,#e30000 55%,#b90000 100%) !important;
 }
 .gs-social-btn.facebook{
-  background:linear-gradient(135deg,#3184f5,#0b56c9) !important;
+  background:linear-gradient(145deg,#4b9bff 0%,#1877e8 55%,#0b55bd 100%) !important;
 }
 .gs-social-btn.whatsapp{
-  background:linear-gradient(135deg,#31db73,#079447) !important;
+  background:linear-gradient(145deg,#43e987 0%,#18b85d 55%,#078a43 100%) !important;
 }
 .gs-social-btn.instagram{
-  background:linear-gradient(135deg,#833ab4 0%,#e1306c 50%,#f77737 78%,#fcb045 100%) !important;
+  background:linear-gradient(145deg,#7b36c5 0%,#d62976 52%,#f77737 78%,#fcb045 100%) !important;
 }
 
 @media(max-width:700px){
@@ -919,7 +923,7 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
     border-radius:18px !important;
   }
 
-  .gs-social-heading{margin-bottom:13px !important;}
+  .gs-social-heading{margin-bottom:14px !important;}
   .gs-social-heading h2{font-size:18px !important;}
   .gs-social-heading p{font-size:10.5px !important;}
 
@@ -929,17 +933,21 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
   }
 
   .gs-social-btn{
-    height:66px !important;
-    padding:7px 2px !important;
-    border-radius:13px !important;
-    gap:4px !important;
+    height:72px !important;
+    padding:6px 1px 5px !important;
+    border-radius:14px !important;
+    gap:5px !important;
   }
 
-  .gs-social-btn span{
-    width:30px !important;
-    height:30px !important;
-    border-radius:9px !important;
-    font-size:18px !important;
+  .gs-social-btn .gs-social-icon{
+    width:36px !important;
+    height:36px !important;
+    flex-basis:36px !important;
+  }
+
+  .gs-social-btn .gs-social-icon svg{
+    width:20px !important;
+    height:20px !important;
   }
 
   .gs-social-btn b{font-size:8.5px !important;}
@@ -948,8 +956,9 @@ body{background:#f5f7fb;color:var(--gs-text);margin:0;font-family:Arial,'Noto Sa
 @media(max-width:360px){
   .gs-social-card{padding-left:7px !important;padding-right:7px !important;}
   .gs-social-grid{gap:5px !important;}
-  .gs-social-btn{height:62px !important;}
-  .gs-social-btn span{width:28px !important;height:28px !important;font-size:17px !important;}
+  .gs-social-btn{height:68px !important;}
+  .gs-social-btn .gs-social-icon{width:33px !important;height:33px !important;flex-basis:33px !important;}
+  .gs-social-btn .gs-social-icon svg{width:18px !important;height:18px !important;}
   .gs-social-btn b{font-size:8px !important;}
 }
 
