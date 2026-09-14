@@ -6,272 +6,106 @@
 <title>टेस्ट दें | गणित सेतु</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
-:root{
-  --blue:#0867d8;
-  --deep:#073b82;
-  --text:#17365d;
-  --muted:#5d7692;
-}
+:root{--text:#17365d;--muted:#5d7692;--deep:#073b82}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:"Noto Sans Devanagari",Arial,sans-serif}
-body{
-  background:linear-gradient(145deg,#eef7ff 0%,#ffffff 48%,#f3f9ff 100%);
-  color:var(--text);
-  overflow:hidden;
-}
-.test-page{
-  min-height:100vh;
-  min-height:100dvh;
-  padding:18px 14px;
-  display:flex;
-  flex-direction:column;
-}
-.test-top{
-  text-align:center;
-  padding:6px 4px 14px;
-}
-.test-top a{
-  display:inline-block;
-  text-decoration:none;
-  color:var(--blue);
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:5px;
-}
-.test-top h1{
-  margin:0;
-  font-size:25px;
-  line-height:1.25;
-  color:var(--deep);
-  font-weight:800;
-}
-.test-top p{
-  margin:5px 0 0;
-  color:var(--muted);
-  font-size:12px;
-}
-.test-buttons{
-  flex:1;
-  display:grid;
-  grid-template-rows:repeat(3,1fr);
-  gap:12px;
-  width:min(100%,760px);
-  margin:0 auto;
-}
-.test-choice{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:15px;
-  text-decoration:none;
-  color:var(--text);
-  border-radius:24px;
-  padding:18px 18px;
-  background:#fff;
-  border:1px solid #d5e7f8;
-  box-shadow:0 10px 28px rgba(28,91,145,.10);
-  overflow:hidden;
-  transition:transform .15s ease,box-shadow .15s ease;
-}
-.test-choice:active{transform:scale(.985)}
-.test-choice::after{
-  content:"›";
-  position:absolute;
-  right:20px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:34px;
-  line-height:1;
-  color:var(--blue);
-  font-weight:400;
-}
-.test-icon{
-  width:62px;height:62px;flex:0 0 62px;
-  border-radius:18px;
-  display:grid;place-items:center;
-  font-size:31px;
-  background:#eaf5ff;
-}
-.test-content{min-width:0;padding-right:24px}
-.test-content h2{
-  margin:0 0 5px;
-  font-size:19px;
-  line-height:1.25;
-  color:#123d70;
-}
-.test-content p{
-  margin:0;
-  font-size:12.5px;
-  line-height:1.55;
-  color:var(--muted);
-  max-width:540px;
-}
-.choice-course .test-icon{background:#eef3ff}
-.choice-chapter .test-icon{background:#eefbf5}
-.choice-daily .test-icon{background:#fff7e9}
-@media(max-width:560px){
-  .test-page{padding:10px 9px 12px}
-  .test-top{padding:3px 3px 9px}
-  .test-top a{font-size:11px;margin-bottom:3px}
-  .test-top h1{font-size:21px}
-  .test-top p{font-size:10px}
-  .test-buttons{gap:9px}
-  .test-choice{border-radius:19px;padding:13px 12px;gap:11px}
-  .test-icon{width:50px;height:50px;flex-basis:50px;border-radius:14px;font-size:25px}
-  .test-content h2{font-size:15px;margin-bottom:3px}
-  .test-content p{font-size:10.5px;line-height:1.5}
-  .test-choice::after{right:12px;font-size:28px}
-}
-</style>
+body{background:linear-gradient(145deg,#eef7ff 0%,#fff 48%,#f3f9ff 100%);color:var(--text);overflow-x:hidden}
+.test-page{min-height:100vh;min-height:100dvh;padding:10px 9px 18px}
+.gs-test-selection{width:100%;max-width:760px;margin:0 auto;padding:3px 0 18px}
+.gs-test-selection h1{text-align:center;margin:0 0 4px;font-size:clamp(24px,7vw,34px);line-height:1.25;font-weight:900;color:#14243c}
+.gs-test-selection .sub{text-align:center;margin:0 0 11px;font-size:11px;color:#5d7692}
+.gs-test-card{position:relative;width:100%;min-height:150px;margin:5px 0;padding:18px 16px;display:grid;grid-template-columns:64px minmax(0,1fr) 42px;align-items:center;gap:13px;text-align:left;cursor:pointer;box-sizing:border-box;text-decoration:none;color:#17365d;border-radius:20px;overflow:hidden;box-shadow:0 8px 20px rgba(27,51,91,.10),inset 0 1px 0 rgba(255,255,255,.95);transition:transform .15s ease,box-shadow .15s ease}
+.gs-test-card::before{content:"";position:absolute;inset:0;border:2px solid rgba(255,255,255,.74);border-radius:inherit;pointer-events:none}
+.gs-test-card:active{transform:scale(.985)}
+.gs-test-icon{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:29px;background:rgba(255,255,255,.78);box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07)}
+.gs-test-card h2{margin:0 0 7px;font-size:clamp(18px,5vw,25px);line-height:1.22;font-weight:900;color:#17365d}
+.gs-test-card p{margin:0;font-size:13px;line-height:1.45;font-weight:600;color:#5d7692}
+.gs-test-arrow{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.80);font-size:28px;line-height:1;font-weight:900;color:#17365d;box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07)}
+.gs-course{background:linear-gradient(145deg,#dfffee 0%,#f5fffb 56%,#c8f7e1 100%);border:2px solid #8be2c4}
+.gs-chapter{background:linear-gradient(145deg,#fff5d8 0%,#fffdf5 56%,#ffe5a8 100%);border:2px solid #f2cb76}
+.gs-daily{background:linear-gradient(145deg,#ffe8ef 0%,#fffafd 56%,#ffd4df 100%);border:2px solid #f2aabd}
 
-<style id="gs-test-selection-final">
-  .gs-test-selection{
-    min-height:calc(100vh - 90px);
-    padding:18px 14px 28px;
-    display:flex;
-    flex-direction:column;
-    box-sizing:border-box;
-  }
-  .gs-test-selection h1{
-    text-align:center;margin:4px 0 5px;font-size:clamp(24px,7vw,34px);
-    font-weight:900;color:#14243c;
-  }
-  .gs-test-selection .sub{
-    text-align:center;margin:0 0 18px;font-size:14px;color:#5d7692;opacity:.9;
-  }
-  .gs-test-card{
-    position:relative;width:100%;min-height:150px;margin:7px 0;padding:18px 16px;
-    display:grid;grid-template-columns:64px minmax(0,1fr) 42px;align-items:center;gap:13px;
-    text-align:left;cursor:pointer;box-sizing:border-box;text-decoration:none;color:#17365d;
-    border-radius:20px;overflow:hidden;
-    box-shadow:0 8px 20px rgba(27,51,91,.10),inset 0 1px 0 rgba(255,255,255,.95);
-    transition:transform .15s ease,box-shadow .15s ease;
-  }
-  .gs-test-card::before{
-    content:"";position:absolute;inset:0;border:2px solid rgba(255,255,255,.74);
-    border-radius:inherit;pointer-events:none;
-  }
-  .gs-test-card:active{transform:scale(.985);}
-  .gs-test-card:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(27,51,91,.14),inset 0 1px 0 rgba(255,255,255,.95);}
-  .gs-test-icon{
-    width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:29px;
-    background:rgba(255,255,255,.78);box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07);
-  }
-  .gs-test-card h2{margin:0 0 7px;font-size:clamp(18px,5vw,25px);line-height:1.22;font-weight:900;color:#17365d;}
-  .gs-test-card p{margin:0;font-size:13px;line-height:1.45;font-weight:600;color:#5d7692;}
-  .gs-test-arrow{
-    width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
-    background:rgba(255,255,255,.80);font-size:28px;line-height:1;font-weight:900;color:#17365d;
-    box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(35,60,90,.07);
-  }
-  .gs-course{background:linear-gradient(145deg,#dfffee 0%,#f5fffb 56%,#c8f7e1 100%);border:2px solid #8be2c4;}
-  .gs-chapter{background:linear-gradient(145deg,#fff5d8 0%,#fffdf5 56%,#ffe5a8 100%);border:2px solid #f2cb76;}
-  .gs-daily{background:linear-gradient(145deg,#ffe8ef 0%,#fffafd 56%,#ffd4df 100%);border:2px solid #f2aabd;}
-  .gs-test-footer{margin-top:auto;text-align:center;padding-top:18px;font-size:12px;color:#5d7692;opacity:.7;}
-  @media (min-width:700px){.gs-test-selection{max-width:760px;margin:auto}.gs-test-card{min-height:165px;}}
-  @media (max-width:560px){
-    .gs-test-selection{padding:10px 9px 18px;}
-    .gs-test-selection h1{font-size:23px;}
-    .gs-test-selection .sub{font-size:11px;margin-bottom:11px;}
-    .gs-test-card{min-height:0;margin:5px 0;padding:13px 12px;grid-template-columns:50px minmax(0,1fr) 36px;gap:10px;border-radius:18px;}
-    .gs-test-icon{width:48px;height:48px;border-radius:13px;font-size:24px;}
-    .gs-test-card h2{font-size:16px;margin-bottom:4px;}
-    .gs-test-card p{font-size:10.5px;line-height:1.4;}
-    .gs-test-arrow{width:34px;height:34px;font-size:25px;}
-    .gs-test-footer{padding-top:10px;font-size:10px;}
-  }
-
-
-/* ============================================
-   YOUR PREPARATION — dynamic, compact summary
-   Uses the same student-results RPC/source as Home/Results.
-   Chapter slots are reserved for the student's full syllabus:
-   Class 9 = 6 + 6, Class 10 = 7 + 7.
-   ============================================ */
-.gs-prep-summary{
-  width:100%;
-  margin:14px 0 0;
-  padding:13px;
-  border:2px solid #cfe3f8;
-  border-radius:22px;
-  background:linear-gradient(145deg,#f7fbff 0%,#ffffff 58%,#eef7ff 100%);
-  box-shadow:0 8px 22px rgba(27,51,91,.08),inset 0 1px 0 rgba(255,255,255,.95);
-}
-.gs-prep-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.gs-prep-title{display:flex;align-items:center;gap:8px;color:#17365d}
-.gs-prep-title-icon{font-size:24px}
-.gs-prep-title strong{font-size:21px;font-weight:900}
-.gs-prep-stats{display:grid;grid-template-columns:1.45fr 1fr 1fr;gap:9px;align-items:stretch}
-.gs-prep-stat{min-width:0;border-radius:17px;padding:11px 9px;display:flex;gap:9px;align-items:flex-start;border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 1px 0 #fff,0 3px 9px rgba(35,60,90,.06)}
+/* ==========================
+   आज की प्रगति / preparation
+   Data source: existing Results RPC
+   ========================== */
+.gs-prep-summary{width:100%;margin:11px 0 0;padding:10px;border:2px solid #cfe3f8;border-radius:20px;background:linear-gradient(145deg,#f7fbff 0%,#fff 58%,#eef7ff 100%);box-shadow:0 8px 22px rgba(27,51,91,.08),inset 0 1px 0 rgba(255,255,255,.95)}
+.gs-prep-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px}
+.gs-prep-title{display:flex;align-items:center;gap:7px;color:#17365d}
+.gs-prep-title-icon{font-size:21px;line-height:1}
+.gs-prep-title strong{font-size:19px;font-weight:900;line-height:1.2}
+.gs-prep-stats{display:grid;grid-template-columns:1.42fr .86fr .86fr;gap:7px;align-items:stretch}
+.gs-prep-stat{min-width:0;min-height:145px;border-radius:15px;padding:9px 7px;border:1px solid rgba(255,255,255,.92);box-shadow:inset 0 1px 0 #fff,0 3px 9px rgba(35,60,90,.06);display:flex;flex-direction:column;align-items:center;text-align:center}
 .gs-prep-chapters{background:linear-gradient(145deg,#eafff4,#f8fffc)}
 .gs-prep-total{background:linear-gradient(145deg,#edf7ff,#f8fbff)}
 .gs-prep-best{background:linear-gradient(145deg,#fff7df,#fffdf7)}
-.gs-prep-stat-icon{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.8);font-size:22px}
-.gs-prep-stat-body{min-width:0;flex:1}
-.gs-prep-stat-body strong{display:block;font-size:13px;line-height:1.2;color:#17365d;margin-bottom:5px}
-.gs-prep-stat-body>b{display:block;font-size:25px;line-height:1.05;color:#17365d}
-.gs-prep-stat-body small{display:block;margin-top:4px;font-size:9.5px;line-height:1.25;color:#5d7692;font-weight:700}
-.gs-completed-chapters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:27px;gap:5px;min-height:59px;align-content:start}
+.gs-prep-stat-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.82);font-size:19px;margin-bottom:5px}
+.gs-prep-stat-body{width:100%;min-width:0}
+.gs-prep-stat-body strong{display:block;font-size:10px;line-height:1.25;color:#17365d;margin-bottom:5px;white-space:nowrap}
+.gs-prep-stat-body>b{display:block;font-size:23px;line-height:1.05;color:#17365d}
+.gs-prep-stat-body small{display:block;margin-top:5px;font-size:8.5px;line-height:1.3;color:#5d7692;font-weight:700}
+
+/* Fixed chapter area: Class 9 = 6+6, Class 10 = 7+7.
+   Empty slots remain reserved so the card never jumps in height. */
+.gs-completed-chapters{width:100%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(2,22px);gap:4px;margin-top:2px;align-content:start}
 .gs-completed-chapters[data-cols="7"]{grid-template-columns:repeat(7,minmax(0,1fr))}
-.gs-completed-chapters .gs-chapter-num{height:27px;display:grid;place-items:center;border-radius:9px;background:#fff;border:1px solid #bfe8d4;color:#087a4a;font-size:12px;font-weight:900;box-shadow:0 2px 5px rgba(27,91,65,.06)}
-.gs-chapter-placeholder{grid-column:1/-1;align-self:center;color:#7890a7;font-size:10px;font-weight:700}
-.gs-prep-message{margin-top:9px;padding:9px 10px;border-radius:13px;text-align:center;background:linear-gradient(90deg,#eef8ff,#fff9e8,#fff0f5);color:#5d7692;font-size:10.5px;font-weight:800}
+.gs-chapter-slot{height:22px;display:grid;place-items:center;border-radius:7px;border:1px solid rgba(191,232,212,.55);background:rgba(255,255,255,.32);color:transparent;font-size:10px;font-weight:900}
+.gs-chapter-slot.done{background:#fff;border-color:#bfe8d4;color:#087a4a;box-shadow:0 2px 5px rgba(27,91,65,.06)}
+.gs-no-today{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;color:#7890a7;font-size:8.5px;font-weight:700;pointer-events:none}
+.gs-prep-message{margin-top:8px;padding:7px 6px;border-radius:11px;text-align:center;background:linear-gradient(90deg,#eef8ff,#fff9e8,#fff0f5);color:#5d7692;font-size:9px;font-weight:800}
+.gs-test-footer{text-align:center;padding-top:14px;font-size:10px;color:#5d7692;opacity:.7}
+
+@media(min-width:700px){.gs-test-selection{padding-top:8px}.gs-test-card{min-height:165px}.gs-prep-stat{min-height:160px}}
 @media(max-width:560px){
-  .gs-prep-summary{margin-top:11px;padding:10px;border-radius:19px}
+  .gs-test-selection{padding:3px 0 12px}
+  .gs-test-selection h1{font-size:23px}
+  .gs-test-selection .sub{font-size:11px;margin-bottom:9px}
+  .gs-test-card{min-height:0;margin:5px 0;padding:13px 12px;grid-template-columns:50px minmax(0,1fr) 36px;gap:10px;border-radius:18px}
+  .gs-test-icon{width:48px;height:48px;border-radius:13px;font-size:24px}
+  .gs-test-card h2{font-size:16px;margin-bottom:4px}
+  .gs-test-card p{font-size:10.5px;line-height:1.4}
+  .gs-test-arrow{width:34px;height:34px;font-size:25px}
+  .gs-prep-summary{margin-top:10px;padding:9px;border-radius:19px}
   .gs-prep-head{margin-bottom:8px}
   .gs-prep-title{gap:6px}.gs-prep-title-icon{font-size:20px}.gs-prep-title strong{font-size:18px}
-  .gs-prep-stats{grid-template-columns:1.35fr .82fr .82fr;gap:6px}
-  .gs-prep-stat{padding:8px 6px;gap:6px;border-radius:14px}
-  .gs-prep-stat-icon{width:29px;height:29px;flex-basis:29px;border-radius:9px;font-size:17px}
-  .gs-prep-stat-body strong{font-size:10px;margin-bottom:4px}
+  .gs-prep-stats{grid-template-columns:1.42fr .86fr .86fr;gap:6px}
+  .gs-prep-stat{min-height:137px;padding:8px 5px;border-radius:14px}
+  .gs-prep-stat-icon{width:29px;height:29px;flex-basis:29px;border-radius:9px;font-size:17px;margin-bottom:4px}
+  .gs-prep-stat-body strong{font-size:9.5px;margin-bottom:4px}
   .gs-prep-stat-body>b{font-size:20px}
-  .gs-prep-stat-body small{font-size:8px;margin-top:3px}
-  .gs-completed-chapters{grid-auto-rows:23px;gap:4px;min-height:50px}
-  .gs-completed-chapters .gs-chapter-num{height:23px;border-radius:7px;font-size:10px}
-  .gs-chapter-placeholder{font-size:8.5px}
-  .gs-prep-message{margin-top:7px;padding:7px 6px;font-size:9px;border-radius:11px}
+  .gs-prep-stat-body small{font-size:8px;margin-top:4px}
+  .gs-completed-chapters{grid-template-rows:repeat(2,21px);gap:3px;margin-top:2px}
+  .gs-chapter-slot{height:21px;border-radius:7px;font-size:10px}
+  .gs-no-today{font-size:8px}
+  .gs-prep-message{margin-top:7px;padding:7px 5px;font-size:8.8px}
+  .gs-test-footer{padding-top:11px;font-size:10px}
 }
 </style>
-
 </head>
 <body>
 <main class="test-page">
-
 <section class="gs-test-selection" id="gsTestSelection">
   <h1>Test चुनें</h1>
   <p class="sub">अपनी तैयारी को एक नई दिशा दें</p>
 
-  <!-- COURSE TEST — TOP -->
   <button class="gs-test-card gs-course" type="button" data-test="course">
     <span class="gs-test-icon">📊</span>
-    <span>
-      <h2>Course Progress Test</h2>
-      <p>अब तक पढ़े अध्यायों से प्रश्न देकर<br>अपनी पूरी तैयारी जाँचें।</p>
-    </span>
+    <span><h2>Course Progress Test</h2><p>अब तक पढ़े अध्यायों से प्रश्न देकर<br>अपनी पूरी तैयारी जाँचें।</p></span>
     <span class="gs-test-arrow">›</span>
   </button>
 
-  <!-- CHAPTER TEST — MIDDLE -->
   <button class="gs-test-card gs-chapter" type="button" data-test="chapter">
     <span class="gs-test-icon">📖</span>
-    <span>
-      <h2>Chapter Practice Test</h2>
-      <p>किसी एक अध्याय के 10 प्रश्न<br>हल करके अपनी पकड़ जाँचें।</p>
-    </span>
+    <span><h2>Chapter Practice Test</h2><p>किसी एक अध्याय के 10 प्रश्न<br>हल करके अपनी पकड़ जाँचें।</p></span>
     <span class="gs-test-arrow">›</span>
   </button>
 
-  <!-- DAILY TEST — BOTTOM -->
   <button class="gs-test-card gs-daily" type="button" data-test="daily">
     <span class="gs-test-icon">📝</span>
-    <span>
-      <h2>Daily Test</h2>
-      <p>रोज़ थोड़ा अभ्यास करें और<br>अपनी तैयारी मजबूत करें।</p>
-    </span>
+    <span><h2>Daily Test</h2><p>रोज़ थोड़ा अभ्यास करें और<br>अपनी तैयारी मजबूत करें।</p></span>
     <span class="gs-test-arrow">›</span>
   </button>
 
-  <!-- PREPARATION SUMMARY — same result source as Home/Results -->
   <section class="gs-prep-summary" id="gsPrepSummary" aria-label="आपकी तैयारी">
     <div class="gs-prep-head">
       <div class="gs-prep-title"><span class="gs-prep-title-icon">📊</span><strong>आपकी तैयारी</strong></div>
@@ -281,11 +115,9 @@ body{
       <div class="gs-prep-stat gs-prep-chapters">
         <div class="gs-prep-stat-icon">📚</div>
         <div class="gs-prep-stat-body">
-          <strong>अध्याय अभ्यास</strong>
-          <div id="gsCompletedChapters" class="gs-completed-chapters" data-cols="6">
-            <span class="gs-chapter-placeholder">लोड हो रहा है…</span>
-          </div>
-          <small id="gsChapterCount">0 अध्याय पूरे</small>
+          <strong>आज के अध्याय</strong>
+          <div id="gsCompletedChapters" class="gs-completed-chapters" data-cols="6"></div>
+          <small id="gsChapterCount">आज 0 अध्याय</small>
         </div>
       </div>
 
@@ -303,92 +135,143 @@ body{
         <div class="gs-prep-stat-body">
           <strong>Best Score</strong>
           <b id="gsBestScore">—</b>
-          <small>सबसे अच्छा प्रदर्शन</small>
+          <small>अब तक का सर्वश्रेष्ठ</small>
         </div>
       </div>
     </div>
 
-    <div class="gs-prep-message">🌟 नियमित अभ्यास से ही बनती है मजबूत नींव</div>
+    <div class="gs-prep-message" id="gsPrepMessage">🌟 आज का अभ्यास आपकी तैयारी को और मजबूत बनाएगा</div>
   </section>
 
   <div class="gs-test-footer">📖 सीखें • अभ्यास करें • आगे बढ़ें</div>
 </section>
-
 </main>
 
-<!-- Existing Supabase connection used by Home/Results -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase.js"></script>
 
-<script id="gs-test-card-navigation">
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.gs-test-card[data-test]').forEach(function (card) {
-    card.addEventListener('click', function () {
-      var type = card.getAttribute('data-test');
-      if (type === 'daily') window.location.href = 'daily-question.html';
-      else if (type === 'chapter') window.location.href = 'chapter-test.html';
-      else if (type === 'course') window.location.href = 'course-test.html';
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.gs-test-card[data-test]').forEach(function(card){
+    card.addEventListener('click', function(){
+      const type=card.getAttribute('data-test');
+      if(type==='daily') window.location.href='daily-question.html';
+      else if(type==='chapter') window.location.href='chapter-test.html';
+      else if(type==='course') window.location.href='course-test.html';
     });
   });
 });
 </script>
 
-
 <script id="gs-preparation-summary">
 (function(){
-  function normalizeClass(v){
-    const m=String(v??'').match(/(?:9|10)/);
-    return m?Number(m[0]):0;
+  const IST='Asia/Kolkata';
+  const normalizeClass=v=>{const m=String(v??'').match(/(?:9|10)/);return m?Number(m[0]):0};
+  const submitted=r=>{const s=String(r?.status||'').toLowerCase();return s==='submitted'||!!r?.submitted_at};
+  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null};
+
+  function localDate(value){
+    if(!value) return '';
+    const d=new Date(value);
+    if(Number.isNaN(d.getTime())) return '';
+    return new Intl.DateTimeFormat('en-CA',{timeZone:IST,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
   }
-  function isSubmitted(r){
-    const status=String(r?.status||'').toLowerCase();
-    return status==='submitted' || !!r?.submitted_at;
+  function todayIST(){
+    return new Intl.DateTimeFormat('en-CA',{timeZone:IST,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   }
   function chapterNumber(r){
-    const direct=Number(r?.chapter_from ?? r?.chapter_number ?? r?.chapter);
-    if(Number.isInteger(direct) && direct>0) return direct;
+    const direct=num(r?.chapter_from ?? r?.chapter_number ?? r?.chapter);
+    if(Number.isInteger(direct)&&direct>0) return direct;
     const text=String(r?.test_title||r?.title||r?.test_name||'');
     const m=text.match(/(?:chapter|अध्याय)\s*[-:]?\s*(\d+)/i);
     return m?Number(m[1]):null;
   }
+
+  function renderChapters(rows,cls){
+    const max=cls===9?12:14;
+    const cols=cls===10?7:6;
+    const today=todayIST();
+    const todayChapters=new Set();
+
+    rows.forEach(r=>{
+      if(String(r?.test_type||'').toLowerCase()!=='chapter_practice') return;
+      if(localDate(r?.submitted_at)!==today) return;
+      const n=chapterNumber(r);
+      if(Number.isInteger(n)&&n>=1&&n<=max) todayChapters.add(n);
+    });
+
+    const list=[...todayChapters].sort((a,b)=>a-b);
+    const box=document.getElementById('gsCompletedChapters');
+    const count=document.getElementById('gsChapterCount');
+    if(!box) return;
+    box.dataset.cols=String(cols);
+
+    // Full reserved grid: 12 slots for class 9, 14 for class 10.
+    box.innerHTML='';
+    for(let i=1;i<=max;i++){
+      const slot=document.createElement('span');
+      slot.className='gs-chapter-slot'+(todayChapters.has(i)?' done':'');
+      slot.textContent=todayChapters.has(i)?String(i):'';
+      box.appendChild(slot);
+    }
+    if(!list.length){
+      const empty=document.createElement('span');
+      empty.className='gs-no-today';
+      empty.textContent='आज कोई अध्याय टेस्ट नहीं';
+      box.appendChild(empty);
+    }
+    if(count) count.textContent=`आज ${list.length} अध्याय`;
+  }
+
+  function renderOverall(rows){
+    const total=document.getElementById('gsTotalTests');
+    const best=document.getElementById('gsBestScore');
+    const submittedRows=rows.filter(submitted);
+    if(total) total.textContent=String(submittedRows.length);
+
+    // Best Score = highest individual percentage across Course + Chapter + Daily.
+    const percentages=submittedRows.map(r=>num(r?.percentage)).filter(v=>v!==null&&v>=0);
+    if(best) best.textContent=percentages.length?`${Math.max(...percentages).toFixed(0)}%`:'—';
+  }
+
   async function loadPrep(){
     const code=sessionStorage.getItem('ganit_setu_student_id');
-    if(!code || typeof supabaseClient==='undefined') return;
+    const message=document.getElementById('gsPrepMessage');
+    if(!code){
+      renderChapters([],9); renderOverall([]);
+      if(message) message.textContent='🌟 Login के बाद आपकी आज की प्रगति यहाँ दिखेगी';
+      return;
+    }
+    if(typeof supabaseClient==='undefined'){
+      console.error('Supabase connection unavailable');
+      return;
+    }
     try{
       const {data:rows,error}=await supabaseClient.rpc('get_ganit_student_results',{p_student_code:code});
       if(error) throw error;
-      const all=(Array.isArray(rows)?rows:[]).filter(isSubmitted);
-      const studentClass=Number(sessionStorage.getItem('ganit_setu_student_class'));
-      const cls=(studentClass===9||studentClass===10)?studentClass:normalizeClass(all[0]?.class_level);
-      const max=cls===9?12:14;
-      const chapters=new Set();
-      all.forEach(r=>{
-        if(String(r?.test_type||'').toLowerCase()==='chapter_practice'){
-          const n=chapterNumber(r);
-          if(Number.isInteger(n)&&n>=1&&n<=max) chapters.add(n);
-        }
-      });
-      const list=document.getElementById('gsCompletedChapters');
-      const count=document.getElementById('gsChapterCount');
-      const total=document.getElementById('gsTotalTests');
-      const best=document.getElementById('gsBestScore');
-      if(list){
-        list.dataset.cols=cls===10?'7':'6';
-        const sorted=[...chapters].sort((a,b)=>a-b);
-        list.innerHTML=sorted.length
-          ? sorted.map(n=>`<span class="gs-chapter-num">${n}</span>`).join('')
-          : '<span class="gs-chapter-placeholder">अभी कोई अध्याय टेस्ट नहीं</span>';
+      const all=Array.isArray(rows)?rows:[];
+
+      let cls=Number(sessionStorage.getItem('ganit_setu_student_class'));
+      if(cls!==9&&cls!==10) cls=normalizeClass(all.find(r=>r?.class_level)?.class_level);
+      if(cls!==9&&cls!==10) cls=9;
+
+      const submittedRows=all.filter(submitted);
+      renderChapters(submittedRows,cls);
+      renderOverall(submittedRows);
+
+      const todayChapters=submittedRows.filter(r=>String(r?.test_type||'').toLowerCase()==='chapter_practice' && localDate(r?.submitted_at)===todayIST());
+      if(message){
+        message.textContent=todayChapters.length
+          ? `🌟 आज ${todayChapters.length} अध्याय का अभ्यास पूरा किया`
+          : '🌟 आज अभी कोई अध्याय टेस्ट नहीं दिया है';
       }
-      if(count) count.textContent=`${chapters.size} अध्याय पूरे`;
-      if(total) total.textContent=String(all.length);
-      if(best){
-        const p=all.map(r=>Number(r?.percentage)).filter(Number.isFinite);
-        best.textContent=p.length?Math.max(...p).toFixed(0)+'%':'—';
-      }
-    }catch(e){
-      console.error('Preparation summary load error:',e);
+    }catch(error){
+      console.error('Preparation summary load error:',error);
+      renderChapters([],9); renderOverall([]);
+      if(message) message.textContent='🌟 आज की प्रगति अभी उपलब्ध नहीं है';
     }
   }
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadPrep,{once:true});
   else loadPrep();
 })();
