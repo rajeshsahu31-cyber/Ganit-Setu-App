@@ -44,48 +44,58 @@
     let bar=$('exportToolbar');
     if(!bar){
       bar=document.createElement('div');bar.id='exportToolbar';bar.className='export-toolbar';
-      bar.innerHTML='<button type="button" class="export-btn" id="downloadAllPdf">सभी हल एक PDF में डाउनलोड करें</button><p class="export-note" style="flex-basis:100%">हर प्रश्न का PDF या PNG अलग से भी डाउनलोड कर सकते हैं।</p>';
+      bar.innerHTML='<button type="button" class="export-btn" id="downloadSessionPdf">इस सत्र के सभी प्रश्न PDF में</button><button type="button" class="export-btn secondary" id="shareSessionPdf">पूरा सत्र शेयर करें</button><p class="export-note" style="flex-basis:100%">चुने हुए सत्र और पेपर सेट के सभी प्रश्न एक PDF में आएँगे।</p>';
       $('questions').before(bar);
-      $('downloadAllPdf').addEventListener('click',()=>exportAllPdf());
+      $('downloadSessionPdf').addEventListener('click',()=>exportSession(false));
+      $('shareSessionPdf').addEventListener('click',()=>exportSession(true));
     }
     bar.style.display=(marks===1?'none':'flex');
   }
-  async function makeCanvas(element){
-    if(!window.html2canvas) throw new Error('इमेज बनाने की लाइब्रेरी लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
-    if(document.fonts?.ready) await document.fonts.ready;
-    return await window.html2canvas(element,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});
+  async function captureCard(card){
+    if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
+    if(document.fonts?.ready)await document.fonts.ready;
+    return await window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});
   }
-  function safeFileName(value){return String(value||'ganit-setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
-  async function exportPng(card,filename){
-    const canvas=await makeCanvas(card);
-    const a=document.createElement('a');a.download=filename+'.png';a.href=canvas.toDataURL('image/png');a.click();
-  }
-  async function exportPdfCards(cards,filename){
-    if(!window.jspdf?.jsPDF) throw new Error('PDF लाइब्रेरी लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
-    const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pageW=210,pageH=297,margin=10;
+  function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,60);}
+  async function makePdf(cards){
+    if(!window.jspdf?.jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
+    const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     for(let i=0;i<cards.length;i++){
-      const canvas=await makeCanvas(cards[i]);
-      const img=canvas.toDataURL('image/png');
-      const ratio=Math.min((pageW-2*margin)/canvas.width,(pageH-2*margin)/canvas.height);
-      const w=canvas.width*ratio,h=canvas.height*ratio;
-      if(i>0)pdf.addPage();
-      pdf.addImage(img,'PNG',(pageW-w)/2,margin,w,h,undefined,'FAST');
+      const c=await captureCard(cards[i]),scale=Math.min(192/c.width,279/c.height);
+      if(i)pdf.addPage();
+      pdf.addImage(c.toDataURL('image/png'),'PNG',(210-c.width*scale)/2,9,c.width*scale,c.height*scale,undefined,'FAST');
     }
-    pdf.save(filename+'.pdf');
+    return pdf;
   }
-  async function runExport(button,workFn){
-    const old=button.textContent;button.disabled=true;button.textContent='तैयार हो रहा है...';
-    try{await workFn();}
-    catch(e){console.error(e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}
-    finally{button.disabled=false;button.textContent=old;}
+  async function withBusy(btn,fn){
+    const old=btn.textContent;btn.disabled=true;btn.textContent='तैयार हो रहा है...';
+    try{await fn();}catch(e){console.error(e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}
+    finally{btn.disabled=false;btn.textContent=old;}
   }
-  async function exportAllPdf(){
-    const cards=[...$('questions').querySelectorAll('.question-card')];
-    if(!cards.length)return;
-    const btn=$('downloadAllPdf');
-    await runExport(btn,()=>exportPdfCards(cards,`Ganit_Setu_Class${student.class_level}_${marks}Marks_All_Solutions`));
+  async function exportSession(share){
+    const cards=[...$('questions').querySelectorAll('.handwritten-card,.question-card')];
+    if(!cards.length){alert('इस सत्र में प्रश्न उपलब्ध नहीं हैं।');return;}
+    const btn=$(share?'shareSessionPdf':'downloadSessionPdf');
+    await withBusy(btn,async()=>{
+      const pdf=await makePdf(cards),year=$('yearFilter').value||'All_Sessions',set=$('setFilter').value||'All_Sets';
+      const name=safeName(`Ganit_Setu_Class${student.class_level}_${marks}Marks_${year}_${set}`);
+      const blob=pdf.output('blob'),file=new File([blob],name+'.pdf',{type:'application/pdf'});
+      if(share&&navigator.share&&navigator.canShare?.({files:[file]})){
+        await navigator.share({files:[file],title:'गणित सेतु — सत्र के प्रश्न और हल'});
+      }else{pdf.save(name+'.pdf');if(share)alert('सीधा शेयर उपलब्ध नहीं है। PDF डाउनलोड हो गई है; इसे WhatsApp पर भेजें।');}
+    });
+  }
+  async function exportOne(card,kind,share){
+    const btn=card.querySelector(share?'[data-share-one]':`[data-export-${kind}]`);
+    await withBusy(btn,async()=>{
+      const canvas=await captureCard(card),title=safeName(card.querySelector('.hw-question,.question-title')?.textContent);
+      let blob,file;
+      if(kind==='png'){blob=await new Promise(r=>canvas.toBlob(r,'image/png'));file=new File([blob],title+'.png',{type:'image/png'});}
+      else{const pdf=await makePdf([card]);blob=pdf.output('blob');file=new File([blob],title+'.pdf',{type:'application/pdf'});}
+      if(share&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'गणित सेतु प्रश्न और हल'});}
+      else if(kind==='png'){const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=title+'.png';a.click();if(share)alert('इमेज डाउनलोड हो गई है; इसे WhatsApp पर भेजें।');}
+      else{const pdf=await makePdf([card]);pdf.save(title+'.pdf');if(share)alert('PDF डाउनलोड हो गई है; इसे WhatsApp पर भेजें।');}
+    });
   }
   function render(){
     ensureExportToolbar();
@@ -107,17 +117,29 @@
         const formula=languageField(r,'formula_theorem_hi','formula_theorem_en');
         const solution=languageField(r,'solution_steps_hi','solution_steps_en');
         const final=languageField(r,'final_answer_hi','final_answer_en');
-        const cardId=`writtenCard_${i}`;
-        return `<article class="question-card" id="${cardId}"><div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions export-toolbar"><button type="button" class="export-btn" data-export-pdf="${cardId}">PDF डाउनलोड</button><button type="button" class="export-btn secondary" data-export-png="${cardId}">इमेज डाउनलोड</button></div></article>`;
+        if(marks===2){
+          const givenBlock=given?`<div class="hw-section">${student.medium==='English'?'Given':'दिया गया'}</div><div class="hw-given">${esc(given)}</div>`:'';
+          const requiredBlock=required?`<div class="hw-section">${student.medium==='English'?'To find':'ज्ञात करना है'}</div><div class="hw-text">${esc(required)}</div>`:'';
+          const formulaBlock=formula?`<div class="hw-section">${student.medium==='English'?'Formula / Theorem':'सूत्र / प्रमेय'}</div><div class="hw-formula">${esc(formula)}</div>`:'';
+          const solutionBlock=solution?`<div class="hw-section">${student.medium==='English'?'Step-by-step solution':'हल के चरण'}</div><div class="hw-text">${esc(solution)}</div>`:'';
+          const answerBlock=final?`<div class="hw-answer">${student.medium==='English'?'Final Answer:':'अंतिम उत्तर:'} ${esc(final)}</div>`:'';
+          return `<article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">2 ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper"><div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div><div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
+        }
+        return `<article class="question-card"><div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
       }).join('');
-      $('questions').querySelectorAll('[data-export-pdf]').forEach(btn=>btn.addEventListener('click',()=>{
-        const card=$(btn.dataset.exportPdf);
-        runExport(btn,()=>exportPdfCards([card],`Ganit_Setu_Question_${btn.dataset.exportPdf}`));
-      }));
-      $('questions').querySelectorAll('[data-export-png]').forEach(btn=>btn.addEventListener('click',()=>{
-        const card=$(btn.dataset.exportPng);
-        runExport(btn,()=>exportPng(card,`Ganit_Setu_Question_${btn.dataset.exportPng}`));
-      }));
+      if(marks===2){
+        $('questions').querySelectorAll('.hw-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+          const target=$(btn.dataset.target);
+          if(!target)return;
+          target.hidden=!target.hidden;
+          btn.textContent=target.hidden?(student.medium==='English'?'Show solution':'हल दिखाएँ'):(student.medium==='English'?'Hide solution':'हल छिपाएँ');
+        }));
+      }
+      $('questions').querySelectorAll('.handwritten-card,.question-card').forEach(card=>{
+        card.querySelector('[data-export-pdf]')?.addEventListener('click',()=>exportOne(card,'pdf',false));
+        card.querySelector('[data-export-png]')?.addEventListener('click',()=>exportOne(card,'png',false));
+        card.querySelector('[data-share-one]')?.addEventListener('click',()=>exportOne(card,'pdf',true));
+      });
     }
   }
   function submitQuiz(list){
