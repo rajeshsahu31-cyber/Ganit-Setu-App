@@ -3,17 +3,22 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>पिछले सत्रों के पेपर | गणित सेतु</title>
-<link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/bottom-nav.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/bottom-nav.css"><link rel="stylesheet" href="assets/css/previous-papers.css">
 <style>
 .paper-wrap{max-width:900px;margin:22px auto;padding:0 14px}.paper-panel{background:#fff;border:1px solid #e3e8f0;border-radius:16px;padding:18px;margin-bottom:16px}.filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.filter-grid label{display:block;font-weight:700;margin-bottom:6px}.filter-grid select{width:100%;padding:12px;border:1px solid #ccd5e2;border-radius:10px;background:#fff}.paper-type-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.type-btn{padding:14px;border:1px solid #d7dfeb;border-radius:12px;background:#f7f9fc;text-align:left;font-weight:700;cursor:pointer}.type-btn.active{border-color:#2763c7;background:#edf4ff;color:#17458c}.question-card{border:1px solid #e0e6ef;border-radius:12px;padding:15px;margin:12px 0}.question-title{font-weight:700;margin-bottom:10px}.option{display:block;padding:8px;border:1px solid #e5eaf1;border-radius:8px;margin:7px 0;cursor:pointer}.solution{white-space:pre-wrap;background:#f5f8fc;border-radius:10px;padding:12px;margin-top:10px}.primary-btn{margin-top:12px}.muted-note{color:#687489;font-size:13px}.message{padding:12px;border-radius:10px;background:#fff7e6;margin:10px 0}.hidden{display:none!important}@media(max-width:600px){.filter-grid,.paper-type-list{grid-template-columns:1fr}}
 
-.export-toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
-.export-btn{border:0;border-radius:9px;padding:9px 13px;background:#174b91;color:#fff;font-weight:700;cursor:pointer}
-.export-btn.secondary{background:#16804a}
-.export-btn:disabled{opacity:.55;cursor:wait}
-.export-note{font-size:12px;color:#64748b;margin:4px 0 12px}
-@media print{.simple-header,.filter-grid,.paper-type-list,.export-toolbar,.export-actions{display:none!important}.question-card{break-inside:avoid;box-shadow:none}}
+.export-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.export-btn{border:0;border-radius:9px;padding:9px 12px;background:#174b91;color:#fff;font-weight:700;cursor:pointer}
+.export-btn.secondary{background:#16804a}.export-btn:disabled{opacity:.6;cursor:wait}
+.export-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.export-note{font-size:12px;color:#64748b;margin:0 0 10px}
+@media print{.simple-header,.filter-grid,.paper-type-list,.export-toolbar,.export-actions{display:none!important}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head><body>
 <header class="simple-header"><a href="home.html">← होम</a><div class="mini-brand">📚 पिछले सत्रों के पेपर</div></header>
 <main class="paper-wrap">
@@ -34,7 +39,5 @@
 </section>
 <section class="paper-panel"><div id="status" class="muted-note">प्रश्न लोड हो रहे हैं...</div><div id="questions"></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script><script src="assets/js/supabase.js"></script><script src="assets/js/previous-papers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script><script src="assets/js/previous-papers.js"></script>
 </body></html>
