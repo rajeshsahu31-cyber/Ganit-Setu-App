@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pMedium = document.getElementById('pMedium');
   const pSchool = document.getElementById('pSchool');
   const pMobile = document.getElementById('pMobile');
+  const mediumSelect = document.getElementById('profileMediumSelect');
+  const saveMediumBtn = document.getElementById('saveMediumBtn');
+  const mediumStatus = document.getElementById('mediumStatus');
 
   const photoInput = document.getElementById('photoInput');
   const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
@@ -124,6 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       pSchool.textContent = data.school_name || '—';
       if (pMedium) pMedium.textContent = data.medium === 'English' ? 'English Medium' : (data.medium === 'Hindi' ? 'हिंदी माध्यम' : '—');
+      if (mediumSelect && ['Hindi', 'English'].includes(data.medium)) mediumSelect.value = data.medium;
       if (data.medium) sessionStorage.setItem('ganit_setu_student_medium', data.medium);
 
       pMobile.textContent = data.mobile || '—';
@@ -347,6 +351,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
   });
+
+
+
+
+  // विद्यार्थी अपनी प्रोफाइल से माध्यम बदल सकता है
+  if (saveMediumBtn && mediumSelect) {
+    saveMediumBtn.addEventListener('click', async () => {
+      const selectedMedium = mediumSelect.value;
+      if (!['Hindi', 'English'].includes(selectedMedium)) {
+        if (mediumStatus) mediumStatus.textContent = 'कृपया हिंदी या English माध्यम चुनें।';
+        return;
+      }
+
+      saveMediumBtn.disabled = true;
+      saveMediumBtn.textContent = 'सेव हो रहा है...';
+      if (mediumStatus) {
+        mediumStatus.style.color = '#2563eb';
+        mediumStatus.textContent = 'माध्यम अपडेट हो रहा है...';
+      }
+
+      try {
+        const { error } = await supabaseClient
+          .from('students')
+          .update({ medium: selectedMedium })
+          .eq('student_id', sid);
+
+        if (error) throw error;
+
+        if (pMedium) pMedium.textContent = selectedMedium === 'English' ? 'English Medium' : 'हिंदी माध्यम';
+        sessionStorage.setItem('ganit_setu_student_medium', selectedMedium);
+        if (mediumStatus) {
+          mediumStatus.style.color = '#15803d';
+          mediumStatus.textContent = '✓ आपका माध्यम सफलतापूर्वक बदल गया।';
+        }
+      } catch (error) {
+        console.error('Medium Update Error:', error);
+        if (mediumStatus) {
+          mediumStatus.style.color = '#c62828';
+          mediumStatus.textContent = 'माध्यम नहीं बदल सका: ' + (error.message || 'कृपया दोबारा प्रयास करें।');
+        }
+      } finally {
+        saveMediumBtn.disabled = false;
+        saveMediumBtn.textContent = 'माध्यम बदलें';
+      }
+    });
+  }
 
 
   // शुरू में Profile Load
