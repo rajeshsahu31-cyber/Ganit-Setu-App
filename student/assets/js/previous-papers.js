@@ -5,13 +5,22 @@
   let student = null, marks = 1, rows = [], answers = new Map();
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
-  function languageField(row, hi, en){ return student.medium === 'English' ? (row[en] || row[hi] || '') : (row[hi] || row[en] || ''); }
+  function normalizeMedium(value){
+    const v=String(value??'').trim().toLowerCase();
+    if(['english','eng','english medium','अंग्रेज़ी','अंग्रेजी','अंग्रेज़ी माध्यम','अंग्रेजी माध्यम'].includes(v)) return 'English';
+    if(['hindi','hin','hindi medium','हिंदी','हिन्दी','हिंदी माध्यम','हिन्दी माध्यम'].includes(v)) return 'Hindi';
+    if(['both','all','दोनों','दोनों माध्यम'].includes(v)) return 'Both';
+    return v;
+  }
+  function languageField(row, hi, en){ return normalizeMedium(student.medium) === 'English' ? (row[en] || row[hi] || '') : (row[hi] || row[en] || ''); }
   async function init(){
     if(!sid){ location.href='index.html'; return; }
     const {data,error}=await supabaseClient.from('students').select('student_id,class_level,medium').eq('student_id',sid).maybeSingle();
     if(error || !data){ msg('विद्यार्थी की प्रोफाइल नहीं मिल सकी।'); return; }
     student=data;
-    if(!['Hindi','English'].includes(student.medium)) { msg('आपकी प्रोफाइल में माध्यम दर्ज नहीं है। कृपया स्कूल/प्रशासन से संपर्क करें।'); return; }
+    const normalizedMedium=normalizeMedium(student.medium);
+    if(!['Hindi','English'].includes(normalizedMedium)) { console.warn('[Previous Papers] Unknown student medium:',student.medium); msg('आपकी प्रोफाइल में माध्यम दर्ज नहीं है। कृपया स्कूल/प्रशासन से संपर्क करें।'); return; }
+    student.medium=normalizedMedium;
     sessionStorage.setItem('ganit_setu_student_class',String(student.class_level));
     sessionStorage.setItem('ganit_setu_student_medium',student.medium);
     $('studentInfo').textContent=`कक्षा ${student.class_level} • ${student.medium==='English'?'English Medium':'हिंदी माध्यम'}`;
@@ -23,13 +32,24 @@
     $('questions').innerHTML=''; answers.clear(); msg('प्रश्न लोड हो रहे हैं...');
     let q;
     if(marks===1){
-      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).in('medium',[student.medium,'Both']).order('exam_year',{ascending:false}).order('source_question');
+      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
     } else {
-      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).in('medium',[student.medium,'Both']).order('exam_year',{ascending:false}).order('question_id');
+      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
     }
     const {data,error}=await q;
-    if(error){console.error(error);msg('प्रश्न लोड नहीं हुए। Admin से प्रकाशित प्रश्न और database access जाँचने को कहें।');return;}
-    rows=data||[];
+    if(error){
+      console.error('[Previous Papers] Supabase query failed:',{message:error.message,details:error.details,hint:error.hint,code:error.code,marks,classLevel:student.class_level,medium:student.medium});
+      msg(`प्रश्न लोड नहीं हुए: ${error.message || 'डेटाबेस त्रुटि'} `);
+      return;
+    }
+    // Medium values may be stored with different labels (Hindi/Hindi Medium/हिंदी).
+    // Fetch the class/published rows first, then apply a normalized medium filter.
+    const requested=normalizeMedium(student.medium);
+    rows=(data||[]).filter(r=>{
+      const stored=normalizeMedium(r.medium);
+      return stored===requested || stored==='Both' || stored==='';
+    });
+    console.info('[Previous Papers] Loaded rows:',{marks,classLevel:student.class_level,medium:student.medium,dbRows:(data||[]).length,visibleRows:rows.length,storedMediums:[...new Set((data||[]).map(r=>r.medium))]});
     fillFilters(rows); render();
   }
   function fillFilters(data){
