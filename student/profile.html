@@ -179,8 +179,16 @@
 
 
         <div class="info">
-          <small>माध्यम</small>
+          <small>वर्तमान माध्यम</small>
           <b id="pMedium">—</b>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center">
+            <select id="profileMediumSelect" aria-label="अपना माध्यम चुनें" style="flex:1;min-width:150px;padding:10px;border:1px solid var(--line);border-radius:10px">
+              <option value="Hindi">हिंदी माध्यम</option>
+              <option value="English">English Medium</option>
+            </select>
+            <button type="button" id="saveMediumBtn" class="photo-btn">माध्यम बदलें</button>
+          </div>
+          <small id="mediumStatus" role="status" aria-live="polite" style="display:block;margin-top:8px"></small>
         </div>
 
         <div class="info">
