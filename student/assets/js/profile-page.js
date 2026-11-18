@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pName = document.getElementById('pName');
   const pId = document.getElementById('pId');
   const pClass = document.getElementById('pClass');
+  const pMedium = document.getElementById('pMedium');
   const pSchool = document.getElementById('pSchool');
   const pMobile = document.getElementById('pMobile');
 
@@ -96,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           student_id,
           full_name,
           class_level,
+          medium,
           school_name,
           mobile,
           photo_url
@@ -121,6 +123,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         : '—';
 
       pSchool.textContent = data.school_name || '—';
+      if (pMedium) pMedium.textContent = data.medium === 'English' ? 'English Medium' : (data.medium === 'Hindi' ? 'हिंदी माध्यम' : '—');
+      if (data.medium) sessionStorage.setItem('ganit_setu_student_medium', data.medium);
 
       pMobile.textContent = data.mobile || '—';
 

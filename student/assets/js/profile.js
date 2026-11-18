@@ -43,6 +43,7 @@ function renderStudentProfile(student){
   setText('studentName', name);
   setText('studentId', student.student_id);
   setText('studentClass', className);
+  setText('studentMedium', student.medium === 'English' ? 'English Medium' : (student.medium === 'Hindi' ? 'हिंदी माध्यम' : '—'));
   setText('schoolName', student.school_name);
   renderStudentPhoto(name, student.photo_url || '');
 
@@ -61,7 +62,7 @@ async function loadStudentProfile(){
   try{
     const {data,error}=await supabaseClient
       .from('students')
-      .select('student_id, full_name, class_level, school_name, village_city, block, district, state, mobile, photo_url, status')
+      .select('student_id, full_name, class_level, medium, school_name, village_city, block, district, state, mobile, photo_url, status')
       .eq('student_id', studentId)
       .maybeSingle();
 
@@ -87,6 +88,7 @@ async function loadStudentProfile(){
     // आगे Test, Result और Ranking के लिए current student details उपलब्ध रहेंगी।
     sessionStorage.setItem('ganit_setu_student_name', data.full_name || '');
     sessionStorage.setItem('ganit_setu_student_class', String(data.class_level || ''));
+    sessionStorage.setItem('ganit_setu_student_medium', data.medium || '');
     sessionStorage.setItem('ganit_setu_student_school', data.school_name || '');
 
   }catch(error){

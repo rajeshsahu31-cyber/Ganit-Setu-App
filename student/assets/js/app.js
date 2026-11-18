@@ -64,6 +64,7 @@ async function showRegistration(e){
 
   const fullName=getValue('fullName').toUpperCase();
   const classLevel=Number(document.getElementById('classLevel').value);
+  const medium=getValue('studentMedium');
   const schoolName=getValue('schoolName').toUpperCase();
   const schoolDiseCode=getValue('schoolDiseCode').replace(/\D/g,'').slice(0,11);
   const villageCity=getValue('villageCity').toUpperCase();
@@ -89,6 +90,10 @@ async function showRegistration(e){
     result.innerHTML='<div class="error-box">कृपया कक्षा 9 या 10 चुनें।</div>';
     return;
   }
+  if(!['Hindi','English'].includes(medium)){
+    result.innerHTML='<div class="error-box">कृपया हिंदी या English माध्यम चुनें।</div>';
+    return;
+  }
 
   button.disabled=true;
   button.textContent='रजिस्ट्रेशन हो रहा है...';
@@ -96,7 +101,8 @@ async function showRegistration(e){
 
   // कोई Email और कोई Supabase Auth signUp नहीं।
   // Registration सीधे सुरक्षित database function से होगा।
-  const {data,error}=await supabaseClient.rpc('register_student',{
+  const {data,error}=await supabaseClient.rpc('register_student_with_medium',{
+    p_medium:medium,
     p_full_name:fullName,
     p_class_level:classLevel,
     p_school_name:schoolName,
@@ -122,7 +128,8 @@ async function showRegistration(e){
     return;
   }
 
-  const studentId=Array.isArray(data) && data.length ? data[0].student_id : '';
+  const registrationData=Array.isArray(data) ? data[0] : data;
+  const studentId=registrationData?.student_id || registrationData?.register_student?.student_id || '';
   result.innerHTML='<div class="success-box"><b>✓ रजिस्ट्रेशन सफल</b><br><br>आपकी विद्यार्थी आईडी: <b>'+studentId+'</b><br><br><small>अपना 6 अंकों का पासवर्ड याद रखें।</small></div>';
 
   document.getElementById('registrationForm').reset();
