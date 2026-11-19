@@ -3,41 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GANIT SETU | गणित Blueprint 2026–27</title>
+<title>GANIT SETU | MPBSE गणित अंक योजना 2026–27</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","Mangal",sans-serif}
-.gs-blueprint{max-width:900px;margin:auto;padding:16px 13px 80px}
-.gs-hero{background:linear-gradient(135deg,#eaf5ff,#fff);border:1px solid #dceaf7;border-radius:20px;padding:23px 16px;text-align:center}
+.gs-blueprint{max-width:980px;margin:auto;padding:15px 12px 70px}
+.gs-head{background:#fff;border:1px solid #dce5ef;border-radius:16px;padding:20px 14px;text-align:center}
 .gs-brand{font-size:12px;font-weight:800;letter-spacing:1px;color:#1769aa}
-.gs-hero h1{font-size:25px;margin:8px 0}.gs-hero p{font-size:13px;color:#64748b;line-height:1.7;margin:0}
-.gs-class{display:inline-block;margin-top:12px;background:#1769aa;color:#fff;padding:7px 15px;border-radius:30px;font-weight:bold}
-.gs-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
-.gs-stat{background:#fff;border:1px solid #e3eaf2;border-radius:13px;padding:12px;text-align:center}
-.gs-stat b{display:block;color:#1769aa;font-size:17px}.gs-stat small{font-size:11px;color:#64748b}
-.gs-section{background:#fff;border:1px solid #dfe7f0;border-radius:14px;margin:10px 0 16px;overflow:hidden}
-.gs-section>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:15px;cursor:pointer;font-weight:800;color:#1769aa;background:#f7fbff}
-.gs-section>summary::-webkit-details-marker{display:none}
-.gs-section>summary .gs-chevron{margin-left:auto;transition:transform .2s}
-.gs-section[open]>summary .gs-chevron{transform:rotate(180deg)}
-.gs-section-content{padding:10px 13px 14px;border-top:1px solid #e8edf3}
-.gs-chapter{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #e3eaf2;border-radius:12px;margin:8px 0;padding:11px 13px}
-.gs-cno{width:32px;height:32px;display:grid;place-items:center;background:#eaf4fc;color:#1769aa;border-radius:9px;font-weight:800;flex:0 0 32px}
-.gs-ctext{font-size:14px;font-weight:700;flex:1;line-height:1.5}
-.gs-marks{background:#eaf4fc;color:#1769aa;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:800;white-space:nowrap}
-.gs-total{display:flex;justify-content:space-between;align-items:center;background:#1769aa;color:#fff;border-radius:11px;padding:13px 14px;margin-top:12px;font-weight:800}
-.gs-note{background:#fff8e8;border:1px solid #f3dfae;color:#76551d;border-radius:12px;padding:13px;font-size:12px;line-height:1.8;margin-top:17px}
-.gs-error{background:#fff;border:1px solid #e8bcbc;color:#8a2626;border-radius:13px;padding:18px;text-align:center;margin-top:18px}
-.gs-back{display:inline-block;margin:18px 0;color:#1769aa;text-decoration:none;font-weight:bold}
-@media(max-width:520px){.gs-hero h1{font-size:22px}.gs-stat{padding:9px 4px}.gs-stat b{font-size:15px}.gs-stat small{font-size:10px}.gs-chapter{padding:10px}.gs-ctext{font-size:13px}}
+.gs-head h1{font-size:22px;line-height:1.4;margin:8px 0 4px}
+.gs-head p{font-size:13px;line-height:1.7;color:#526174;margin:3px 0}
+.gs-class{display:inline-block;background:#1769aa;color:#fff;border-radius:30px;padding:7px 16px;margin-top:9px;font-weight:700}
+.gs-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.gs-meta div{background:#fff;border:1px solid #e0e7ef;border-radius:11px;text-align:center;padding:11px 5px}
+.gs-meta b{display:block;color:#1769aa;font-size:16px}.gs-meta small{font-size:11px;color:#64748b}
+.gs-panel{background:#fff;border:1px solid #dfe7f0;border-radius:14px;margin:12px 0;overflow:hidden}
+.gs-panel>summary{list-style:none;display:flex;align-items:center;padding:14px 15px;cursor:pointer;font-weight:800;color:#1769aa;background:#f7fbff}
+.gs-panel>summary::-webkit-details-marker{display:none}
+.gs-panel>summary span:last-child{margin-left:auto;font-size:18px}
+.gs-panel[open]>summary span:last-child{transform:rotate(180deg)}
+.gs-content{padding:12px;border-top:1px solid #e7edf4}
+.gs-table-wrap{overflow-x:auto}
+.gs-table{width:100%;border-collapse:collapse;min-width:610px;font-size:13px;line-height:1.65}
+.gs-table th,.gs-table td{border:1px solid #9aa8b8;padding:8px 9px;vertical-align:top}
+.gs-table th{background:#eaf3fb;color:#183d60;text-align:center}
+.gs-table td:first-child{text-align:center;width:38px}
+.gs-table td:last-child{text-align:center;width:82px;white-space:nowrap;font-weight:800}
+.gs-table tfoot td{font-weight:800;background:#f1f6fb}
+.gs-notes{padding:4px 5px 8px;font-size:13px;line-height:1.8}
+.gs-notes p{margin:7px 0}
+.gs-notes ol{margin:4px 0 8px;padding-left:24px}
+.gs-notes li{padding:2px 0}
+.gs-notelead{font-weight:800}
+.gs-source{background:#fff8e8;border:1px solid #f0dfb8;color:#70531e;border-radius:11px;padding:12px;font-size:12px;line-height:1.7;margin-top:13px}
+.gs-back{display:inline-block;margin:16px 0;color:#1769aa;text-decoration:none;font-weight:700}
+.gs-error{background:#fff;border:1px solid #e8bcbc;color:#8a2626;border-radius:12px;padding:17px;text-align:center}
+@media(max-width:520px){.gs-head h1{font-size:19px}.gs-meta b{font-size:14px}.gs-table{font-size:12px}.gs-table th,.gs-table td{padding:7px}}
 </style>
 </head>
 <body>
 <main class="gs-blueprint">
-<header class="gs-hero">
+<header class="gs-head">
 <div class="gs-brand">GANIT SETU · MP BOARD</div>
-<h1>गणित Blueprint – अध्यायवार अंक योजना</h1>
-<p>शैक्षणिक सत्र 2026–27<br>माध्यमिक शिक्षा मंडल, मध्यप्रदेश</p>
+<h1>माध्यमिक शिक्षा मंडल, मध्यप्रदेश, भोपाल</h1>
+<p>हाईस्कूल परीक्षा सत्र 2026–27<br><b>अंक योजना</b></p>
 <span class="gs-class" id="gsClassLabel">कक्षा जाँची जा रही है…</span>
 </header>
 <div id="gsBlueprintContent"></div>
@@ -46,38 +54,77 @@ body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","M
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase.js"></script>
 <script>
-const blueprintMarks={
-"9":[
-["संख्या पद्धति",6],["बहुपद",10],["निर्देशांक ज्यामिति",8],
-["दो चरों वाले रैखिक समीकरण",8],["यूक्लिड की ज्यामिति का परिचय",3],
-["रेखाएँ और कोण",5],["त्रिभुज",5],["चतुर्भुज",7],["वृत्त",6],
-["हीरोन का सूत्र",5],["पृष्ठीय क्षेत्रफल और आयतन",6],["सांख्यिकी",6]
-],
-"10":[
-["वास्तविक संख्याएँ",6],["बहुपद",5],["दो चर वाले रैखिक समीकरण युग्म",7],
-["द्विघात समीकरण",5],["समांतर श्रेणियाँ",5],["त्रिभुज",5],
-["निर्देशांक ज्यामिति",5],["त्रिकोणमिति का परिचय",5],
-["त्रिकोणमिति के कुछ अनुप्रयोग",5],["वृत्त",5],
-["वृत्तों से संबंधित क्षेत्रफल",5],["पृष्ठीय क्षेत्रफल और आयतन",6],
-["सांख्यिकी",5],["प्रायिकता",6]
-]};
+const blueprintData={
+"9":{
+ chapters:[
+ ["अध्याय–1 संख्या पद्धति – भूमिका, अपरिमेय संख्याएँ, वास्तविक संख्याएँ और उनके दशमलव प्रसार, वास्तविक संख्याओं पर संक्रियाएँ, वास्तविक संख्याओं के लिए घातांक-नियम, सारांश",6],
+ ["अध्याय–2 बहुपद – भूमिका, एक चर वाले बहुपद, बहुपद के शून्यक, बहुपदों का गुणनखंडन, बीजीय सर्वसमिकाएँ, सारांश",10],
+ ["अध्याय–3 निर्देशांक ज्यामिति – भूमिका, कार्तीय पद्धति, सारांश",8],
+ ["अध्याय–4 दो चरों वाले रैखिक समीकरण – भूमिका, रैखिक समीकरण, रैखिक समीकरण का हल, सारांश",8],
+ ["अध्याय–5 यूक्लिड की ज्यामिति का परिचय – भूमिका, यूक्लिड की परिभाषाएँ, अभिगृहीत और अभिधारणाएँ, सारांश",3],
+ ["अध्याय–6 रेखाएँ और कोण – भूमिका, आधारभूत पद और परिभाषाएँ, प्रतिच्छेदी रेखाएँ और अप्रतिच्छेदी रेखाएँ, कोणों के युग्म, एक ही रेखा के समांतर रेखाएँ, सारांश",5],
+ ["अध्याय–7 त्रिभुज – भूमिका, त्रिभुजों की सर्वांगसमता, त्रिभुजों की सर्वांगसमता के लिए कसौटियाँ, एक त्रिभुज के कुछ गुण, त्रिभुजों की सर्वांगसमता के लिए कुछ और कसौटियाँ, सारांश",5],
+ ["अध्याय–8 चतुर्भुज – समांतर चतुर्भुज के गुण, मध्य-बिंदु प्रमेय, सारांश",7],
+ ["अध्याय–9 वृत्त – जीवा द्वारा एक बिन्दु पर अंतरित कोण, केन्द्र से जीवा पर लम्ब, समान जीवाएँ और उनकी केन्द्र से दूरियाँ, एक वृत्त के चाप द्वारा अंतरित कोण, चक्रीय चतुर्भुज, सारांश",6],
+ ["अध्याय–10 हीरोन का सूत्र – त्रिभुज का क्षेत्रफल – हीरोन के सूत्र द्वारा, सारांश",5],
+ ["अध्याय–11 पृष्ठीय क्षेत्रफल और आयतन – एक लंब वृत्तीय शंकु का पृष्ठीय क्षेत्रफल, गोले का पृष्ठीय क्षेत्रफल, लंब वृत्तीय शंकु का आयतन, गोले का आयतन, सारांश",6],
+ ["अध्याय–12 सांख्यिकी – आँकड़ों का आलेखीय निरूपण, सारांश",6]
+ ],
+ page:"13"
+},
+"10":{
+ chapters:[
+ ["अध्याय–1 वास्तविक संख्याएँ – भूमिका, अंकगणित की आधारभूत प्रमेय, अपरिमेय संख्याओं का पुनर्निर्माण, सारांश",6],
+ ["अध्याय–2 बहुपद – भूमिका, बहुपद के शून्यकों का ज्यामितीय अर्थ, किसी बहुपद के शून्यकों और गुणांकों में संबंध, सारांश",5],
+ ["अध्याय–3 दो चर वाले रैखिक समीकरण युग्म – भूमिका, रैखिक समीकरण युग्म का ग्राफीय विधि से हल, एक रैखिक समीकरण युग्म को हल करने की बीजगणितीय विधि (प्रतिस्थापन विधि, विलोपन विधि), सारांश",7],
+ ["अध्याय–4 द्विघात समीकरण – भूमिका, द्विघात समीकरण, गुणनखंडों द्वारा द्विघात समीकरण का हल, मूलों की प्रकृति, सारांश",5],
+ ["अध्याय–5 समांतर श्रेढ़ियाँ – भूमिका, समांतर श्रेढ़ियाँ, A.P. का nवाँ पद, A.P. के प्रथम n पदों का योग, सारांश",5],
+ ["अध्याय–6 त्रिभुज – भूमिका, समरूप आकृतियाँ, त्रिभुजों की समरूपता, त्रिभुजों की समरूपता के लिए कसौटियाँ, सारांश",5],
+ ["अध्याय–7 निर्देशांक ज्यामिति – भूमिका, दूरी सूत्र, विभाजन सूत्र, सारांश",5],
+ ["अध्याय–8 त्रिकोणमिति का परिचय – भूमिका, त्रिकोणमितीय अनुपात, कुछ विशिष्ट कोणों के त्रिकोणमितीय अनुपात, त्रिकोणमितीय सर्वसमिकाएँ, सारांश",5],
+ ["अध्याय–9 त्रिकोणमिति के कुछ अनुप्रयोग – ऊँचाइयाँ और दूरियाँ, सारांश",5],
+ ["अध्याय–10 वृत्त – भूमिका, वृत्त की स्पर्श रेखा, एक बिन्दु से एक वृत्त पर स्पर्श रेखाओं की संख्या, सारांश",5],
+ ["अध्याय–11 वृत्तों से संबंधित क्षेत्रफल – त्रिज्यखंड और वृत्तखंड के क्षेत्रफल, सारांश",5],
+ ["अध्याय–12 पृष्ठीय क्षेत्रफल और आयतन – भूमिका, ठोसों के संयोजन का पृष्ठीय क्षेत्रफल, ठोसों के संयोजन का आयतन, सारांश",6],
+ ["अध्याय–13 सांख्यिकी – भूमिका, वर्गीकृत आँकड़ों का माध्य, वर्गीकृत आँकड़ों का बहुलक, वर्गीकृत आँकड़ों का माध्यक, सारांश",5],
+ ["अध्याय–14 प्रायिकता – प्रायिकता—एक सैद्धांतिक दृष्टिकोण, सारांश",6]
+ ],
+ page:"31"
+}
+};
+const commonNotes=`
+<p class="gs-notelead">नोट— गणित Basic / गणित Standard की अंकयोजना समान है किंतु प्रश्न पत्र का कठिनाई स्तर अलग रहेगा।</p>
+<p class="gs-notelead">➤ प्रश्न क्रमांक 1 से 5 तक 30 वस्तुनिष्ठ प्रश्न होंगे। प्रत्येक प्रश्न पर 01 अंक निर्धारित है।</p>
+<ol>
+<li>प्रश्न क्रमांक 1 – सही विकल्प 06.</li>
+<li>प्रश्न क्रमांक 2 – रिक्त स्थान 06.</li>
+<li>प्रश्न क्रमांक 3 – सत्य असत्य 06.</li>
+<li>प्रश्न क्रमांक 4 – सही जोड़ी 06.</li>
+<li>प्रश्न क्रमांक 5 – एक वाक्य में उत्तर 06.</li>
+</ol>
+<p>➤ प्रश्न क्रमांक 6 से 17 तक कुल 12 प्रश्न होंगे। प्रत्येक प्रश्न पर 02 अंक निर्धारित है।</p>
+<p>➤ प्रश्न क्रमांक 18 से 20 तक कुल 03 प्रश्न होंगे। प्रत्येक प्रश्न पर 03 अंक निर्धारित है।</p>
+<p>➤ प्रश्न क्रमांक 21 से 23 तक कुल 03 प्रश्न होंगे। प्रत्येक प्रश्न पर 04 अंक निर्धारित है।</p>`;
 function renderBlueprint(cls){
- const rows=blueprintMarks[String(cls)];
- document.getElementById('gsClassLabel').textContent='कक्षा '+cls+'वीं · गणित';
- const total=rows.reduce((sum,row)=>sum+row[1],0);
- let out=`<div class="gs-stats">
- <div class="gs-stat"><b>${rows.length}</b><small>कुल अध्याय</small></div>
- <div class="gs-stat"><b>${total}</b><small>कुल अंक</small></div>
- <div class="gs-stat"><b>3 घंटे</b><small>परीक्षा समय</small></div></div>`;
- out+=`<details class="gs-section" open><summary><span>अध्यायवार अंक योजना</span><span class="gs-chevron">⌄</span></summary><div class="gs-section-content">`;
- out+=rows.map((row,i)=>`<div class="gs-chapter"><span class="gs-cno">${i+1}</span><span class="gs-ctext">अध्याय ${i+1} – ${row[0]}</span><span class="gs-marks">${row[1]} अंक</span></div>`).join('');
- out+=`<div class="gs-total"><span>कुल पूर्णांक</span><span>${total} अंक</span></div></div></details>`;
- out+=`<div class="gs-note"><b>महत्वपूर्ण जानकारी:</b><br>
- • यह अंक योजना MPBSE के आधिकारिक सत्र 2026–27 के अंक योजना दस्तावेज़ पर आधारित है।<br>
- • गणित Basic और गणित Standard की अंकयोजना समान है, किंतु प्रश्नपत्र का कठिनाई स्तर अलग रहेगा।<br>
- • परीक्षा का पूर्णांक 75 अंक तथा समय 3 घंटे है।<br>
- • स्रोत PDF: कक्षा 9वीं – पृष्ठ 13; कक्षा 10वीं – पृष्ठ 31।</div>`;
- document.getElementById('gsBlueprintContent').innerHTML=out;
+ const data=blueprintData[String(cls)];
+ document.getElementById('gsClassLabel').textContent='कक्षा – '+cls+'वीं · विषय – गणित Basic / गणित Standard';
+ let rows=data.chapters.map((r,i)=>`<tr><td>${i+1}</td><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+ document.getElementById('gsBlueprintContent').innerHTML=`
+ <div class="gs-meta">
+ <div><b>75 अंक</b><small>पूर्णांक</small></div>
+ <div><b>3:00 घंटे</b><small>समय</small></div>
+ <div><b>${data.chapters.length} अध्याय</b><small>अध्यायवार अंक योजना</small></div>
+ </div>
+ <details class="gs-panel" open>
+ <summary><span>विषय-वस्तु एवं आवंटित अंक</span><span>⌄</span></summary>
+ <div class="gs-content"><div class="gs-table-wrap"><table class="gs-table">
+ <thead><tr><th>क्र.</th><th>विषय वस्तु</th><th>आवंटित अंक</th></tr></thead>
+ <tbody>${rows}</tbody><tfoot><tr><td colspan="2">कुल योग</td><td>75</td></tr></tfoot>
+ </table></div></div></details>
+ <details class="gs-panel" open>
+ <summary><span>नोट एवं प्रश्नपत्र की अंक योजना</span><span>⌄</span></summary>
+ <div class="gs-content gs-notes">${commonNotes}</div></details>
+ <div class="gs-source">स्रोत: माध्यमिक शिक्षा मंडल, मध्यप्रदेश, भोपाल — हाईस्कूल परीक्षा सत्र 2026–27, अंक योजना। कक्षा ${cls}वीं का मूल अंक योजना पृष्ठ ${data.page} (दस्तावेज़ का पृष्ठ क्रमांक)। ऊपर विषय-वस्तु, अंक और नोट मूल दस्तावेज़ के अनुसार टाइप किए गए हैं।</div>`;
 }
 (async()=>{
  const sid=sessionStorage.getItem('ganit_setu_student_id');
