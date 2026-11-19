@@ -3,6 +3,7 @@
   const $ = id => document.getElementById(id);
   const sid = sessionStorage.getItem('ganit_setu_student_id');
   let student = null, marks = 1, rows = [], answers = new Map();
+  let chooserPanel = null, resultPanel = null, questionPageOpen = false;
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
   function normalizeMedium(value){
@@ -24,9 +25,29 @@
     sessionStorage.setItem('ganit_setu_student_class',String(student.class_level));
     sessionStorage.setItem('ganit_setu_student_medium',student.medium);
     $('studentInfo').textContent=`कक्षा ${student.class_level} • ${student.medium==='English'?'English Medium':'हिंदी माध्यम'}`;
-    document.querySelectorAll('[data-marks]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-marks]').forEach(x=>x.classList.remove('active'));b.classList.add('active');marks=Number(b.dataset.marks);loadQuestions();}));
-    $('yearFilter').addEventListener('change',loadQuestions); $('setFilter').addEventListener('change',loadQuestions);
-    await loadQuestions();
+    const panels=document.querySelectorAll('main.paper-wrap > .paper-panel');
+    chooserPanel=panels[0]||null; resultPanel=panels[1]||null;
+    if(resultPanel) resultPanel.hidden=true;
+    if(resultPanel && !$('previousPapersBack')){
+      const back=document.createElement('button'); back.type='button'; back.id='previousPapersBack'; back.className='export-btn secondary'; back.textContent='← प्रश्नों के प्रकार पर वापस जाएँ'; back.style.marginBottom='12px';
+      resultPanel.insertBefore(back,resultPanel.firstChild);
+      back.addEventListener('click',closeQuestionPage);
+    }
+    document.querySelectorAll('[data-marks]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-marks]').forEach(x=>x.classList.remove('active'));b.classList.add('active');marks=Number(b.dataset.marks);openQuestionPage();loadQuestions();}));
+    $('yearFilter').addEventListener('change',()=>{if(questionPageOpen)loadQuestions();}); $('setFilter').addEventListener('change',()=>{if(questionPageOpen)loadQuestions();});
+  }
+  function openQuestionPage(){
+    questionPageOpen=true;
+    if(chooserPanel)chooserPanel.hidden=true;
+    if(resultPanel)resultPanel.hidden=false;
+    const back=$('previousPapersBack'); if(back)back.hidden=false;
+  }
+  function closeQuestionPage(){
+    questionPageOpen=false; clearInterval(objectiveTimer);
+    if(chooserPanel)chooserPanel.hidden=false;
+    if(resultPanel)resultPanel.hidden=true;
+    $('questions').innerHTML=''; $('status').textContent='प्रश्न देखने के लिए ऊपर से अंक चुनें।';
+    $('exportToolbar')?.remove(); answers.clear();
   }
   async function loadQuestions(){
     $('questions').innerHTML=''; answers.clear(); msg('प्रश्न लोड हो रहे हैं...');
@@ -212,7 +233,7 @@
         <div id="ppTestStage"></div>
         <div class="pp-test-note">ⓘ सभी प्रश्नों के उत्तर देने के बाद ही टेस्ट Submit करें।</div>
       </div>`;
-    $('ppTestBack').addEventListener('click',()=>{ if(objectiveIndex>0) objectiveIndex--; else {clearInterval(objectiveTimer); render();} drawObjectiveQuestion(list); });
+    $('ppTestBack').addEventListener('click',closeQuestionPage);
     objectiveTimer=setInterval(()=>{
       const sec=Math.floor((Date.now()-objectiveStartedAt)/1000);
       const el=$('ppTestTimer'); if(el)el.textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
@@ -229,9 +250,14 @@
       const text=languageField(r,`option_${letter.toLowerCase()}_hi`,`option_${letter.toLowerCase()}_en`);
       return `<button type="button" class="pp-test-option ${chosen===value?'selected':''}" data-pp-answer="${value}"><b>${letter}</b><span>${esc(text)}</span></button>`;
     }).join('');
-    const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
-    const setLabel=set?(/^set\s+/i.test(set)?set:`Set ${set}`):'';
-    const session=[year,setLabel].filter(Boolean).join(' • ');
+    const sessionLabels=(r.appearances||[]).map(a=>a.label).filter(Boolean);
+    if(!sessionLabels.length){
+      const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
+      const setLabel=set?(/^set\s+/i.test(set)?set:`Set ${set}`):'';
+      const fallback=[year,setLabel].filter(Boolean).join(' ');
+      if(fallback)sessionLabels.push(fallback);
+    }
+    const session=sessionLabels.join(' | ');
     const hint=languageField(r,'hint_hi','hint_en');
     $('ppTestStage').innerHTML=`
       <div class="pp-test-question">
