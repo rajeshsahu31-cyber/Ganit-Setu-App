@@ -1,1 +1,100 @@
-<!doctype html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blue Prints | गणित सेतु</title><link rel="stylesheet" href="assets/css/style.css"><style>body{font-family:Arial,sans-serif;background:#f5f7fb;color:#172033;margin:0}.wrap{max-width:720px;margin:40px auto;padding:18px}.panel{background:#fff;border:1px solid #dfe5ef;border-radius:16px;padding:24px;text-align:center}.panel a{display:inline-block;margin-top:16px;color:#2155c7;font-weight:700;text-decoration:none}</style></head><body><main class="wrap"><section class="panel"><h1>Blue Prints</h1><p>यह सामग्री अभी गणित सेतु पर उपलब्ध नहीं कराई गई है। उपलब्ध होते ही यहाँ दिखाई जाएगी।</p><a href="home.html">← होम पेज पर वापस जाएँ</a></section></main></body></html>
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GANIT SETU | गणित Blueprint 2026–27</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","Mangal",sans-serif}
+.gs-blueprint{max-width:900px;margin:auto;padding:16px 13px 80px}
+.gs-hero{background:linear-gradient(135deg,#eaf5ff,#fff);border:1px solid #dceaf7;border-radius:20px;padding:23px 16px;text-align:center}
+.gs-brand{font-size:12px;font-weight:800;letter-spacing:1px;color:#1769aa}
+.gs-hero h1{font-size:25px;margin:8px 0}.gs-hero p{font-size:13px;color:#64748b;line-height:1.7;margin:0}
+.gs-class{display:inline-block;margin-top:12px;background:#1769aa;color:#fff;padding:7px 15px;border-radius:30px;font-weight:bold}
+.gs-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
+.gs-stat{background:#fff;border:1px solid #e3eaf2;border-radius:13px;padding:12px;text-align:center}
+.gs-stat b{display:block;color:#1769aa;font-size:17px}.gs-stat small{font-size:11px;color:#64748b}
+.gs-section{background:#fff;border:1px solid #dfe7f0;border-radius:14px;margin:10px 0 16px;overflow:hidden}
+.gs-section>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:15px;cursor:pointer;font-weight:800;color:#1769aa;background:#f7fbff}
+.gs-section>summary::-webkit-details-marker{display:none}
+.gs-section>summary .gs-chevron{margin-left:auto;transition:transform .2s}
+.gs-section[open]>summary .gs-chevron{transform:rotate(180deg)}
+.gs-section-content{padding:10px 13px 14px;border-top:1px solid #e8edf3}
+.gs-chapter{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #e3eaf2;border-radius:12px;margin:8px 0;padding:11px 13px}
+.gs-cno{width:32px;height:32px;display:grid;place-items:center;background:#eaf4fc;color:#1769aa;border-radius:9px;font-weight:800;flex:0 0 32px}
+.gs-ctext{font-size:14px;font-weight:700;flex:1;line-height:1.5}
+.gs-marks{background:#eaf4fc;color:#1769aa;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:800;white-space:nowrap}
+.gs-total{display:flex;justify-content:space-between;align-items:center;background:#1769aa;color:#fff;border-radius:11px;padding:13px 14px;margin-top:12px;font-weight:800}
+.gs-note{background:#fff8e8;border:1px solid #f3dfae;color:#76551d;border-radius:12px;padding:13px;font-size:12px;line-height:1.8;margin-top:17px}
+.gs-error{background:#fff;border:1px solid #e8bcbc;color:#8a2626;border-radius:13px;padding:18px;text-align:center;margin-top:18px}
+.gs-back{display:inline-block;margin:18px 0;color:#1769aa;text-decoration:none;font-weight:bold}
+@media(max-width:520px){.gs-hero h1{font-size:22px}.gs-stat{padding:9px 4px}.gs-stat b{font-size:15px}.gs-stat small{font-size:10px}.gs-chapter{padding:10px}.gs-ctext{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="gs-blueprint">
+<header class="gs-hero">
+<div class="gs-brand">GANIT SETU · MP BOARD</div>
+<h1>गणित Blueprint – अध्यायवार अंक योजना</h1>
+<p>शैक्षणिक सत्र 2026–27<br>माध्यमिक शिक्षा मंडल, मध्यप्रदेश</p>
+<span class="gs-class" id="gsClassLabel">कक्षा जाँची जा रही है…</span>
+</header>
+<div id="gsBlueprintContent"></div>
+<a class="gs-back" href="home.html">← होम पेज पर वापस जाएँ</a>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script>
+const blueprintMarks={
+"9":[
+["संख्या पद्धति",6],["बहुपद",10],["निर्देशांक ज्यामिति",8],
+["दो चरों वाले रैखिक समीकरण",8],["यूक्लिड की ज्यामिति का परिचय",3],
+["रेखाएँ और कोण",5],["त्रिभुज",5],["चतुर्भुज",7],["वृत्त",6],
+["हीरोन का सूत्र",5],["पृष्ठीय क्षेत्रफल और आयतन",6],["सांख्यिकी",6]
+],
+"10":[
+["वास्तविक संख्याएँ",6],["बहुपद",5],["दो चर वाले रैखिक समीकरण युग्म",7],
+["द्विघात समीकरण",5],["समांतर श्रेणियाँ",5],["त्रिभुज",5],
+["निर्देशांक ज्यामिति",5],["त्रिकोणमिति का परिचय",5],
+["त्रिकोणमिति के कुछ अनुप्रयोग",5],["वृत्त",5],
+["वृत्तों से संबंधित क्षेत्रफल",5],["पृष्ठीय क्षेत्रफल और आयतन",6],
+["सांख्यिकी",5],["प्रायिकता",6]
+]};
+function renderBlueprint(cls){
+ const rows=blueprintMarks[String(cls)];
+ document.getElementById('gsClassLabel').textContent='कक्षा '+cls+'वीं · गणित';
+ const total=rows.reduce((sum,row)=>sum+row[1],0);
+ let out=`<div class="gs-stats">
+ <div class="gs-stat"><b>${rows.length}</b><small>कुल अध्याय</small></div>
+ <div class="gs-stat"><b>${total}</b><small>कुल अंक</small></div>
+ <div class="gs-stat"><b>3 घंटे</b><small>परीक्षा समय</small></div></div>`;
+ out+=`<details class="gs-section" open><summary><span>अध्यायवार अंक योजना</span><span class="gs-chevron">⌄</span></summary><div class="gs-section-content">`;
+ out+=rows.map((row,i)=>`<div class="gs-chapter"><span class="gs-cno">${i+1}</span><span class="gs-ctext">अध्याय ${i+1} – ${row[0]}</span><span class="gs-marks">${row[1]} अंक</span></div>`).join('');
+ out+=`<div class="gs-total"><span>कुल पूर्णांक</span><span>${total} अंक</span></div></div></details>`;
+ out+=`<div class="gs-note"><b>महत्वपूर्ण जानकारी:</b><br>
+ • यह अंक योजना MPBSE के आधिकारिक सत्र 2026–27 के अंक योजना दस्तावेज़ पर आधारित है।<br>
+ • गणित Basic और गणित Standard की अंकयोजना समान है, किंतु प्रश्नपत्र का कठिनाई स्तर अलग रहेगा।<br>
+ • परीक्षा का पूर्णांक 75 अंक तथा समय 3 घंटे है।<br>
+ • स्रोत PDF: कक्षा 9वीं – पृष्ठ 13; कक्षा 10वीं – पृष्ठ 31।</div>`;
+ document.getElementById('gsBlueprintContent').innerHTML=out;
+}
+(async()=>{
+ const sid=sessionStorage.getItem('ganit_setu_student_id');
+ const box=document.getElementById('gsBlueprintContent');
+ if(!sid){box.innerHTML='<div class="gs-error">कृपया पहले विद्यार्थी लॉगिन करें।</div>';return;}
+ let cls=Number(sessionStorage.getItem('ganit_setu_student_class'));
+ if(cls!==9&&cls!==10){
+  try{
+   const {data,error}=await supabaseClient.from('students').select('class_level').eq('student_id',sid).maybeSingle();
+   if(error)throw error;
+   cls=Number(data?.class_level);
+   if(cls===9||cls===10)sessionStorage.setItem('ganit_setu_student_class',String(cls));
+  }catch(e){console.error(e);}
+ }
+ if(cls!==9&&cls!==10){box.innerHTML='<div class="gs-error">आपकी कक्षा की जानकारी नहीं मिली। कृपया दोबारा लॉगिन करें।</div>';return;}
+ renderBlueprint(cls);
+})();
+</script>
+</body>
+</html>
