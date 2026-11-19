@@ -17,7 +17,8 @@ html,body{margin:0;min-height:100%;font-family:"Noto Sans Devanagari",Arial,sans
 body{
   background:linear-gradient(145deg,#eef7ff 0%,#ffffff 48%,#f3f9ff 100%);
   color:var(--text);
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
 }
 .test-page{
   min-height:100vh;
@@ -70,7 +71,8 @@ body{
   background:#fff;
   border:1px solid #d5e7f8;
   box-shadow:0 10px 28px rgba(28,91,145,.10);
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
   transition:transform .15s ease,box-shadow .15s ease;
 }
 .test-choice:active{transform:scale(.985)}
@@ -126,7 +128,7 @@ body{
 
 <style id="gs-test-selection-final">
   .gs-test-selection {
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 30px);
     padding: 18px 14px 28px;
     display:flex;
     flex-direction:column;
@@ -216,6 +218,12 @@ body{
   .gs-test-record-links b{font-size:13px}
   .gs-test-footer{color:#666}
   @media(max-width:420px){.gs-test-record-links{grid-template-columns:1fr}}
+  /* Keep results/history actions visible below the three Free Test choices */
+  body{overflow-y:auto!important;overflow-x:hidden!important}
+  .test-page{min-height:100vh;min-height:100dvh;height:auto;overflow:visible}
+  .gs-test-selection{min-height:0!important;height:auto!important;overflow:visible!important}
+  .gs-test-record-links{position:relative;z-index:2;flex:0 0 auto;margin:18px auto 8px;width:100%;max-width:760px}
+  .gs-test-footer{flex:0 0 auto}
 </style>
 
 </head>
