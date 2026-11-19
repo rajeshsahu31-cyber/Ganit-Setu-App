@@ -32,3 +32,7 @@
  .handwritten-paper{font-size:16px;padding:15px 12px 18px 23px;line-height:1.85}
  .handwritten-head{padding:10px 12px}
 }
+
+/* Exam year / paper-set labels shown on each Previous Papers question */
+.paper-session-label{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;color:#174ea6;font-size:12px;font-weight:700;line-height:1.5;}
+.paper-session-label::before{content:'पूछा गया:';color:#64748b;font-weight:600;}
