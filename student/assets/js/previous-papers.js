@@ -72,7 +72,7 @@
       const g=groups.get(key);
       const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
       if(year||set){
-        const setLabel=set ? (/^set\\s+/i.test(set) ? set : `Set ${set}`) : '';
+        const setLabel=set ? (/^set\s+/i.test(set) ? set : `Set ${set}`) : '';
         const label=[year,setLabel].filter(Boolean).join(' ');
         if(!g.appearances.some(a=>a.label===label)) g.appearances.push({year,set,label});
       }
