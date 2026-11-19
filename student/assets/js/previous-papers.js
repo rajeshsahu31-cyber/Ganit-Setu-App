@@ -5,6 +5,11 @@
   let student = null, marks = 1, rows = [], answers = new Map();
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
+  function showDiagnostic(d){
+    let el=$('ppDiagnostic');
+    if(!el){ el=document.createElement('details'); el.id='ppDiagnostic'; el.style.cssText='margin:12px 0;padding:10px;border:1px dashed #b7791f;border-radius:10px;background:#fffaf0;color:#4a3b20;font-size:13px;'; el.innerHTML='<summary style="font-weight:700;cursor:pointer">तकनीकी जाँच (मोबाइल में प्रश्न क्यों नहीं आ रहे?)</summary><pre id="ppDiagnosticText" style="white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0"></pre>'; const host=$('status')?.parentElement; host?.appendChild(el); }
+    const text=$('ppDiagnosticText'); if(text) text.textContent=JSON.stringify(d,null,2);
+  }
   function normalizeMedium(value){
     const v=String(value??'').trim().toLowerCase();
     if(['english','eng','english medium','अंग्रेज़ी','अंग्रेजी','अंग्रेज़ी माध्यम','अंग्रेजी माध्यम'].includes(v)) return 'English';
@@ -32,24 +37,30 @@
     $('questions').innerHTML=''; answers.clear(); msg('प्रश्न लोड हो रहे हैं...');
     let q;
     if(marks===1){
-      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
+      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).order('exam_year',{ascending:false}).order('source_question');
     } else {
-      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
+      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).order('exam_year',{ascending:false}).order('question_id');
     }
     const {data,error}=await q;
     if(error){
       console.error('[Previous Papers] Supabase query failed:',{message:error.message,details:error.details,hint:error.hint,code:error.code,marks,classLevel:student.class_level,medium:student.medium});
       msg(`प्रश्न लोड नहीं हुए: ${error.message || 'डेटाबेस त्रुटि'} `);
+      showDiagnostic({marks,classLevel:student.class_level,medium:student.medium,error:{message:error.message,details:error.details,hint:error.hint,code:error.code}});
       return;
     }
-    // Medium values may be stored with different labels (Hindi/Hindi Medium/हिंदी).
-    // Fetch the class/published rows first, then apply a normalized medium filter.
+    // Diagnostic: fetch class/marks rows first, then report status/active/medium values.
+    const raw=data||[];
+    const published=raw.filter(r=>String(r.status||'').trim().toLowerCase()==='published');
+    const active=raw.filter(r=>r.is_active===true || String(r.is_active).toLowerCase()==='true');
     const requested=normalizeMedium(student.medium);
-    rows=(data||[]).filter(r=>{
+    const eligible=raw.filter(r=>String(r.status||'').trim().toLowerCase()==='published' && (r.is_active===true || String(r.is_active).toLowerCase()==='true'));
+    rows=eligible.filter(r=>{
       const stored=normalizeMedium(r.medium);
       return stored===requested || stored==='Both' || stored==='';
     });
-    console.info('[Previous Papers] Loaded rows:',{marks,classLevel:student.class_level,medium:student.medium,dbRows:(data||[]).length,visibleRows:rows.length,storedMediums:[...new Set((data||[]).map(r=>r.medium))]});
+    const diag={marks,classLevel:student.class_level,medium:student.medium,rawRows:raw.length,publishedRows:published.length,activeRows:active.length,eligibleRows:eligible.length,visibleRows:rows.length,statusValues:[...new Set(raw.map(r=>String(r.status)))],activeValues:[...new Set(raw.map(r=>String(r.is_active)))],mediumValues:[...new Set(raw.map(r=>String(r.medium)))]};
+    console.info('[Previous Papers] Diagnostic:',diag);
+    showDiagnostic(diag, error);
     fillFilters(rows); render();
   }
   function fillFilters(data){
