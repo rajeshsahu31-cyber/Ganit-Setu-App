@@ -131,11 +131,16 @@
     finally{btn.disabled=false;btn.textContent=old;}
   }
   async function exportSession(share){
-    const cards=[...$('questions').querySelectorAll('.handwritten-card,.question-card')];
+    const slides=[...$('questions').querySelectorAll('.pp-written-slide')];
+    const cards=slides.length?slides.map(slide=>slide.querySelector('.handwritten-card,.question-card')).filter(Boolean):[...$('questions').querySelectorAll('.handwritten-card,.question-card')];
     if(!cards.length){alert('इस सत्र में प्रश्न उपलब्ध नहीं हैं।');return;}
     const btn=$(share?'shareSessionPdf':'downloadSessionPdf');
     await withBusy(btn,async()=>{
-      const pdf=await makePdf(cards),year=$('yearFilter').value||'All_Sessions',set=$('setFilter').value||'All_Sets';
+      const previous=slides.map(slide=>slide.hidden);
+      slides.forEach(slide=>slide.hidden=false);
+      let pdf;
+      try{pdf=await makePdf(cards);}finally{slides.forEach((slide,i)=>slide.hidden=previous[i]);}
+      const year=$('yearFilter').value||'All_Sessions',set=$('setFilter').value||'All_Sets';
       const name=safeName(`Ganit_Setu_Class${student.class_level}_${marks}Marks_${year}_${set}`);
       const blob=pdf.output('blob'),file=new File([blob],name+'.pdf',{type:'application/pdf'});
       if(share&&navigator.share&&navigator.canShare?.({files:[file]})){
@@ -157,6 +162,7 @@
   }
 
   let objectiveIndex=0, objectiveStartedAt=0, objectiveTimer=null, objectiveSubmitted=false;
+  let writtenIndex=0;
   function renderObjectiveTest(list){
     objectiveIndex=0; objectiveStartedAt=Date.now(); objectiveSubmitted=false; answers.clear();
     clearInterval(objectiveTimer);
@@ -278,37 +284,48 @@
     if(marks===1){
       renderObjectiveTest(list);
     } else {
-      $('questions').innerHTML=list.map((r,i)=>{
-        const question=languageField(r,'question_text_hi','question_text_en');
-        const given=languageField(r,'given_data_hi','given_data_en');
-        const required=languageField(r,'required_to_find_hi','required_to_find_en');
-        const formula=languageField(r,'formula_theorem_hi','formula_theorem_en');
-        const solution=languageField(r,'solution_steps_hi','solution_steps_en');
-        const final=languageField(r,'final_answer_hi','final_answer_en');
-        if(marks>=2){
-          const givenBlock=given?`<div class="hw-section">${student.medium==='English'?'Given':'दिया गया'}</div><div class="hw-given">${esc(given)}</div>`:'';
-          const requiredBlock=required?`<div class="hw-section">${student.medium==='English'?'To find':'ज्ञात करना है'}</div><div class="hw-text">${esc(required)}</div>`:'';
-          const formulaBlock=formula?`<div class="hw-section">${student.medium==='English'?'Formula / Theorem':'सूत्र / प्रमेय'}</div><div class="hw-formula">${esc(formula)}</div>`:'';
-          const solutionBlock=solution?`<div class="hw-section">${student.medium==='English'?'Step-by-step solution':'हल के चरण'}</div><div class="hw-text">${esc(solution)}</div>`:'';
-          const answerBlock=final?`<div class="hw-answer">${student.medium==='English'?'Final Answer:':'अंतिम उत्तर:'} ${esc(final)}</div>`:'';
-          return `<article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper">${sessionLabel(r)}<div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div><div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
-        }
-        return `<article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
-      }).join('');
-      if(marks>=2){
-        $('questions').querySelectorAll('.hw-toggle').forEach(btn=>btn.addEventListener('click',()=>{
-          const target=$(btn.dataset.target);
-          if(!target)return;
-          target.hidden=!target.hidden;
-          btn.textContent=target.hidden?(student.medium==='English'?'Show solution':'हल दिखाएँ'):(student.medium==='English'?'Hide solution':'हल छिपाएँ');
-        }));
-      }
-      $('questions').querySelectorAll('.handwritten-card,.question-card').forEach(card=>{
-        card.querySelector('[data-export-pdf]')?.addEventListener('click',()=>exportOne(card,'pdf',false));
-        card.querySelector('[data-export-png]')?.addEventListener('click',()=>exportOne(card,'png',false));
-        card.querySelector('[data-share-one]')?.addEventListener('click',()=>exportOne(card,'pdf',true));
-      });
+      renderWrittenSlides(list);
     }
+  }
+  function renderWrittenSlides(list){
+    writtenIndex=0;
+    const cards=list.map((r,i)=>{
+      const question=languageField(r,'question_text_hi','question_text_en');
+      const given=languageField(r,'given_data_hi','given_data_en');
+      const required=languageField(r,'required_to_find_hi','required_to_find_en');
+      const formula=languageField(r,'formula_theorem_hi','formula_theorem_en');
+      const solution=languageField(r,'solution_steps_hi','solution_steps_en');
+      const final=languageField(r,'final_answer_hi','final_answer_en');
+      if(marks>=2){
+        const givenBlock=given?`<div class="hw-section">${student.medium==='English'?'Given':'दिया गया'}</div><div class="hw-given">${esc(given)}</div>`:'';
+        const requiredBlock=required?`<div class="hw-section">${student.medium==='English'?'To find':'ज्ञात करना है'}</div><div class="hw-text">${esc(required)}</div>`:'';
+        const formulaBlock=formula?`<div class="hw-section">${student.medium==='English'?'Formula / Theorem':'सूत्र / प्रमेय'}</div><div class="hw-formula">${esc(formula)}</div>`:'';
+        const solutionBlock=solution?`<div class="hw-section">${student.medium==='English'?'Step-by-step solution':'हल के चरण'}</div><div class="hw-text">${esc(solution)}</div>`:'';
+        const answerBlock=final?`<div class="hw-answer">${student.medium==='English'?'Final Answer:':'अंतिम उत्तर:'} ${esc(final)}</div>`:'';
+        return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper">${sessionLabel(r)}<div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div><div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
+      }
+      return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
+    }).join('');
+    $('questions').innerHTML=`<div class="pp-written-viewer">${cards}<div class="pp-written-navigation"><button type="button" id="ppWrittenPrev" class="export-btn secondary">← पिछला प्रश्न</button><span id="ppWrittenCount">प्रश्न 1 / ${list.length}</span><button type="button" id="ppWrittenNext" class="export-btn">अगला प्रश्न →</button></div></div>`;
+    const update=()=>{
+      $('questions').querySelectorAll('.pp-written-slide').forEach((slide,i)=>slide.hidden=i!==writtenIndex);
+      $('ppWrittenCount').textContent=`प्रश्न ${writtenIndex+1} / ${list.length}`;
+      $('ppWrittenPrev').disabled=writtenIndex===0;
+      $('ppWrittenNext').disabled=writtenIndex===list.length-1;
+      $('ppWrittenNext').textContent=writtenIndex===list.length-1?'अंतिम प्रश्न':'अगला प्रश्न →';
+    };
+    $('ppWrittenPrev').addEventListener('click',()=>{if(writtenIndex>0){writtenIndex--;update();}});
+    $('ppWrittenNext').addEventListener('click',()=>{if(writtenIndex<list.length-1){writtenIndex++;update();}});
+    $('questions').querySelectorAll('.hw-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+      const target=$(btn.dataset.target);if(!target)return;target.hidden=!target.hidden;
+      btn.textContent=target.hidden?(student.medium==='English'?'Show solution':'हल दिखाएँ'):(student.medium==='English'?'Hide solution':'हल छिपाएँ');
+    }));
+    $('questions').querySelectorAll('.handwritten-card,.question-card').forEach(card=>{
+      card.querySelector('[data-export-pdf]')?.addEventListener('click',()=>exportOne(card,'pdf',false));
+      card.querySelector('[data-export-png]')?.addEventListener('click',()=>exportOne(card,'png',false));
+      card.querySelector('[data-share-one]')?.addEventListener('click',()=>exportOne(card,'pdf',true));
+    });
+    update();
   }
   function submitQuiz(list){
     let correct=0,attempted=0;
