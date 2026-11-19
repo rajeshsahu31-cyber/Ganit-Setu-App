@@ -1,29 +1,63 @@
-<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GANIT SETU | गणित पाठ्यक्रम 2026–27</title><link rel="stylesheet" href="assets/css/style.css"><style>
-body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","Mangal",sans-serif}.sy-wrap{max-width:900px;margin:auto;padding:16px 13px 70px}.hero{background:linear-gradient(135deg,#eaf5ff,#fff);border:1px solid #dceaf7;border-radius:20px;padding:23px 16px;text-align:center}.brand{font-size:12px;font-weight:800;letter-spacing:1px;color:#1769aa}.hero h1{font-size:25px;margin:8px 0}.hero p{font-size:13px;color:#64748b;line-height:1.7;margin:0}.chip{display:inline-block;margin-top:12px;background:#1769aa;color:#fff;padding:7px 15px;border-radius:30px;font-weight:bold}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}.stat{background:#fff;border:1px solid #e3eaf2;border-radius:13px;padding:12px;text-align:center}.stat b{display:block;color:#1769aa;font-size:17px}.stat small{font-size:11px;color:#64748b}.sect{font-size:19px;margin:21px 2px 10px}.month,.chapter{background:#fff;border:1px solid #e3eaf2;border-radius:14px;margin:9px 0;overflow:hidden}.month summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;font-weight:700}.month summary::-webkit-details-marker{display:none}.mno{width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:#eaf4fc;color:#1769aa}.mtag{margin-left:auto;color:#64748b;font-size:11px;font-weight:400}.mbody{border-top:1px solid #e8edf3;padding:10px 15px 14px}.mbody li{padding:5px 0;font-size:14px;line-height:1.6}.chapter{padding:13px;display:flex;gap:12px;align-items:center}.cno{width:34px;height:34px;display:grid;place-items:center;background:#eaf4fc;color:#1769aa;border-radius:10px;font-weight:bold}.ctitle{font-weight:700;font-size:14px}.note{background:#fff8e8;border:1px solid #f3dfae;color:#76551d;border-radius:12px;padding:13px;font-size:12px;line-height:1.8;margin-top:17px}.error{background:#fff;border:1px solid #e8bcbc;color:#8a2626;border-radius:13px;padding:18px;text-align:center;margin-top:18px}.back{display:inline-block;margin:18px 0;color:#1769aa;text-decoration:none;font-weight:bold}@media(max-width:520px){.hero h1{font-size:22px}.stat{padding:9px 4px}.stat b{font-size:15px}.stat small{font-size:10px}}@media print{.back{display:none}.sy-wrap{max-width:none}}
-</style></head><body><main class="sy-wrap"><header class="hero"><div class="brand">GANIT SETU · MP BOARD</div><h1>गणित का पाठ्यक्रम एवं अध्ययन योजना</h1><p>शैक्षणिक सत्र 2026–27<br>महीनेवार इकाई विभाजन और अध्याय सूची</p><span class="chip" id="classChip">कक्षा जाँची जा रही है…</span></header><div id="pageContent"></div><a class="back" href="home.html">← होम पेज पर वापस जाएँ</a></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script>
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GANIT SETU | महीनेवार गणित पाठ्यक्रम 2026–27</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","Mangal",sans-serif}
+.gs-syllabus{max-width:900px;margin:auto;padding:16px 13px 80px}
+.gs-hero{background:linear-gradient(135deg,#eaf5ff,#fff);border:1px solid #dceaf7;border-radius:20px;padding:23px 16px;text-align:center}
+.gs-brand{font-size:12px;font-weight:800;letter-spacing:1px;color:#1769aa}
+.gs-hero h1{font-size:25px;margin:8px 0}.gs-hero p{font-size:13px;color:#64748b;line-height:1.7;margin:0}
+.gs-class{display:inline-block;margin-top:12px;background:#1769aa;color:#fff;padding:7px 15px;border-radius:30px;font-weight:bold}
+.gs-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
+.gs-stat{background:#fff;border:1px solid #e3eaf2;border-radius:13px;padding:12px;text-align:center}
+.gs-stat b{display:block;color:#1769aa;font-size:17px}.gs-stat small{font-size:11px;color:#64748b}
+.gs-title{font-size:19px;margin:21px 2px 10px}
+.gs-month{background:#fff;border:1px solid #e3eaf2;border-radius:14px;margin:9px 0;overflow:hidden}
+.gs-month summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer;font-weight:700}
+.gs-month summary::-webkit-details-marker{display:none}
+.gs-mno{width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:#eaf4fc;color:#1769aa;flex:0 0 35px}
+.gs-month-name{flex:1}.gs-page{font-size:11px;color:#64748b;font-weight:400}.gs-chevron{color:#1769aa;font-size:18px}
+.gs-month[open] .gs-chevron{transform:rotate(180deg)}
+.gs-month-body{border-top:1px solid #e8edf3;padding:11px 16px 14px}
+.gs-month-body ul{margin:0;padding-left:21px}.gs-month-body li{padding:4px 0;font-size:14px;line-height:1.65}
+.gs-chapter{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #e3eaf2;border-radius:12px;margin:8px 0;padding:11px 13px}
+.gs-cno{width:32px;height:32px;display:grid;place-items:center;background:#eaf4fc;color:#1769aa;border-radius:9px;font-weight:800;flex:0 0 32px}
+.gs-ctext{font-size:14px;font-weight:700}
+.gs-note{background:#fff8e8;border:1px solid #f3dfae;color:#76551d;border-radius:12px;padding:13px;font-size:12px;line-height:1.8;margin-top:17px}
+.gs-error{background:#fff;border:1px solid #e8bcbc;color:#8a2626;border-radius:13px;padding:18px;text-align:center;margin-top:18px}
+.gs-back{display:inline-block;margin:18px 0;color:#1769aa;text-decoration:none;font-weight:bold}
+@media(max-width:520px){.gs-hero h1{font-size:22px}.gs-stat{padding:9px 4px}.gs-stat b{font-size:15px}.gs-stat small{font-size:10px}.gs-month summary{padding:12px}.gs-page{font-size:10px}}
+</style></head>
+<body><main class="gs-syllabus">
+<header class="gs-hero"><div class="gs-brand">GANIT SETU · MP BOARD</div><h1>गणित का महीनेवार पाठ्यक्रम</h1><p>शैक्षणिक सत्र 2026–27<br>अप्रैल 2026 से दिसंबर 2026 तक · इकाईवार पाठ्यक्रम विभाजन</p><span class="gs-class" id="gsClassLabel">कक्षा जाँची जा रही है…</span></header>
+<div id="gsSyllabusContent"></div>
+<a class="gs-back" href="home.html">← होम पेज पर वापस जाएँ</a>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
 <script>
-const chapters={"9": ["संख्या पद्धति", "बहुपद", "निर्देशांक ज्यामिति", "दो चरों वाले रैखिक समीकरण", "यूक्लिड की ज्यामिति का परिचय", "रेखाएँ और कोण", "त्रिभुज", "चतुर्भुज", "वृत्त", "हीरोन का सूत्र", "पृष्ठीय क्षेत्रफल और आयतन", "सांख्यिकी"], "10": ["वास्तविक संख्याएँ", "बहुपद", "दो चर वाले रैखिक समीकरण युग्म", "द्विघात समीकरण", "समांतर श्रेढ़ियाँ", "त्रिभुज", "निर्देशांक ज्यामिति", "त्रिकोणमिति का परिचय", "त्रिकोणमिति के कुछ अनुप्रयोग", "वृत्त", "वृत्तों से संबंधित क्षेत्रफल", "पृष्ठीय क्षेत्रफल और आयतन", "सांख्यिकी", "प्रायिकता"]};
-const monthly={"9": [{"month": "जून 2026", "kind": "ब्रिज कोर्स", "items": ["ब्रिज कोर्स – अध्याय 2: बहुपद"]}, {"month": "जुलाई 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["इस माह का गणितीय इकाई-विभाजन कैलेंडर के जुलाई माह वाले पृष्ठ से देखें।"]}, {"month": "अगस्त 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["इस माह का गणितीय इकाई-विभाजन कैलेंडर के अगस्त माह वाले पृष्ठ से देखें।"]}, {"month": "सितंबर 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["इस माह का गणितीय इकाई-विभाजन कैलेंडर के सितंबर माह वाले पृष्ठ से देखें।"]}, {"month": "अक्टूबर 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["इस माह का गणितीय इकाई-विभाजन कैलेंडर के अक्टूबर माह वाले पृष्ठ से देखें।"]}, {"month": "नवंबर 2026 – अप्रैल 2027", "kind": "पुनरावृत्ति एवं शेष योजना", "items": ["कैलेंडर के संबंधित माह के इकाईवार पृष्ठ से योजना का पालन करें।"]}], "10": [{"month": "जून 2026", "kind": "ब्रिज कोर्स", "items": ["ब्रिज कोर्स – अध्याय 2: संबंध एवं फलन"]}, {"month": "जुलाई 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["अध्याय 3 – दो चर वाले रैखिक समीकरण युग्म", "अध्याय 4 – द्विघात समीकरण", "अध्याय 5 – समांतर श्रेणियाँ"]}, {"month": "अगस्त 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["अध्याय 2 – बहुपद", "अध्याय 6 – त्रिभुज", "अध्याय 7 – निर्देशांक ज्यामिति"]}, {"month": "सितंबर 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["अध्याय 4 – दो चरों वाले रैखिक समीकरण युग्म", "अध्याय 8 – त्रिकोणमिति का परिचय"]}, {"month": "अक्टूबर 2026", "kind": "इकाईवार पाठ्यक्रम", "items": ["अध्याय 6 – रेखाएँ", "अध्याय 7 – त्रिभुज", "अध्याय 9 – त्रिकोणमिति के कुछ अनुप्रयोग", "अध्याय 10 – वृत्त", "अध्याय 11 – वृत्तों से संबंधित क्षेत्रफल"]}, {"month": "नवंबर 2026 – अप्रैल 2027", "kind": "शेष इकाइयाँ / पुनरावृत्ति", "items": ["कैलेंडर के संबंधित माह के इकाईवार पृष्ठ के अनुसार आगे का अध्ययन करें।"]}]};
-function render(cls){
- document.getElementById('classChip').textContent='कक्षा '+cls+'वीं · गणित';
- const units=monthly[cls];
- let h=`<div class="stats"><div class="stat"><b>${chapters[cls].length}</b><small>कुल अध्याय</small></div><div class="stat"><b>${units.length}</b><small>योजना खंड</small></div><div class="stat"><b>2026–27</b><small>शैक्षणिक सत्र</small></div></div><h2 class="sect">महीने के अनुसार अध्ययन योजना</h2>`;
- h+=units.map((m,i)=>`<details class="month" ${i===0?'open':''}><summary><span class="mno">${String(i+1).padStart(2,'0')}</span><span>${m.month}</span><span class="mtag">${m.kind}</span></summary><div class="mbody"><ul>${m.items.map(x=>`<li>${x}</li>`).join('')}</ul></div></details>`).join('');
- h+='<h2 class="sect">पूरे वर्ष के अध्याय</h2>'+chapters[cls].map((c,i)=>`<div class="chapter"><span class="cno">${i+1}</span><span class="ctitle">अध्याय ${i+1} – ${c}</span></div>`).join('');
- h+='<div class="note"><b>महत्वपूर्ण:</b> विद्यार्थी की कक्षा उसके लॉगिन प्रोफाइल से ली जाती है। केवल उसी कक्षा का पाठ्यक्रम दिखेगा। महीनेवार प्रविष्टियाँ उपलब्ध शैक्षणिक कैलेंडर के पढ़े जा सकने वाले गणितीय विवरण पर आधारित हैं; जहाँ कैलेंडर की तालिका स्पष्ट नहीं थी, वहाँ कोई अध्याय अनुमान से नहीं जोड़ा गया है।</div>';
- document.getElementById('pageContent').innerHTML=h;
+const monthlyPlan={"9": [{"month": "अप्रैल 2026", "pdfPage": 2, "items": ["ब्रिज कोर्स", "सप्ताह–1", "सप्ताह–2", "सप्ताह–3"]}, {"month": "मई 2026", "pdfPage": 4, "items": ["मई माह के कैलेंडर पृष्ठ पर गणित का अलग इकाईवार पाठ्यक्रम विभाजन नहीं दिया गया है।"]}, {"month": "जून 2026", "pdfPage": 6, "items": ["ब्रिज कोर्स", "सप्ताह–4", "सप्ताह–5", "अध्याय–2 बहुपद", "प्रायोजना कार्य"]}, {"month": "जुलाई 2026", "pdfPage": 8, "items": ["ब्रिज कोर्स", "सप्ताह–6", "सप्ताह–7", "सप्ताह–8", "अध्याय–1 संख्या पद्धति"]}, {"month": "अगस्त 2026", "pdfPage": 10, "items": ["अध्याय–2 बहुपद", "अध्याय–3 निर्देशांक ज्यामिति", "प्रायोजना कार्य"]}, {"month": "सितंबर 2026", "pdfPage": 12, "items": ["अध्याय–4 दो चरों वाले रैखिक समीकरण", "अध्याय–5 यूक्लिड की ज्यामिति का परिचय", "प्रायोजना कार्य"]}, {"month": "अक्टूबर 2026", "pdfPage": 14, "items": ["अध्याय–6 रेखाएँ और कोण", "अध्याय–7 त्रिभुज", "अध्याय–8 चतुर्भुज"]}, {"month": "नवंबर 2026", "pdfPage": 16, "items": ["अध्याय–9 वृत्त"]}, {"month": "दिसंबर 2026", "pdfPage": 18, "items": ["अध्याय–10 हीरोन का सूत्र", "अध्याय–11 पृष्ठीय क्षेत्रफल और आयतन", "अध्याय–12 सांख्यिकी"]}], "10": [{"month": "अप्रैल 2026", "pdfPage": 2, "items": ["अध्याय–1 वास्तविक संख्याएँ", "प्रायोजना कार्य"]}, {"month": "मई 2026", "pdfPage": 4, "items": ["मई माह के कैलेंडर पृष्ठ पर गणित का अलग इकाईवार पाठ्यक्रम विभाजन नहीं दिया गया है।"]}, {"month": "जून 2026", "pdfPage": 6, "items": ["अध्याय–2 संबंध एवं फलन", "प्रायोजना कार्य"]}, {"month": "जुलाई 2026", "pdfPage": 8, "items": ["अध्याय–3 दो चरों वाले रैखिक समीकरण युग्म", "अध्याय–4 द्विघात समीकरण", "अध्याय–5 समांतर श्रेणियाँ"]}, {"month": "अगस्त 2026", "pdfPage": 10, "items": ["अध्याय–6 त्रिभुज", "अध्याय–7 निर्देशांक ज्यामिति"]}, {"month": "सितंबर 2026", "pdfPage": 12, "items": ["अध्याय–8 त्रिकोणमिति का परिचय"]}, {"month": "अक्टूबर 2026", "pdfPage": 14, "items": ["अध्याय–9 त्रिकोणमिति के कुछ अनुप्रयोग", "अध्याय–10 वृत्त", "अध्याय–11 वृत्तों से संबंधित क्षेत्रफल", "प्रायोजना कार्य"]}, {"month": "नवंबर 2026", "pdfPage": 16, "items": ["अध्याय–12 पृष्ठीय क्षेत्रफल और आयतन"]}, {"month": "दिसंबर 2026", "pdfPage": 18, "items": ["अध्याय–13 सांख्यिकी", "अध्याय–14 प्रायिकता", "प्रायोजना कार्य"]}]};
+const yearlyChapters={"9": ["संख्या पद्धति", "बहुपद", "निर्देशांक ज्यामिति", "दो चरों वाले रैखिक समीकरण", "यूक्लिड की ज्यामिति का परिचय", "रेखाएँ और कोण", "त्रिभुज", "चतुर्भुज", "वृत्त", "हीरोन का सूत्र", "पृष्ठीय क्षेत्रफल और आयतन", "सांख्यिकी"], "10": ["वास्तविक संख्याएँ", "बहुपद", "दो चरों वाले रैखिक समीकरण युग्म", "द्विघात समीकरण", "समांतर श्रेणियाँ", "त्रिभुज", "निर्देशांक ज्यामिति", "त्रिकोणमिति का परिचय", "त्रिकोणमिति के कुछ अनुप्रयोग", "वृत्त", "वृत्तों से संबंधित क्षेत्रफल", "पृष्ठीय क्षेत्रफल और आयतन", "सांख्यिकी", "प्रायिकता"]};
+function renderSyllabus(cls){
+ const months=monthlyPlan[String(cls)];
+ document.getElementById('gsClassLabel').textContent='कक्षा '+cls+'वीं · गणित';
+ let out=`<div class="gs-stats"><div class="gs-stat"><b>${yearlyChapters[cls].length}</b><small>कुल अध्याय</small></div><div class="gs-stat"><b>9</b><small>महीने (अप्रैल–दिसंबर)</small></div><div class="gs-stat"><b>2026–27</b><small>शैक्षणिक सत्र</small></div></div><h2 class="gs-title">महीने के अनुसार इकाईवार पाठ्यक्रम</h2>`;
+ out+=months.map((m,i)=>`<details class="gs-month" ${i===0?'open':''}><summary><span class="gs-mno">${String(i+1).padStart(2,'0')}</span><span class="gs-month-name">${m.month}</span><span class="gs-page">कैलेंडर पृष्ठ ${m.pdfPage}</span><span class="gs-chevron">⌄</span></summary><div class="gs-month-body"><ul>${m.items.map(item=>`<li>${item}</li>`).join('')}</ul></div></details>`).join('');
+ out+='<h2 class="gs-title">पूरे वर्ष के अध्याय</h2>'+yearlyChapters[cls].map((name,i)=>`<div class="gs-chapter"><span class="gs-cno">${i+1}</span><span class="gs-ctext">अध्याय ${i+1} – ${name}</span></div>`).join('');
+ out+='<div class="gs-note"><b>स्रोत:</b> लोक शिक्षण संचालनालय, मध्यप्रदेश के शैक्षणिक कैलेंडर 2026–27 में दिए गए महीनेवार “इकाईवार पाठ्यक्रम विभाजन” से केवल कक्षा 9वीं/10वीं की गणित वाली प्रविष्टियाँ ली गई हैं। अप्रैल, जून, जुलाई, अगस्त, सितंबर, अक्टूबर, नवंबर और दिसंबर के लिए कैलेंडर के पृष्ठ 2, 6, 8, 10, 12, 14, 16 और 18 देखे गए हैं। मई के कैलेंडर पृष्ठ पर अलग गणित इकाईवार विभाजन नहीं दिया गया है। प्रविष्टियों को मूल तालिका के अनुसार रखा गया है; अतिरिक्त अध्याय/विषय नहीं जोड़े गए हैं।</div>';
+ document.getElementById('gsSyllabusContent').innerHTML=out;
 }
 (async()=>{
  const sid=sessionStorage.getItem('ganit_setu_student_id');
- const box=document.getElementById('pageContent');
- if(!sid){box.innerHTML='<div class="error">कृपया पहले विद्यार्थी लॉगिन करें।</div>';return;}
+ const box=document.getElementById('gsSyllabusContent');
+ if(!sid){box.innerHTML='<div class="gs-error">कृपया पहले विद्यार्थी लॉगिन करें।</div>';return;}
  let cls=Number(sessionStorage.getItem('ganit_setu_student_class'));
  if(cls!==9&&cls!==10){
   try{const {data,error}=await supabaseClient.from('students').select('class_level').eq('student_id',sid).maybeSingle();if(error)throw error;cls=Number(data?.class_level);if(cls===9||cls===10)sessionStorage.setItem('ganit_setu_student_class',String(cls));}
   catch(e){console.error(e);}
  }
- if(cls!==9&&cls!==10){box.innerHTML='<div class="error">आपकी कक्षा की जानकारी नहीं मिली। कृपया दोबारा लॉगिन करें या स्कूल से संपर्क करें।</div>';return;}
- render(String(cls));
+ if(cls!==9&&cls!==10){box.innerHTML='<div class="gs-error">आपकी कक्षा की जानकारी नहीं मिली। कृपया दोबारा लॉगिन करें।</div>';return;}
+ renderSyllabus(cls);
 })();
 </script></body></html>
