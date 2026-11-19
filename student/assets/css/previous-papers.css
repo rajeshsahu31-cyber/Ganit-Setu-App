@@ -43,3 +43,11 @@
   color:#174ea6; font-size:12px; font-weight:700; line-height:1.45;
 }
 .paper-session-label::before{content:'पूछा गया:';color:#64748b;font-weight:600;}
+
+/* Written previous-paper questions: one question per slide */
+.pp-written-viewer{max-width:900px;margin:0 auto;}
+.pp-written-slide[hidden]{display:none!important;}
+.pp-written-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 22px;padding:10px 12px;background:#f8fbff;border:1px solid #dce8f5;border-radius:12px;}
+.pp-written-navigation span{font-size:13px;font-weight:800;color:#244c78;white-space:nowrap;}
+.pp-written-navigation button:disabled{opacity:.42;cursor:not-allowed;}
+@media(max-width:480px){.pp-written-navigation{gap:6px;padding:8px}.pp-written-navigation button{font-size:12px;padding:8px 9px}.pp-written-navigation span{font-size:11px}}
