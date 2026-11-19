@@ -199,6 +199,23 @@ body{
     .gs-test-selection { max-width:760px; margin:auto; }
     .gs-test-card { min-height:165px; }
   }
+
+  /* Clean white theme for all Free Test options */
+  .gs-test-selection{background:#fff;color:#202124}
+  .gs-test-card,.gs-daily,.gs-chapter,.gs-course{
+    background:#fff!important;color:#202124!important;
+    border:1px solid #e5e7eb!important;
+    box-shadow:0 5px 16px rgba(0,0,0,.045)!important;
+  }
+  .gs-test-card h2{color:#202124!important}
+  .gs-test-card p{color:#666!important}
+  .gs-test-icon,.gs-test-arrow{background:#fff!important;color:#333!important;border:1px solid #ececec}
+  .gs-test-record-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 0}
+  .gs-test-record-links a{display:flex;align-items:center;gap:10px;min-height:58px;padding:12px;background:#fff;border:1px solid #e5e7eb;border-radius:15px;color:#222;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.035)}
+  .gs-test-record-links span{font-size:22px}
+  .gs-test-record-links b{font-size:13px}
+  .gs-test-footer{color:#666}
+  @media(max-width:420px){.gs-test-record-links{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -206,7 +223,7 @@ body{
 <main class="test-page">
 
 <section class="gs-test-selection" id="gsTestSelection">
-  <h1>Test चुनें</h1>
+  <h1>Free Test</h1>
   <p class="sub">अपनी तैयारी को एक नई दिशा दें</p>
 
   <button class="gs-test-card gs-daily" type="button" data-test="daily">
@@ -236,6 +253,11 @@ body{
     <span class="gs-test-arrow">›</span>
   </button>
 
+  
+  <section class="gs-test-record-links" aria-label="टेस्ट रिकॉर्ड">
+    <a href="results.html"><span>📊</span><b>मेरे परिणाम</b></a>
+    <a href="previous-result.html"><span>📋</span><b>पिछला परिणाम जानें</b></a>
+  </section>
   <div class="gs-test-footer">📖 सीखें • अभ्यास करें • आगे बढ़ें</div>
 </section>
 
