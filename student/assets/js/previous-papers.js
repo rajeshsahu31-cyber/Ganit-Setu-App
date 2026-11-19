@@ -5,11 +5,6 @@
   let student = null, marks = 1, rows = [], answers = new Map();
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
-  function showDiagnostic(d){
-    let el=$('ppDiagnostic');
-    if(!el){ el=document.createElement('details'); el.id='ppDiagnostic'; el.style.cssText='margin:12px 0;padding:10px;border:1px dashed #b7791f;border-radius:10px;background:#fffaf0;color:#4a3b20;font-size:13px;'; el.innerHTML='<summary style="font-weight:700;cursor:pointer">तकनीकी जाँच (मोबाइल में प्रश्न क्यों नहीं आ रहे?)</summary><pre id="ppDiagnosticText" style="white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0"></pre>'; const host=$('status')?.parentElement; host?.appendChild(el); }
-    const text=$('ppDiagnosticText'); if(text) text.textContent=JSON.stringify(d,null,2);
-  }
   function normalizeMedium(value){
     const v=String(value??'').trim().toLowerCase();
     if(['english','eng','english medium','अंग्रेज़ी','अंग्रेजी','अंग्रेज़ी माध्यम','अंग्रेजी माध्यम'].includes(v)) return 'English';
@@ -37,30 +32,24 @@
     $('questions').innerHTML=''; answers.clear(); msg('प्रश्न लोड हो रहे हैं...');
     let q;
     if(marks===1){
-      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).order('exam_year',{ascending:false}).order('source_question');
+      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
     } else {
-      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).order('exam_year',{ascending:false}).order('question_id');
+      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
     }
     const {data,error}=await q;
     if(error){
       console.error('[Previous Papers] Supabase query failed:',{message:error.message,details:error.details,hint:error.hint,code:error.code,marks,classLevel:student.class_level,medium:student.medium});
       msg(`प्रश्न लोड नहीं हुए: ${error.message || 'डेटाबेस त्रुटि'} `);
-      showDiagnostic({marks,classLevel:student.class_level,medium:student.medium,error:{message:error.message,details:error.details,hint:error.hint,code:error.code}});
       return;
     }
-    // Diagnostic: fetch class/marks rows first, then report status/active/medium values.
-    const raw=data||[];
-    const published=raw.filter(r=>String(r.status||'').trim().toLowerCase()==='published');
-    const active=raw.filter(r=>r.is_active===true || String(r.is_active).toLowerCase()==='true');
+    // Medium values may be stored with different labels (Hindi/Hindi Medium/हिंदी).
+    // Fetch the class/published rows first, then apply a normalized medium filter.
     const requested=normalizeMedium(student.medium);
-    const eligible=raw.filter(r=>String(r.status||'').trim().toLowerCase()==='published' && (r.is_active===true || String(r.is_active).toLowerCase()==='true'));
-    rows=eligible.filter(r=>{
+    rows=(data||[]).filter(r=>{
       const stored=normalizeMedium(r.medium);
       return stored===requested || stored==='Both' || stored==='';
     });
-    const diag={marks,classLevel:student.class_level,medium:student.medium,rawRows:raw.length,publishedRows:published.length,activeRows:active.length,eligibleRows:eligible.length,visibleRows:rows.length,statusValues:[...new Set(raw.map(r=>String(r.status)))],activeValues:[...new Set(raw.map(r=>String(r.is_active)))],mediumValues:[...new Set(raw.map(r=>String(r.medium)))]};
-    console.info('[Previous Papers] Diagnostic:',diag);
-    showDiagnostic(diag, error);
+    console.info('[Previous Papers] Loaded rows:',{marks,classLevel:student.class_level,medium:student.medium,dbRows:(data||[]).length,visibleRows:rows.length,storedMediums:[...new Set((data||[]).map(r=>r.medium))]});
     fillFilters(rows); render();
   }
   function fillFilters(data){
@@ -69,7 +58,34 @@
     const y=$('yearFilter'), oldY=y.value; y.innerHTML='<option value="">सभी उपलब्ध सत्र</option>'+years.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''); if(years.includes(oldY))y.value=oldY;
     const s=$('setFilter'),oldS=s.value;s.innerHTML='<option value="">सभी सेट</option>'+sets.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(sets.includes(oldS))s.value=oldS;
   }
-  function filtered(){return rows.filter(r=>(!$('yearFilter').value||String(r.exam_year)===$('yearFilter').value)&&(!$('setFilter').value||String(r.paper_set)===$('setFilter').value));}
+  function questionKey(r){
+    const q=String(r.question_text_hi||r.question_text_en||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
+    const medium=normalizeMedium(r.medium);
+    const options=marks===1?['a','b','c','d'].map(k=>String(r['option_'+k+'_hi']||r['option_'+k+'_en']||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim()).join('|'):'';
+    return [Number(r.class_level),marks,medium,q,options].join('::');
+  }
+  function groupedQuestions(){
+    const groups=new Map();
+    rows.forEach(r=>{
+      const key=questionKey(r);
+      if(!groups.has(key)) groups.set(key,{...r,appearances:[]});
+      const g=groups.get(key);
+      const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
+      if(year||set){
+        const label=[year,set?`Set ${set}`:''].filter(Boolean).join(' ');
+        if(!g.appearances.some(a=>a.label===label)) g.appearances.push({year,set,label});
+      }
+    });
+    return [...groups.values()].map(g=>({...g,appearances:g.appearances.sort((a,b)=>Number(b.year||0)-Number(a.year||0)||a.set.localeCompare(b.set))}));
+  }
+  function filtered(){
+    const year=$('yearFilter').value, set=$('setFilter').value;
+    return groupedQuestions().filter(g=>g.appearances.some(a=>(!year||a.year===year)&&(!set||a.set===set)));
+  }
+  function sessionLabel(r){
+    const labels=(r.appearances||[]).map(a=>a.label).filter(Boolean);
+    return labels.length?`<div class="paper-session-label">${labels.map(esc).join(' | ')}</div>`:'';
+  }
 
   function ensureExportToolbar(){
     let bar=$('exportToolbar');
@@ -136,7 +152,7 @@
     if(marks===1){
       $('questions').innerHTML=list.map((r,i)=>{
         const opts=['a','b','c','d'].map(k=>`<label class="option"><input type="radio" name="q_${i}" value="${k.toUpperCase()}"> ${k.toUpperCase()}. ${esc(languageField(r,'option_'+k+'_hi','option_'+k+'_en'))}</label>`).join('');
-        return `<article class="question-card"><div class="question-title">प्रश्न ${i+1}. ${esc(languageField(r,'question_text_hi','question_text_en'))}</div>${opts}</article>`;
+        return `<article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(languageField(r,'question_text_hi','question_text_en'))}</div>${opts}</article>`;
       }).join('')+`<button class="primary-btn" id="submitQuiz">टेस्ट जमा करें</button><div id="quizResult"></div>`;
       $('questions').querySelectorAll('input[type=radio]').forEach(el=>el.addEventListener('change',e=>answers.set(e.target.name,e.target.value)));
       $('submitQuiz').addEventListener('click',()=>submitQuiz(list));
@@ -154,9 +170,9 @@
           const formulaBlock=formula?`<div class="hw-section">${student.medium==='English'?'Formula / Theorem':'सूत्र / प्रमेय'}</div><div class="hw-formula">${esc(formula)}</div>`:'';
           const solutionBlock=solution?`<div class="hw-section">${student.medium==='English'?'Step-by-step solution':'हल के चरण'}</div><div class="hw-text">${esc(solution)}</div>`:'';
           const answerBlock=final?`<div class="hw-answer">${student.medium==='English'?'Final Answer:':'अंतिम उत्तर:'} ${esc(final)}</div>`:'';
-          return `<article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper"><div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div><div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
+          return `<article class="handwritten-card">${sessionLabel(r)}<div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper"><div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div><div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
         }
-        return `<article class="question-card"><div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
+        return `<article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article>`;
       }).join('');
       if(marks>=2){
         $('questions').querySelectorAll('.hw-toggle').forEach(btn=>btn.addEventListener('click',()=>{
