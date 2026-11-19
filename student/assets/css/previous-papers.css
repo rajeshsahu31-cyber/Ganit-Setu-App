@@ -36,3 +36,10 @@
 /* Exam year / paper-set labels shown on each Previous Papers question */
 .paper-session-label{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;color:#174ea6;font-size:12px;font-weight:700;line-height:1.5;}
 .paper-session-label::before{content:'पूछा गया:';color:#64748b;font-weight:600;}
+
+/* Session label sits immediately above the question text */
+.paper-session-label{
+  display:flex; flex-wrap:wrap; gap:6px; margin:0 0 8px;
+  color:#174ea6; font-size:12px; font-weight:700; line-height:1.45;
+}
+.paper-session-label::before{content:'पूछा गया:';color:#64748b;font-weight:600;}
