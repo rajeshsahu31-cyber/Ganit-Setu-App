@@ -102,7 +102,17 @@
   async function captureCard(card){
     if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
     if(document.fonts?.ready)await document.fonts.ready;
-    return await window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    const captureId=`capture-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    card.dataset.exportCaptureId=captureId;
+    try{return await window.html2canvas(card,{
+      scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,
+      onclone:clonedDoc=>{
+        const clonedCard=clonedDoc.querySelector(`[data-export-capture-id="${card.dataset.exportCaptureId}"]`);
+        if(!clonedCard)return;
+        clonedCard.querySelectorAll('.hw-actions,.export-actions,.export-toolbar,.export-note,[data-export-pdf],[data-export-png],[data-share-one],.hw-toggle,.download-instructions').forEach(el=>el.remove());
+        clonedCard.querySelectorAll('.hw-solution-content').forEach(el=>{el.hidden=false;el.style.display='';});
+      }
+    });}finally{delete card.dataset.exportCaptureId;}
   }
   function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,60);}
   async function makePdf(cards){
