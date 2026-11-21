@@ -432,22 +432,50 @@
     if(type==='TRUE_FALSE'){
       return `<div class="pp-exam-options pp-exam-options-inline"><div class="pp-exam-option">(A) ${isEnglish?'True':'सही'}</div><div class="pp-exam-option">(B) ${isEnglish?'False':'गलत'}</div></div>`;
     }
-    if(type==='FILL_BLANK'||type==='SHORT_ANSWER'){
-      const opts=['A','B'].map(letter=>answerOptionText(r,letter));
-      return `<div class="pp-exam-options pp-exam-options-inline">${opts.map((value,i)=>value?`<div class="pp-exam-option"><b>(${i?'B':'A'})</b> ${esc(value)}</div>`:'').join('')}</div>`;
+    if(type==='FILL_BLANK'){
+      // In the printable question paper, students write the missing answer themselves.
+      // The two practice dropdown choices are intentionally not printed here.
+      return '';
     }
-    if(type==='MATCH'){
-      const pairs=matchPairs(r), first=pairs[0]||{};
-      const right=isEnglish?(first.column_b_en||first.column_b_hi):(first.column_b_hi||first.column_b_en);
-      const rightItems=Array.isArray(right)?right:[];
-      const leftItems=pairs.map((pair,i)=>{
-        const left=isEnglish?(pair.column_a_en||pair.column_a_hi):(pair.column_a_hi||pair.column_a_en);
-        return `<tr><td class="pp-match-no">${i+1}.</td><td>${esc(left||'')}</td></tr>`;
-      }).join('');
-      const rightHtml=rightItems.map(item=>`<div class="pp-match-choice"><b>(${esc(item.label||'')})</b> ${esc(item.value||'')}</div>`).join('');
-      return `<div class="pp-exam-match"><table><tbody>${leftItems}</tbody></table><div class="pp-match-bank"><b>${isEnglish?'Options':'विकल्प'}</b>${rightHtml}</div></div>`;
+    if(type==='SHORT_ANSWER'){
+      // No answer choices in the question paper; leave writing space for the learner.
+      return `<div class="pp-exam-writing-lines" aria-hidden="true"><span></span></div>`;
     }
     return '';
+  }
+
+  function objectiveMatchLeftText(r){
+    const raw=languageField(r,'question_text_hi','question_text_en');
+    const colon=raw.indexOf(':');
+    return (colon>=0?raw.slice(colon+1):raw).trim();
+  }
+
+  function objectiveSheetBlocks(list){
+    const blocks=[];
+    for(let i=0;i<list.length;){
+      const row=list[i];
+      if(objectiveType(row)==='MATCH'){
+        const group=[];
+        while(i<list.length && objectiveType(list[i])==='MATCH') group.push(list[i++]);
+        blocks.push({type:'MATCH_GROUP',rows:group,displayNo:blocks.length+1});
+      }else{
+        blocks.push({type:'SINGLE',row,index:i,displayNo:blocks.length+1});
+        i++;
+      }
+    }
+    return blocks;
+  }
+
+  function objectiveMatchSheetHtml(group,isEnglish){
+    const firstPairs=matchPairs(group[0]);
+    const first=firstPairs[0]||{};
+    const right=isEnglish?(first.column_b_en||first.column_b_hi):(first.column_b_hi||first.column_b_en);
+    const rightItems=Array.isArray(right)?right:[];
+    const leftRows=group.map((r,i)=>`<tr><td class="pp-match-subno">${esc(objectiveMatchLeftText(r))}</td></tr>`).join('');
+    const rightRows=rightItems.map(item=>`<tr><td><b>(${esc(item.label||'')})</b> ${esc(item.value||'')}</td></tr>`).join('');
+    const count=Math.max(group.length,rightItems.length);
+    const rows=Array.from({length:count},(_,i)=>`<tr><td>${i<group.length?`<span class="pp-match-subno">${esc(objectiveMatchLeftText(group[i]))}</span>`:''}</td><td>${i<rightItems.length?`<b>(${esc(rightItems[i].label||'')})</b> ${esc(rightItems[i].value||'')}`:''}</td></tr>`).join('');
+    return `<div class="pp-exam-match-wrap"><table class="pp-exam-match-table"><thead><tr><th>${isEnglish?'Column A':'स्तम्भ A'}</th><th>${isEnglish?'Column B':'स्तम्भ B'}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   }
 
   function objectiveAnswerKey(r){
@@ -459,54 +487,55 @@
       if(['false','f','0','no','गलत','असत्य'].includes(value)) return isEnglish?'False':'गलत';
       return String(r.true_false_answer||'—');
     }
-    if(type==='FILL_BLANK'||type==='SHORT_ANSWER'){
-      const letter=correctAnswerOption(r);
-      const value=answerOptionText(r,letter);
-      return value ? `${letter}. ${value}` : (languageField(r,type==='FILL_BLANK'?'fill_blank_answer_hi':'short_answer_hi',type==='FILL_BLANK'?'fill_blank_answer_en':'short_answer_en')||'—');
-    }
-    if(type==='MATCH'){
-      return matchPairs(r).map((pair,i)=>`${i+1}-${pair.correct_label||'?'}`).join(', ')||'—';
-    }
+    if(type==='FILL_BLANK') return languageField(r,'fill_blank_answer_hi','fill_blank_answer_en')||'—';
+    if(type==='SHORT_ANSWER') return languageField(r,'short_answer_hi','short_answer_en')||'—';
+    if(type==='MATCH') return matchPairs(r).map(pair=>pair.correct_label||'?').join(', ')||'—';
     return '—';
   }
 
   function renderObjectiveQuestionSheet(list){
     clearInterval(objectiveTimer);
     const isEnglish=student.medium==='English';
-    const year=$('yearFilter').value|| (isEnglish?'All sessions':'सभी सत्र');
-    const set=$('setFilter').value|| (isEnglish?'All sets':'सभी सेट');
+    const blocks=objectiveSheetBlocks(list);
     const pageSize=5;
     const questionPages=[];
-    for(let i=0;i<list.length;i+=pageSize) questionPages.push(list.slice(i,i+pageSize));
+    for(let i=0;i<blocks.length;i+=pageSize) questionPages.push(blocks.slice(i,i+pageSize));
     const totalPages=questionPages.length+1;
     const pages=questionPages.map((group,pageIndex)=>{
       const first=pageIndex===0;
-      const body=group.map((r,j)=>{
-        const index=pageIndex*pageSize+j+1;
-        const question=languageField(r,'question_text_hi','question_text_en');
+      const body=group.map(block=>{
+        if(block.type==='MATCH_GROUP'){
+          return `<article class="pp-exam-question pp-exam-match-question">
+            <div class="pp-exam-qline"><span class="pp-exam-qnumber">${isEnglish?'Q.':'प्रश्न'} ${block.displayNo}.</span><span class="pp-exam-marks">[${block.rows.length} ${isEnglish?'Marks':'अंक'}]</span></div>
+            <div class="pp-exam-question-text">${isEnglish?'Match the following:':'सही जोड़ी मिलाइए :'}</div>
+            ${objectiveMatchSheetHtml(block.rows,isEnglish)}
+          </article>`;
+        }
+        const r=block.row;
         const type=objectiveType(r);
+        const question=languageField(r,'question_text_hi','question_text_en');
         const questionText=type==='FILL_BLANK'?esc(question).replace(/_{3,}|…{2,}/g,'__________'):esc(question);
         return `<article class="pp-exam-question">
-          <div class="pp-exam-qline"><span class="pp-exam-qnumber">${isEnglish?'Q.':'प्रश्न'} ${index}.</span><span class="pp-exam-marks">[1 ${isEnglish?'Mark':'अंक'}]</span></div>
+          <div class="pp-exam-qline"><span class="pp-exam-qnumber">${isEnglish?'Q.':'प्रश्न'} ${block.displayNo}.</span><span class="pp-exam-marks">[1 ${isEnglish?'Mark':'अंक'}]</span></div>
           <div class="pp-exam-question-text">${questionText}</div>
           ${objectiveSheetOptions(r)}
         </article>`;
       }).join('');
       const header=first?`
         <div class="pp-exam-brand">GANIT SETU • ${isEnglish?'MATHEMATICS':'गणित सेतु'}</div>
-        <h1 class="pp-exam-title">${isEnglish?'OBJECTIVE QUESTION PAPER':'वस्तुनिष्ठ प्रश्नपत्र'}</h1>
-        <div class="pp-exam-meta"><span>${isEnglish?'Class':'कक्षा'}: ${esc(student.class_level)}</span><span>${isEnglish?'Subject':'विषय'}: ${isEnglish?'Mathematics':'गणित'}</span><span>${isEnglish?'Session':'सत्र'}: ${esc(year)}</span><span>${isEnglish?'Set':'सेट'}: ${esc(set)}</span></div>
-        <div class="pp-exam-meta pp-exam-meta-second"><span>${isEnglish?'Time':'समय'}: __________</span><span>${isEnglish?'Maximum Marks':'पूर्णांक'}: ${list.length}</span></div>
-        <div class="pp-exam-student-line">${isEnglish?'Name':'विद्यार्थी का नाम'}: __________________________ <span>${isEnglish?'Roll No.':'अनुक्रमांक'}: ______________</span></div>
-        <div class="pp-exam-instructions"><b>${isEnglish?'General Instructions':'सामान्य निर्देश'}:</b> ${isEnglish?'All questions are compulsory. Each question carries one mark. Choose or match the correct answer.':'सभी प्रश्न अनिवार्य हैं। प्रत्येक प्रश्न 1 अंक का है। दिए गए विकल्पों में से सही उत्तर चुनिए अथवा सही मिलान कीजिए।'}</div>`:
-        `<div class="pp-exam-continuation"><b>GANIT SETU</b><span>${isEnglish?'OBJECTIVE QUESTION PAPER (Continued)':'वस्तुनिष्ठ प्रश्नपत्र (जारी)'}</span></div>`;
+        <h1 class="pp-exam-title">${isEnglish?'OBJECTIVE QUESTIONS':'वस्तुनिष्ठ प्रश्न'}</h1>`:
+        `<div class="pp-exam-continuation"><b>GANIT SETU</b><span>${isEnglish?'OBJECTIVE QUESTIONS (Continued)':'वस्तुनिष्ठ प्रश्न (जारी)'}</span></div>`;
       return `<section class="pp-exam-page">${header}<div class="pp-exam-question-list">${body}</div><div class="pp-exam-page-footer">${isEnglish?'Ganit Setu • Objective Practice':'गणित सेतु • वस्तुनिष्ठ अभ्यास'} <span>${isEnglish?'Page':'पृष्ठ'} ${pageIndex+1} / ${totalPages}</span></div></section>`;
     }).join('');
-    const answerRows=list.map((r,i)=>`<div class="pp-exam-key-item"><b>${i+1}.</b><span>${esc(objectiveAnswerKey(r))}</span></div>`).join('');
+    const answerRows=blocks.map(block=>{
+      if(block.type==='MATCH_GROUP'){
+        return block.rows.map((r,i)=>`<div class="pp-exam-key-item"><b>${block.displayNo}${['(i)','(ii)','(iii)','(iv)','(v)','(vi)','(vii)','(viii)'][i]||`(${i+1})`}.</b><span>${esc(objectiveAnswerKey(r))}</span></div>`).join('');
+      }
+      return `<div class="pp-exam-key-item"><b>${block.displayNo}.</b><span>${esc(objectiveAnswerKey(block.row))}</span></div>`;
+    }).join('');
     const answerPage=`<section class="pp-exam-page pp-exam-answer-page">
       <div class="pp-exam-brand">GANIT SETU • ${isEnglish?'MATHEMATICS':'गणित सेतु'}</div>
       <h1 class="pp-exam-title">${isEnglish?'ANSWER KEY':'उत्तरमाला'}</h1>
-      <p class="pp-exam-key-note">${isEnglish?'Answers to all questions in the question paper.':'प्रश्नपत्र के सभी प्रश्नों के उत्तर नीचे दिए गए हैं।'}</p>
       <div class="pp-exam-key-grid">${answerRows}</div>
       <div class="pp-exam-page-footer">${isEnglish?'Ganit Setu • Answer Key':'गणित सेतु • उत्तरमाला'} <span>${isEnglish?'Page':'पृष्ठ'} ${totalPages} / ${totalPages}</span></div>
     </section>`;
@@ -519,12 +548,7 @@
         .pp-exam-preview{display:grid;gap:18px;justify-items:center;overflow-x:auto;padding:4px 0 18px}
         .pp-exam-page{position:relative;box-sizing:border-box;width:794px;height:1123px;padding:48px 54px 56px;background:#fff;color:#172b43;border:1px solid #d5dce5;box-shadow:0 5px 20px rgba(25,55,85,.12);font-family:'Noto Sans Devanagari',Arial,sans-serif;overflow:hidden}
         .pp-exam-brand{text-align:center;font-size:12px;letter-spacing:1.4px;font-weight:800;color:#34577c;border-bottom:2px solid #243f60;padding-bottom:9px}
-        .pp-exam-title{text-align:center;font-size:23px;letter-spacing:.2px;margin:14px 0 13px;color:#152e4a}
-        .pp-exam-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;font-weight:700;border-bottom:1px solid #aab8c8;padding:7px 0}
-        .pp-exam-meta-second{border:0;padding-top:9px}
-        .pp-exam-student-line{font-size:12px;margin:13px 0 12px;padding-bottom:10px;border-bottom:1px solid #c4ccd6}
-        .pp-exam-student-line span{float:right}
-        .pp-exam-instructions{font-size:11px;line-height:1.65;background:#f4f6f8;border:1px solid #dce2e8;padding:9px 11px;margin:0 0 14px}
+        .pp-exam-title{text-align:center;font-size:23px;letter-spacing:.2px;margin:14px 0 20px;color:#152e4a}
         .pp-exam-continuation{display:flex;justify-content:space-between;border-bottom:2px solid #243f60;padding-bottom:10px;margin-bottom:22px;font-size:13px;color:#34577c}
         .pp-exam-question{padding:0 0 15px;margin:0 0 14px;border-bottom:1px dotted #aeb8c5;break-inside:avoid}
         .pp-exam-qline{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;color:#263f5d;margin-bottom:5px}
@@ -534,20 +558,19 @@
         .pp-exam-options-inline{grid-template-columns:repeat(2,minmax(0,1fr))}
         .pp-exam-option{font-size:12px;line-height:1.55;padding:2px 0;white-space:pre-wrap;overflow-wrap:anywhere}
         .pp-exam-option b{font-weight:800;margin-right:4px}
-        .pp-exam-match{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:5px 12px 0}
-        .pp-exam-match table{border-collapse:collapse;width:100%;font-size:11px}
-        .pp-exam-match td{border:1px solid #cbd3dd;padding:5px 7px;line-height:1.4}
-        .pp-exam-match .pp-match-no{width:25px;text-align:center;font-weight:800}
-        .pp-match-bank{font-size:11px;border:1px solid #cbd3dd;padding:6px 8px;line-height:1.55}
-        .pp-match-choice{padding:2px 0}
+        .pp-exam-writing-lines{height:28px;margin:3px 8px 0;border-bottom:1px solid #aeb8c5}
+        .pp-exam-match-wrap{padding:4px 10px 0}
+        .pp-exam-match-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px}
+        .pp-exam-match-table th,.pp-exam-match-table td{width:50%;border:1px solid #aeb8c5;padding:7px 9px;text-align:left;vertical-align:top;line-height:1.55;overflow-wrap:anywhere}
+        .pp-exam-match-table th{text-align:center;background:#f3f6f9;font-weight:800}
+        .pp-exam-match-table td b{margin-right:4px}
         .pp-exam-page-footer{position:absolute;bottom:25px;left:54px;right:54px;border-top:1px solid #cbd3dd;padding-top:7px;display:flex;justify-content:space-between;font-size:9px;color:#69798b}
-        .pp-exam-key-note{text-align:center;font-size:12px;margin:0 0 22px;color:#52677f}
         .pp-exam-key-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 18px;border-top:1px solid #aeb8c5}
-        .pp-exam-key-item{display:flex;gap:7px;align-items:flex-start;padding:9px 4px;border-bottom:1px solid #d8dee6;font-size:12px;line-height:1.5;break-inside:avoid}
-        .pp-exam-key-item b{min-width:22px;color:#244d78}
-        @media(max-width:820px){.pp-exam-preview{justify-items:start}.pp-exam-page{transform-origin:top left}}
+        .pp-exam-key-item{display:flex;gap:7px;align-items:flex-start;padding:9px 4px;border-bottom:1px solid #d8dee6;font-size:12px;line-height:1.5;break-inside:avoid;overflow-wrap:anywhere}
+        .pp-exam-key-item b{min-width:28px;color:#244d78}
+        @media(max-width:820px){.pp-exam-preview{justify-items:start}}
       </style>
-      <div class="pp-sheet-toolbar"><button type="button" id="ppDownloadObjectiveSheet">⬇ ${isEnglish?'Download exam-style PDF with answer key':'परीक्षा जैसे प्रारूप में उत्तरमाला सहित PDF डाउनलोड करें'}</button><button type="button" class="secondary" id="ppStartTestFromSheet">${isEnglish?'Start test':'टेस्ट शुरू करें'}</button><button type="button" class="pp-sheet-back" id="ppBackToObjectiveChoices">${isEnglish?'← Back':'← वापस जाएँ'}</button></div>
+      <div class="pp-sheet-toolbar"><button type="button" id="ppDownloadObjectiveSheet">⬇ ${isEnglish?'Download questions PDF with answer key':'प्रश्न और उत्तरमाला PDF डाउनलोड करें'}</button><button type="button" class="secondary" id="ppStartTestFromSheet">${isEnglish?'Start test':'टेस्ट शुरू करें'}</button><button type="button" class="pp-sheet-back" id="ppBackToObjectiveChoices">${isEnglish?'← Back':'← वापस जाएँ'}</button></div>
       <div class="pp-exam-preview" id="ppObjectiveSheet">${pages}${answerPage}</div>`;
     $('ppBackToObjectiveChoices').addEventListener('click',()=>renderObjectiveEntry(list));
     $('ppStartTestFromSheet').addEventListener('click',()=>renderObjectiveTest(list));
