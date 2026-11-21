@@ -6,6 +6,14 @@
   let chooserPanel = null, resultPanel = null, questionPageOpen = false;
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
+  function normalizePaperSet(value){
+    // Treat values like 'A' and 'Set A' as the same paper set.
+    return String(value ?? '').trim().replace(/^set\s*/i, '').trim().toUpperCase();
+  }
+  function paperSetLabel(value){
+    const normalized=normalizePaperSet(value);
+    return normalized ? `Set ${normalized}` : '';
+  }
   function normalizeMedium(value){
     const v=String(value??'').trim().toLowerCase();
     if(['english','eng','english medium','अंग्रेज़ी','अंग्रेजी','अंग्रेज़ी माध्यम','अंग्रेजी माध्यम'].includes(v)) return 'English';
@@ -79,8 +87,8 @@
   }
   function fillSetFilter(){
     const year=$('yearFilter').value;
-    const sets=[...new Set(filterRecords.filter(r=>String(r.exam_year||'').trim()===year).map(r=>String(r.paper_set||'').trim()).filter(Boolean))].sort();
-    $('setFilter').innerHTML='<option value="">पेपर सेट चुनें</option>'+sets.map(v=>`<option value="${esc(v)}">${esc(/^set\\s+/i.test(v)?v:'Set '+v)}</option>`).join('');
+    const sets=[...new Set(filterRecords.filter(r=>String(r.exam_year||'').trim()===year).map(r=>normalizePaperSet(r.paper_set)).filter(Boolean))].sort();
+    $('setFilter').innerHTML='<option value="">पेपर सेट चुनें</option>'+sets.map(v=>`<option value="${esc(v)}">${esc(paperSetLabel(v))}</option>`).join('');
   }
   function openQuestionPage(){
     questionPageOpen=true;
@@ -116,7 +124,7 @@
       const stored=normalizeMedium(r.medium);
       return (stored===requested || stored==='Both' || stored==='') &&
         String(r.exam_year||'').trim()===$('yearFilter').value &&
-        String(r.paper_set||'').trim()===$('setFilter').value;
+        normalizePaperSet(r.paper_set)===$('setFilter').value;
     });
     console.info('[Previous Papers] Loaded rows:',{marks,classLevel:student.class_level,medium:student.medium,dbRows:(data||[]).length,visibleRows:rows.length,storedMediums:[...new Set((data||[]).map(r=>r.medium))]});
     render();
@@ -141,9 +149,9 @@
       const key=questionKey(r);
       if(!groups.has(key)) groups.set(key,{...r,appearances:[]});
       const g=groups.get(key);
-      const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
+      const year=String(r.exam_year||'').trim(), set=normalizePaperSet(r.paper_set);
       if(year||set){
-        const setLabel=set ? (/^set\s+/i.test(set) ? set : `Set ${set}`) : '';
+        const setLabel=paperSetLabel(set);
         const label=[year,setLabel].filter(Boolean).join(' ');
         if(!g.appearances.some(a=>a.label===label)) g.appearances.push({year,set,label});
       }
@@ -152,7 +160,7 @@
   }
   function filtered(){
     const year=$('yearFilter').value, set=$('setFilter').value;
-    return groupedQuestions().filter(g=>g.appearances.some(a=>(!year||a.year===year)&&(!set||a.set===set)));
+    return groupedQuestions().filter(g=>g.appearances.some(a=>(!year||a.year===year)&&(!set||normalizePaperSet(a.set)===set)));
   }
   function sessionLabel(r){
     const labels=(r.appearances||[]).map(a=>a.label).filter(Boolean);
@@ -358,8 +366,8 @@
 
     const sessionLabels=(r.appearances||[]).map(a=>a.label).filter(Boolean);
     if(!sessionLabels.length){
-      const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
-      const setLabel=set?(/^set\s+/i.test(set)?set:`Set ${set}`):'';
+      const year=String(r.exam_year||'').trim(), set=normalizePaperSet(r.paper_set);
+      const setLabel=paperSetLabel(set);
       const fallback=[year,setLabel].filter(Boolean).join(' ');
       if(fallback)sessionLabels.push(fallback);
     }
