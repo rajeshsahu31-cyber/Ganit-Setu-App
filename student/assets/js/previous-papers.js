@@ -392,10 +392,108 @@
     if(!list.length){msg('इस सत्र / सेट में प्रकाशित प्रश्न उपलब्ध नहीं हैं।');return;}
     msg(`${list.length} प्रश्न उपलब्ध हैं।`);
     if(marks===1){
-      renderObjectiveTest(list);
+      renderObjectiveEntry(list);
     } else {
       renderWrittenSlides(list);
     }
+  }
+
+  function renderObjectiveEntry(list){
+    clearInterval(objectiveTimer);
+    const isEnglish=student.medium==='English';
+    $('questions').innerHTML=`
+      <style>
+        .pp-objective-choice{max-width:760px;margin:14px auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+        .pp-objective-choice button{border:1px solid #d5e3f2;border-radius:16px;background:#fff;padding:20px 16px;text-align:left;cursor:pointer;box-shadow:0 5px 18px rgba(30,70,110,.06);color:#17385f;min-height:145px}
+        .pp-objective-choice button:hover{border-color:#2380df;background:#f5faff}
+        .pp-objective-choice .pp-choice-icon{font-size:28px;display:block;margin-bottom:9px}
+        .pp-objective-choice strong{display:block;font-size:17px;margin-bottom:6px}
+        .pp-objective-choice small{display:block;color:#667b93;line-height:1.55;font-size:13px}
+        .pp-objective-count{text-align:center;color:#61758d;font-size:13px;margin:8px 0 14px}
+        @media(max-width:600px){.pp-objective-choice{grid-template-columns:1fr}.pp-objective-choice button{min-height:115px}}
+      </style>
+      <div class="pp-objective-count">${isEnglish?`${list.length} objective questions are available.`:`कुल ${list.length} वस्तुनिष्ठ प्रश्न उपलब्ध हैं।`}</div>
+      <div class="pp-objective-choice">
+        <button type="button" id="ppViewAllObjective"><span class="pp-choice-icon">📖</span><strong>${isEnglish?'View all questions':'सभी प्रश्न एक साथ देखें'}</strong><small>${isEnglish?'See the complete question paper with options and download it as a PDF.':'सभी प्रश्न और उनके विकल्प एक ही पेज पर देखें और पूरा प्रश्न-पत्र PDF में डाउनलोड करें।'}</small></button>
+        <button type="button" id="ppStartObjectiveTest"><span class="pp-choice-icon">📝</span><strong>${isEnglish?'Start the test':'टेस्ट शुरू करें'}</strong><small>${isEnglish?'Answer questions one by one and see your score at the end.':'एक-एक प्रश्न हल करें और अंत में अपना परिणाम देखें।'}</small></button>
+      </div>`;
+    $('ppViewAllObjective').addEventListener('click',()=>renderObjectiveQuestionSheet(list));
+    $('ppStartObjectiveTest').addEventListener('click',()=>renderObjectiveTest(list));
+  }
+
+  function objectiveSheetOptions(r){
+    const type=objectiveType(r), isEnglish=student.medium==='English';
+    if(type==='MCQ'){
+      return ['A','B','C','D'].map(letter=>{
+        const value=languageField(r,`option_${letter.toLowerCase()}_hi`,`option_${letter.toLowerCase()}_en`);
+        return value?`<div class="pp-sheet-option"><b>${letter}.</b> ${esc(value)}</div>`:'';
+      }).join('');
+    }
+    if(type==='TRUE_FALSE'){
+      return `<div class="pp-sheet-option">${isEnglish?'True':'सही'}</div><div class="pp-sheet-option">${isEnglish?'False':'गलत'}</div>`;
+    }
+    if(type==='FILL_BLANK'||type==='SHORT_ANSWER'){
+      const opts=['A','B'].map(letter=>answerOptionText(r,letter)).filter(Boolean);
+      return opts.map((value,i)=>`<div class="pp-sheet-option"><b>${i+1}.</b> ${esc(value)}</div>`).join('') || `<div class="pp-sheet-option">${esc(type==='FILL_BLANK'?languageField(r,'fill_blank_answer_hi','fill_blank_answer_en'):languageField(r,'short_answer_hi','short_answer_en'))}</div>`;
+    }
+    if(type==='MATCH'){
+      const pairs=matchPairs(r);
+      return pairs.map((pair,i)=>{
+        const left=isEnglish?(pair.column_a_en||pair.column_a_hi):(pair.column_a_hi||pair.column_a_en);
+        const right=isEnglish?(pair.column_b_en||pair.column_b_hi):(pair.column_b_hi||pair.column_b_en);
+        const leftText=Array.isArray(left)?left.map(x=>x.value||x.label).join(' | '):String(left||'');
+        const rightText=Array.isArray(right)?right.map(x=>`${x.label||''}. ${x.value||''}`).join('  •  '):String(right||'');
+        return `<div class="pp-sheet-option"><b>${i+1}.</b> ${esc(leftText)} <span class="pp-sheet-match-arrow">↔</span> ${esc(rightText)}</div>`;
+      }).join('');
+    }
+    return '';
+  }
+
+  function renderObjectiveQuestionSheet(list){
+    clearInterval(objectiveTimer);
+    const isEnglish=student.medium==='English';
+    const cards=list.map((r,i)=>{
+      const question=languageField(r,'question_text_hi','question_text_en');
+      const type=objectiveType(r);
+      const typeLabel=({MCQ:isEnglish?'Multiple Choice':'बहुविकल्पीय',TRUE_FALSE:isEnglish?'True / False':'सही / गलत',FILL_BLANK:isEnglish?'Fill in the Blank':'रिक्त स्थान भरिए',MATCH:isEnglish?'Match the Following':'सही जोड़ी मिलाइए',SHORT_ANSWER:isEnglish?'One-sentence Answer':'एक वाक्य में उत्तर'})[type]||type;
+      const session=(r.appearances||[]).map(a=>a.label).filter(Boolean).join(' | ');
+      const questionText=type==='FILL_BLANK'?esc(question).replace(/_{3,}|…{2,}/g,'____________'):esc(question);
+      return `<article class="pp-objective-sheet-card"><div class="pp-sheet-head"><b>${isEnglish?'Question':'प्रश्न'} ${i+1}</b><span>${esc(typeLabel)} • 1 ${isEnglish?'Mark':'अंक'}</span></div>${session?`<div class="pp-sheet-session">${esc(session)}</div>`:''}<div class="pp-sheet-question">${questionText}</div><div class="pp-sheet-options">${objectiveSheetOptions(r)}</div></article>`;
+    }).join('');
+    $('questions').innerHTML=`
+      <style>
+        .pp-sheet-toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+        .pp-sheet-toolbar button{border:0;border-radius:10px;padding:11px 15px;background:#174b91;color:#fff;font-weight:800;cursor:pointer}
+        .pp-sheet-toolbar .secondary{background:#16804a}
+        .pp-objective-sheet{max-width:850px;margin:0 auto}
+        .pp-objective-sheet-card{background:#fff;border:1px solid #dce5ef;border-radius:13px;padding:15px 16px;margin:12px 0;break-inside:avoid;page-break-inside:avoid;color:#193653}
+        .pp-sheet-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#1d5c9e;font-size:12px;margin-bottom:9px}
+        .pp-sheet-head span{background:#eef6ff;border-radius:20px;padding:4px 9px}
+        .pp-sheet-session{font-size:11px;color:#68809a;margin-bottom:7px}
+        .pp-sheet-question{font-size:16px;line-height:1.7;font-weight:700;margin-bottom:10px;white-space:pre-wrap}
+        .pp-sheet-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+        .pp-sheet-option{border:1px solid #e5ebf2;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.5;break-inside:avoid}
+        .pp-sheet-match-arrow{color:#7890a8;padding:0 5px}
+        .pp-sheet-back{border:1px solid #d1dfed!important;background:#eef6fb!important;color:#315b80!important}
+        @media(max-width:600px){.pp-sheet-options{grid-template-columns:1fr}.pp-sheet-question{font-size:14px}}
+        @media print{.pp-sheet-toolbar,.simple-header,.paper-panel:first-child{display:none!important}.paper-wrap{max-width:none;margin:0;padding:0}.paper-panel{border:0;padding:0}.pp-objective-sheet-card{box-shadow:none;margin:0 0 10px;break-inside:avoid}}
+      </style>
+      <div class="pp-sheet-toolbar"><button type="button" id="ppDownloadObjectiveSheet">⬇ ${isEnglish?'Download complete question paper (PDF)':'पूरे प्रश्न PDF में डाउनलोड करें'}</button><button type="button" class="secondary" id="ppStartTestFromSheet">${isEnglish?'Start test':'टेस्ट शुरू करें'}</button><button type="button" class="pp-sheet-back" id="ppBackToObjectiveChoices">${isEnglish?'← Back':'← वापस जाएँ'}</button></div>
+      <div class="pp-objective-sheet" id="ppObjectiveSheet">${cards}</div>`;
+    $('ppBackToObjectiveChoices').addEventListener('click',()=>renderObjectiveEntry(list));
+    $('ppStartTestFromSheet').addEventListener('click',()=>renderObjectiveTest(list));
+    $('ppDownloadObjectiveSheet').addEventListener('click',()=>downloadObjectiveSheet());
+  }
+
+  async function downloadObjectiveSheet(){
+    const btn=$('ppDownloadObjectiveSheet');
+    await withBusy(btn,async()=>{
+      const cards=[...$('ppObjectiveSheet').querySelectorAll('.pp-objective-sheet-card')];
+      if(!cards.length)throw new Error('प्रश्न उपलब्ध नहीं हैं।');
+      const pdf=await makePdf(cards);
+      const year=$('yearFilter').value||'All_Sessions',set=$('setFilter').value||'All_Sets';
+      pdf.save(safeName(`Ganit_Setu_Class${student.class_level}_Objective_${year}_${set}`)+'.pdf');
+    });
   }
   function renderWrittenSlides(list){
     writtenIndex=0;
