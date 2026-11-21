@@ -2,7 +2,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const sid = sessionStorage.getItem('ganit_setu_student_id');
-  let student = null, marks = 1, rows = [], answers = new Map();
+  let student = null, marks = 1, rows = [], answers = new Map(), filterRecords = [];
   let chooserPanel = null, resultPanel = null, questionPageOpen = false;
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function msg(t){ $('status').textContent=t; }
@@ -33,8 +33,54 @@
       resultPanel.insertBefore(back,resultPanel.firstChild);
       back.addEventListener('click',closeQuestionPage);
     }
-    document.querySelectorAll('[data-marks]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-marks]').forEach(x=>x.classList.remove('active'));b.classList.add('active');marks=Number(b.dataset.marks);openQuestionPage();loadQuestions();}));
-    $('yearFilter').addEventListener('change',()=>{if(questionPageOpen)loadQuestions();}); $('setFilter').addEventListener('change',()=>{if(questionPageOpen)loadQuestions();});
+    document.querySelectorAll('[data-marks]').forEach(b=>b.addEventListener('click',()=>{
+      if(!filtersReady()){alert('पहले सत्र और पेपर सेट चुनें।');return;}
+      document.querySelectorAll('[data-marks]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');marks=Number(b.dataset.marks);openQuestionPage();loadQuestions();
+    }));
+    $('yearFilter').addEventListener('change',()=>{
+      fillSetFilter();
+      updateTypeButtons();
+      if(questionPageOpen)closeQuestionPage();
+    });
+    $('setFilter').addEventListener('change',()=>{
+      updateTypeButtons();
+      if(questionPageOpen)closeQuestionPage();
+    });
+    await loadFilterOptions();
+  }
+
+  function filtersReady(){ return Boolean($('yearFilter').value && $('setFilter').value); }
+  function updateTypeButtons(){
+    const enabled=filtersReady();
+    document.querySelectorAll('[data-marks]').forEach(b=>b.disabled=!enabled);
+  }
+  async function loadFilterOptions(){
+    msg('उपलब्ध सत्र लोड हो रहे हैं...');
+    const classLevel=Number(student.class_level);
+    const [objective,written]=await Promise.all([
+      supabaseClient.from('objective_questions').select('exam_year,paper_set,medium').eq('class_level',classLevel).eq('status','published').eq('is_active',true),
+      supabaseClient.from('written_questions').select('exam_year,paper_set,medium').eq('class_level',classLevel).in('marks',[2,3,4]).eq('status','published').eq('is_active',true)
+    ]);
+    if(objective.error || written.error){
+      console.error('[Previous Papers] Filter options failed:',objective.error||written.error);
+      msg('सत्रों की सूची लोड नहीं हो सकी। कृपया पेज रीफ्रेश करें।');
+      return;
+    }
+    const wanted=normalizeMedium(student.medium);
+    filterRecords=[...(objective.data||[]),...(written.data||[])].filter(r=>{
+      const m=normalizeMedium(r.medium); return m===wanted || m==='Both' || m==='';
+    });
+    const years=[...new Set(filterRecords.map(r=>String(r.exam_year||'').trim()).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
+    $('yearFilter').innerHTML='<option value="">पहले सत्र चुनें</option>'+years.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    $('setFilter').innerHTML='<option value="">पहले सत्र चुनें</option>';
+    updateTypeButtons();
+    msg(years.length?'पहले सत्र चुनें, फिर पेपर सेट चुनें।':'अभी कोई प्रकाशित पुराना पेपर उपलब्ध नहीं है।');
+  }
+  function fillSetFilter(){
+    const year=$('yearFilter').value;
+    const sets=[...new Set(filterRecords.filter(r=>String(r.exam_year||'').trim()===year).map(r=>String(r.paper_set||'').trim()).filter(Boolean))].sort();
+    $('setFilter').innerHTML='<option value="">पेपर सेट चुनें</option>'+sets.map(v=>`<option value="${esc(v)}">${esc(/^set\\s+/i.test(v)?v:'Set '+v)}</option>`).join('');
   }
   function openQuestionPage(){
     questionPageOpen=true;
@@ -68,10 +114,12 @@
     const requested=normalizeMedium(student.medium);
     rows=(data||[]).filter(r=>{
       const stored=normalizeMedium(r.medium);
-      return stored===requested || stored==='Both' || stored==='';
+      return (stored===requested || stored==='Both' || stored==='') &&
+        String(r.exam_year||'').trim()===$('yearFilter').value &&
+        String(r.paper_set||'').trim()===$('setFilter').value;
     });
     console.info('[Previous Papers] Loaded rows:',{marks,classLevel:student.class_level,medium:student.medium,dbRows:(data||[]).length,visibleRows:rows.length,storedMediums:[...new Set((data||[]).map(r=>r.medium))]});
-    fillFilters(rows); render();
+    render();
   }
   function fillFilters(data){
     const years=[...new Set(data.map(x=>x.exam_year).filter(Boolean).map(String))].sort((a,b)=>Number(b)-Number(a));
