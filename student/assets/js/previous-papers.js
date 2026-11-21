@@ -53,7 +53,7 @@
     $('questions').innerHTML=''; answers.clear(); msg('प्रश्न लोड हो रहे हैं...');
     let q;
     if(marks===1){
-      q=supabaseClient.from('objective_questions').select('id,class_level,question_type,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,true_false_answer,fill_blank_answer_hi,fill_blank_answer_en,match_pairs_json,short_answer_hi,short_answer_en,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
+      q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,status,is_active,source_question,question_type,true_false_answer,fill_blank_answer_hi,fill_blank_answer_en,match_pairs_json,short_answer_hi,short_answer_en,answer_option_a_hi,answer_option_b_hi,answer_option_a_en,answer_option_b_en,answer_correct_option').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
     } else {
       q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,medium,exam_year,paper_set,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
     }
@@ -80,11 +80,12 @@
     const s=$('setFilter'),oldS=s.value;s.innerHTML='<option value="">सभी सेट</option>'+sets.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');if(sets.includes(oldS))s.value=oldS;
   }
   function questionKey(r){
-    const clean=v=>String(v??'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
-    const medium=normalizeMedium(r.medium), type=String(r.question_type||'MCQ').toUpperCase();
-    const options=type==='MCQ'?['a','b','c','d'].map(k=>clean(r['option_'+k+'_hi']||r['option_'+k+'_en'])).join('|'):'';
-    const typeData=type==='MATCH'?JSON.stringify(r.match_pairs_json||[]):type==='FILL_BLANK'?clean(r.fill_blank_answer_hi||r.fill_blank_answer_en):type==='TRUE_FALSE'?clean(r.true_false_answer):type==='SHORT_ANSWER'?clean(r.short_answer_hi||r.short_answer_en):'';
-    return [Number(r.class_level),marks,medium,type,clean(r.question_text_hi||r.question_text_en),options,typeData].join('::');
+    const q=String(r.question_text_hi||r.question_text_en||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
+    const medium=normalizeMedium(r.medium);
+    const options=marks===1?['a','b','c','d'].map(k=>String(r['option_'+k+'_hi']||r['option_'+k+'_en']||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim()).join('|'):'';
+    const type=String(r.question_type||'MCQ').toUpperCase();
+    const answerOptions=type==='FILL_BLANK'||type==='SHORT_ANSWER'?['a','b'].map(k=>String(r['answer_option_'+k+'_hi']||r['answer_option_'+k+'_en']||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim()).join('|'):'';
+    return [Number(r.class_level),marks,medium,type,q,options,answerOptions].join('::');
   }
   function groupedQuestions(){
     const groups=new Map();
@@ -184,9 +185,24 @@
   }
 
   let objectiveIndex=0, objectiveStartedAt=0, objectiveTimer=null, objectiveSubmitted=false;
+  let objectiveOptionOrder = new Map();
   let writtenIndex=0;
+  function shuffleTwo(){ return Math.random() < 0.5 ? ['A','B'] : ['B','A']; }
+  function objectiveType(r){ return String(r.question_type || 'MCQ').trim().toUpperCase(); }
+  function answerOptionText(r, letter){
+    const suffix=letter.toLowerCase();
+    return languageField(r, `answer_option_${suffix}_hi`, `answer_option_${suffix}_en`);
+  }
+  function correctAnswerOption(r){ return String(r.answer_correct_option || 'A').trim().toUpperCase(); }
+  function matchPairs(r){
+    try { const parsed=typeof r.match_pairs_json==='string'?JSON.parse(r.match_pairs_json):r.match_pairs_json; return Array.isArray(parsed)?parsed:[]; }
+    catch(_){ return []; }
+  }
+  function normalizeAnswer(v){ return String(v??'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim(); }
   function renderObjectiveTest(list){
     objectiveIndex=0; objectiveStartedAt=Date.now(); objectiveSubmitted=false; answers.clear();
+    objectiveOptionOrder = new Map();
+    list.forEach(r=>{ if(['FILL_BLANK','SHORT_ANSWER'].includes(objectiveType(r))) objectiveOptionOrder.set(`q_${r.id}`, shuffleTwo()); });
     clearInterval(objectiveTimer);
     const host=$('questions');
     host.innerHTML=`
@@ -208,6 +224,10 @@
       .pp-test-text{font-size:17px;line-height:1.75;font-weight:700;color:#172f50}
       .pp-test-hint{border:1px solid #cfe5fa;background:#eef8ff;color:#0867d8;border-radius:10px;padding:8px 11px;margin-top:12px;font-weight:700;cursor:pointer}
       .pp-test-options{display:grid;gap:9px;margin-top:13px}
+      .pp-test-fill-answer,.pp-test-short-answer,.pp-test-match{margin-top:14px;padding:12px;background:#fff;border:1px solid #dce7f0;border-radius:12px;line-height:1.8}
+      .pp-answer-select-wrap{display:inline-block;vertical-align:middle;margin:4px 6px;min-width:150px}
+      .pp-answer-select{width:100%;max-width:100%;min-height:44px;padding:9px 34px 9px 11px;border:1.5px solid #087cf0;border-radius:10px;background:#f7fbff;color:#17385f;font:inherit;font-size:14px;font-weight:600}
+      .pp-answer-prompt{font-weight:700;margin-bottom:9px;color:#244c78}
       .pp-test-option{width:100%;display:flex;align-items:flex-start;gap:10px;text-align:left;background:#fff;border:1.5px solid #dce7f0;border-radius:13px;padding:10px 11px;color:#1c2f49;font:600 14px/1.55 inherit;cursor:pointer}
       .pp-test-option b{width:29px;height:29px;border-radius:50%;background:#edf3f8;color:#183858;display:grid;place-items:center;flex:0 0 29px}
       .pp-test-option.selected{border-color:#087cf0;background:#eef8ff;box-shadow:0 0 0 1px rgba(8,124,240,.08)}
@@ -217,11 +237,6 @@
       .pp-test-prev{border:1px solid #cfe1ef;background:#eef6fb;color:#315b80}.pp-test-next{border:0;background:linear-gradient(100deg,#0870df,#087ff2);color:#fff}
       .pp-test-submit{width:100%;margin-top:12px;padding:13px;border:0;border-radius:13px;background:#16804a;color:white;font-weight:800;font-size:14px;cursor:pointer}
       .pp-test-note{text-align:center;background:#eef8ff;border-radius:11px;padding:9px;margin-top:10px;font-size:11px;color:#66809a}
-      .pp-test-type{display:inline-block;margin:0 0 8px;padding:4px 8px;border-radius:8px;background:#e8f2ff;color:#245b91;font-size:11px;font-weight:800}
-      .pp-test-answer-label{display:block;margin:14px 0 6px;font-weight:800;font-size:13px}
-      .pp-test-input{width:100%;box-sizing:border-box;border:1px solid #cbd9e8;border-radius:11px;padding:12px;font:inherit;background:#fff;color:#17385f;margin-top:8px}
-      .pp-test-match{display:grid;gap:10px;margin-top:14px}.pp-match-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;padding:10px;background:#fff;border:1px solid #e0e8f1;border-radius:10px}.pp-match-left{font-weight:700;font-size:13px}
-      @media(max-width:560px){.pp-match-row{grid-template-columns:1fr}}
       .pp-test-result{background:#fff;border:1px solid #d6e8fa;border-radius:16px;padding:18px;text-align:center;margin-top:12px}
       .pp-test-score{font-size:30px;font-weight:900;color:#0870df}
       @media(max-width:560px){.pp-test-heading h2{font-size:16px}.pp-test-text{font-size:14px}.pp-test-option{font-size:12px;padding:9px}.pp-test-nav button{min-height:43px;font-size:12px}}
@@ -246,20 +261,53 @@
     },1000);
     drawObjectiveQuestion(list);
   }
-  function normalizeAnswer(value){
-    return String(value??'').normalize('NFKC').toLowerCase().replace(/[\s\u200b]+/g,'').replace(/[।.,!?;:]/g,'').trim();
-  }
-  function questionType(r){ return String(r.question_type||'MCQ').trim().toUpperCase(); }
-  function matchPairs(r){
-    if(Array.isArray(r.match_pairs_json)) return r.match_pairs_json;
-    if(typeof r.match_pairs_json==='string') { try { const v=JSON.parse(r.match_pairs_json); return Array.isArray(v)?v:[]; } catch(_){ return []; } }
-    return [];
-  }
   function drawObjectiveQuestion(list){
     if(objectiveSubmitted)return;
-    const r=list[objectiveIndex], key=`q_${r.id}`, type=questionType(r), saved=answers.get(key);
+    const r=list[objectiveIndex], key=`q_${r.id}`, chosen=answers.get(key)||'';
+    const type=objectiveType(r);
     const question=languageField(r,'question_text_hi','question_text_en');
     const isEnglish=student.medium==='English';
+    const letters=['A','B','C','D'];
+    let answerUI='';
+    let questionMarkup=esc(question);
+
+    if(type==='MCQ'){
+      const opts=letters.map(letter=>{
+        const value=letter;
+        const text=languageField(r,`option_${letter.toLowerCase()}_hi`,`option_${letter.toLowerCase()}_en`);
+        return `<button type="button" class="pp-test-option ${chosen===value?'selected':''}" data-pp-answer="${value}"><b>${letter}</b><span>${esc(text)}</span></button>`;
+      }).join('');
+      answerUI=`<div class="pp-test-options">${opts}</div>`;
+    } else if(type==='TRUE_FALSE'){
+      const trueLabel=isEnglish?'True':'सही', falseLabel=isEnglish?'False':'गलत';
+      answerUI=`<div class="pp-test-options"><button type="button" class="pp-test-option ${chosen==='TRUE'?'selected':''}" data-pp-answer="TRUE"><b>✓</b><span>${trueLabel}</span></button><button type="button" class="pp-test-option ${chosen==='FALSE'?'selected':''}" data-pp-answer="FALSE"><b>✕</b><span>${falseLabel}</span></button></div>`;
+    } else if(type==='FILL_BLANK' || type==='SHORT_ANSWER'){
+      const order=objectiveOptionOrder.get(key)||['A','B'];
+      const options=order.map(letter=>`<option value="${letter}" ${chosen===letter?'selected':''}>${esc(answerOptionText(r,letter))}</option>`).join('');
+      const selectLabel=type==='FILL_BLANK'?(isEnglish?'Select the missing answer':'सही उत्तर चुनें'):(isEnglish?'Select the correct answer':'सही उत्तर चुनें');
+      const selectHTML=`<select class="pp-answer-select" id="ppAnswerSelect"><option value="">${selectLabel}</option>${options}</select>`;
+      if(type==='FILL_BLANK'){
+        const inlineSelect=questionMarkup.replace(/_{3,}|…{2,}/, `<span class="pp-answer-select-wrap">${selectHTML}</span>`);
+        questionMarkup=inlineSelect;
+        if(inlineSelect===esc(question)) answerUI=`<div class="pp-test-fill-answer"><div class="pp-answer-prompt">${isEnglish?'Select the missing answer:':'रिक्त स्थान के लिए सही उत्तर चुनें:'}</div>${selectHTML}</div>`;
+      } else {
+        answerUI=`<div class="pp-test-short-answer"><div class="pp-answer-prompt">${isEnglish?'Choose the correct one-sentence answer:':'नीचे दिए गए विकल्पों में से सही उत्तर चुनें:'}</div>${selectHTML}</div>`;
+      }
+    } else if(type==='MATCH'){
+      const pairs=matchPairs(r);
+      if(!pairs.length){ answerUI=`<div class="pp-test-note">${isEnglish?'Matching data is unavailable.':'मिलान का डेटा उपलब्ध नहीं है।'}</div>`; }
+      else {
+        const pair=pairs[0];
+        const left=isEnglish?(pair.column_a_en||pair.column_a_hi):(pair.column_a_hi||pair.column_a_en);
+        const choices=isEnglish?(pair.column_b_en||pair.column_b_hi):(pair.column_b_hi||pair.column_b_en);
+        const selected=chosen||'';
+        const opts=(choices||[]).map(item=>`<option value="${esc(item.label)}" ${selected===String(item.label)?'selected':''}>${esc(item.label)}. ${esc(item.value)}</option>`).join('');
+        answerUI=`<div class="pp-test-match"><div class="pp-answer-prompt">${esc(left)}</div><select class="pp-answer-select" id="ppAnswerSelect"><option value="">${isEnglish?'Select the matching option':'सही जोड़ी चुनें'}</option>${opts}</select></div>`;
+      }
+    } else {
+      answerUI=`<div class="pp-test-note">${isEnglish?'Unsupported question type.':'यह प्रश्न प्रकार उपलब्ध नहीं है।'}</div>`;
+    }
+
     const sessionLabels=(r.appearances||[]).map(a=>a.label).filter(Boolean);
     if(!sessionLabels.length){
       const year=String(r.exam_year||'').trim(), set=String(r.paper_set||'').trim();
@@ -267,39 +315,13 @@
       const fallback=[year,setLabel].filter(Boolean).join(' ');
       if(fallback)sessionLabels.push(fallback);
     }
-    const session=sessionLabels.join(' | '), hint=languageField(r,'hint_hi','hint_en');
-    let answerUI='';
-    if(type==='MCQ'){
-      const letters=['A','B','C','D'];
-      answerUI=`<div class="pp-test-options">${letters.map(letter=>{
-        const value=letter, text=languageField(r,`option_${letter.toLowerCase()}_hi`,`option_${letter.toLowerCase()}_en`);
-        return `<button type="button" class="pp-test-option ${saved===value?'selected':''}" data-pp-answer="${value}"><b>${letter}</b><span>${esc(text)}</span></button>`;
-      }).join('')}</div>`;
-    } else if(type==='TRUE_FALSE'){
-      const trueLabel=isEnglish?'True':'सही', falseLabel=isEnglish?'False':'गलत';
-      answerUI=`<div class="pp-test-options">${[['true',trueLabel],['false',falseLabel]].map(([v,label])=>`<button type="button" class="pp-test-option ${saved===v?'selected':''}" data-pp-answer="${v}"><b>${v==='true'?'✓':'✕'}</b><span>${label}</span></button>`).join('')}</div>`;
-    } else if(type==='FILL_BLANK'){
-      answerUI=`<label class="pp-test-answer-label">${isEnglish?'Write the missing answer':'रिक्त स्थान का उत्तर लिखें'}</label><input id="ppTypedAnswer" class="pp-test-input" type="text" autocomplete="off" value="${esc(saved||'')}" placeholder="${isEnglish?'Type your answer':'अपना उत्तर लिखें'}">`;
-    } else if(type==='SHORT_ANSWER'){
-      answerUI=`<label class="pp-test-answer-label">${isEnglish?'Write your answer':'अपना उत्तर लिखें'}</label><textarea id="ppTypedAnswer" class="pp-test-input" rows="3" placeholder="${isEnglish?'Type your answer':'अपना उत्तर लिखें'}">${esc(saved||'')}</textarea>`;
-    } else if(type==='MATCH'){
-      const pairs=matchPairs(r), savedPairs=saved&&typeof saved==='object'?saved:{};
-      if(!pairs.length){ answerUI=`<p class="pp-test-note">${isEnglish?'Matching data is unavailable.':'इस प्रश्न का मिलान डेटा उपलब्ध नहीं है।'}</p>`; }
-      else answerUI=`<div class="pp-test-match">${pairs.map((pair,i)=>{
-        const left=languageField(pair,'column_a_hi','column_a_en')||pair.left||'';
-        const choices=(isEnglish?(pair.column_b_en||pair.column_b_hi):(pair.column_b_hi||pair.column_b_en))||[];
-        const selected=savedPairs[i]||'';
-        return `<div class="pp-match-row"><div class="pp-match-left">${esc(left)}</div><select class="pp-test-input pp-match-select" data-match-index="${i}"><option value="">${isEnglish?'Select match':'मिलान चुनें'}</option>${choices.map(c=>`<option value="${esc(c.label)}" ${selected===String(c.label)?'selected':''}>${esc(c.label)}. ${esc(c.value)}</option>`).join('')}</select></div>`;
-      }).join('')}</div>`;
-    } else {
-      answerUI=`<p class="pp-test-note">${isEnglish?'Unsupported question type:':'असमर्थित प्रश्न प्रकार:'} ${esc(type)}</p>`;
-    }
+    const session=sessionLabels.join(' | ');
+    const hint=languageField(r,'hint_hi','hint_en');
     $('ppTestStage').innerHTML=`
       <div class="pp-test-question">
-        <div class="pp-test-qhead"><span class="pp-test-badge">${isEnglish?'Question':'प्रश्न'} ${objectiveIndex+1} / ${list.length}</span><span class="pp-test-mark">1 ${isEnglish?'mark':'अंक'}</span></div>
+        <div class="pp-test-qhead"><span class="pp-test-badge">${isEnglish?'Question':'प्रश्न'} ${objectiveIndex+1} / ${list.length}</span><span class="pp-test-mark">1 ${isEnglish?'Mark':'अंक'}</span></div>
         ${session?`<div class="pp-test-session">${esc(session)}</div>`:''}
-        <div class="pp-test-type">${esc(type.replace('_',' '))}</div>
-        <div class="pp-test-text">${esc(question)}</div>
+        <div class="pp-test-text">${questionMarkup}</div>
         ${hint?`<button type="button" class="pp-test-hint" id="ppTestHint">💡 ${isEnglish?'Hint':'संकेत'}</button><div id="ppTestHintText" hidden class="pp-test-note">${esc(hint)}</div>`:''}
         ${answerUI}
         <div class="pp-test-nav">
@@ -308,70 +330,58 @@
         </div>
       </div>`;
     const pct=Math.round((objectiveIndex+1)/list.length*100);
-    $('ppTestProgressText').textContent=`${isEnglish?'Question':'प्रश्न'} ${objectiveIndex+1} / ${list.length}`;
+    $('ppTestProgressText').textContent=`${isEnglish?'Question':'प्रश्न'} ${objectiveIndex+1} / ${list.length}   ${isEnglish?'Total':'कुल'} ${list.length}`;
     $('ppTestPercent').textContent=`${pct}% ${isEnglish?'complete':'पूर्ण'}`; $('ppTestFill').style.width=`${pct}%`;
     $('ppTestStage').querySelectorAll('[data-pp-answer]').forEach(btn=>btn.addEventListener('click',()=>{
-      answers.set(key,btn.dataset.ppAnswer); drawObjectiveQuestion(list);
+      answers.set(key,btn.dataset.ppAnswer);drawObjectiveQuestion(list);
     }));
-    const typed=$('ppTypedAnswer'); if(typed) typed.addEventListener('input',()=>answers.set(key,typed.value));
-    $('ppTestStage').querySelectorAll('[data-match-index]').forEach(sel=>sel.addEventListener('change',()=>{
-      const value={...(answers.get(key)||{})}; value[sel.dataset.matchIndex]=sel.value; answers.set(key,value);
-    }));
-    $('ppTestPrev').addEventListener('click',()=>{saveCurrentTypedAnswer(key);if(objectiveIndex>0){objectiveIndex--;drawObjectiveQuestion(list);}});
+    $('ppAnswerSelect')?.addEventListener('change',e=>{ answers.set(key,e.target.value); });
+    $('ppTestPrev').addEventListener('click',()=>{if(objectiveIndex>0){objectiveIndex--;drawObjectiveQuestion(list);}});
     $('ppTestNext').addEventListener('click',()=>{
-      saveCurrentTypedAnswer(key);
-      if(!hasAnswer(r,answers.get(key))){alert(isEnglish?'Please answer this question before continuing.':'कृपया इस प्रश्न का उत्तर दें।');return;}
-      if(objectiveIndex<list.length-1){objectiveIndex++;drawObjectiveQuestion(list);} else submitObjectiveTest(list);
+      if(!answers.has(key) || !answers.get(key)){alert(isEnglish?'Please answer this question.':'कृपया इस प्रश्न का उत्तर चुनें।');return;}
+      if(objectiveIndex<list.length-1){objectiveIndex++;drawObjectiveQuestion(list);}
+      else submitObjectiveTest(list);
     });
     $('ppTestHint')?.addEventListener('click',()=>{const el=$('ppTestHintText');el.hidden=!el.hidden;});
   }
-  function saveCurrentTypedAnswer(key){
-    const typed=$('ppTypedAnswer'); if(typed) answers.set(key,typed.value);
-    const selects=$('ppTestStage')?.querySelectorAll('[data-match-index]');
-    if(selects?.length){const value={...(answers.get(key)||{})};selects.forEach(sel=>value[sel.dataset.matchIndex]=sel.value);answers.set(key,value);}
-  }
-  function hasAnswer(r,value){
-    const type=questionType(r);
-    if(type==='MATCH'){const pairs=matchPairs(r);return pairs.length>0&&pairs.every((_,i)=>String(value?.[i]||'').trim()!=='');}
-    return String(value??'').trim()!=='';
-  }
-  function isCorrectAnswer(r,value){
-    const type=questionType(r);
-    if(type==='MCQ') return String(value||'').toUpperCase()===String(r.correct_option||'').trim().toUpperCase();
-    if(type==='TRUE_FALSE'){
-      const a=normalizeAnswer(r.true_false_answer);
-      const expected=['true','1','yes','सही','सत्य','true/सही'].includes(a)?'true':(['false','0','no','गलत','असत्य','false/गलत'].includes(a)?'false':a);
-      return normalizeAnswer(value)===expected;
-    }
-    if(type==='FILL_BLANK') return normalizeAnswer(value)===normalizeAnswer(languageField(r,'fill_blank_answer_hi','fill_blank_answer_en'));
-    if(type==='SHORT_ANSWER') return normalizeAnswer(value)===normalizeAnswer(languageField(r,'short_answer_hi','short_answer_en'));
-    if(type==='MATCH') return matchPairs(r).every((pair,i)=>String(value?.[i]||'').trim()===String(pair.correct_label||'').trim());
-    return false;
-  }
-  function correctAnswerLabel(r){
-    const type=questionType(r), isEnglish=student.medium==='English';
-    if(type==='MCQ') return String(r.correct_option||'');
-    if(type==='TRUE_FALSE') return String(r.true_false_answer||'');
-    if(type==='FILL_BLANK') return languageField(r,'fill_blank_answer_hi','fill_blank_answer_en');
-    if(type==='SHORT_ANSWER') return languageField(r,'short_answer_hi','short_answer_en');
-    if(type==='MATCH') return matchPairs(r).map((p,i)=>`${i+1}. ${languageField(p,'column_a_hi','column_a_en')} → ${p.correct_label||''}`).join('; ');
-    return isEnglish?'Not available':'उपलब्ध नहीं';
-  }
-  function displayUserAnswer(r,value){
-    if(questionType(r)==='MATCH') return matchPairs(r).map((p,i)=>`${i+1}. ${value?.[i]||'—'}`).join('; ');
-    return String(value??'');
-  }
   function submitObjectiveTest(list){
-    const unanswered=list.filter(r=>!hasAnswer(r,answers.get(`q_${r.id}`)));
+    const unanswered=list.filter(r=>!answers.has(`q_${r.id}`) || !answers.get(`q_${r.id}`));
     if(unanswered.length){alert(`${unanswered.length} प्रश्नों के उत्तर बाकी हैं।`);return;}
     clearInterval(objectiveTimer);objectiveSubmitted=true;
     let correct=0;
+    const isEnglish=student.medium==='English';
     const review=list.map((r,i)=>{
-      const selected=answers.get(`q_${r.id}`), ok=isCorrectAnswer(r,selected); if(ok)correct++;
-      return `<div class="pp-test-note" style="text-align:left;margin:8px 0"><b>प्रश्न ${i+1}:</b> ${ok?'✅ सही':'❌ गलत'}<br>आपका उत्तर: ${esc(displayUserAnswer(r,selected))}<br>सही उत्तर: ${esc(correctAnswerLabel(r))}</div>`;
+      const selected=answers.get(`q_${r.id}`);
+      const type=objectiveType(r);
+      let ok=false, selectedText=selected, correctText='';
+      if(type==='MCQ'){
+        const answer=String(r.correct_option||'').trim().toUpperCase().replace(/[^A-D]/g,'').slice(0,1);
+        ok=selected===answer;
+        selectedText=languageField(r,`option_${String(selected).toLowerCase()}_hi`,`option_${String(selected).toLowerCase()}_en`);
+        correctText=languageField(r,`option_${answer.toLowerCase()}_hi`,`option_${answer.toLowerCase()}_en`);
+      } else if(type==='TRUE_FALSE'){
+        const answer=String(r.true_false_answer||'').trim().toUpperCase();
+        ok=selected===answer;
+        selectedText=selected==='TRUE'?(isEnglish?'True':'सही'):(isEnglish?'False':'गलत');
+        correctText=answer==='TRUE'?(isEnglish?'True':'सही'):(isEnglish?'False':'गलत');
+      } else if(type==='FILL_BLANK' || type==='SHORT_ANSWER'){
+        const answer=correctAnswerOption(r);
+        ok=selected===answer;
+        selectedText=answerOptionText(r,selected);
+        correctText=answerOptionText(r,answer) || (type==='FILL_BLANK'?languageField(r,'fill_blank_answer_hi','fill_blank_answer_en'):languageField(r,'short_answer_hi','short_answer_en'));
+      } else if(type==='MATCH'){
+        const pairs=matchPairs(r), pair=pairs[0];
+        const answer=String(pair?.correct_label||'');
+        ok=selected===answer;
+        const choices=isEnglish?(pair?.column_b_en||pair?.column_b_hi):(pair?.column_b_hi||pair?.column_b_en);
+        selectedText=(choices||[]).find(x=>String(x.label)===selected)?.value||selected;
+        correctText=(choices||[]).find(x=>String(x.label)===answer)?.value||answer;
+      }
+      if(ok)correct++;
+      return `<div class="pp-test-note" style="text-align:left;margin:8px 0"><b>${isEnglish?'Question':'प्रश्न'} ${i+1}:</b> ${ok?'✅ '+(isEnglish?'Correct':'सही'):'❌ '+(isEnglish?'Incorrect':'गलत')}<br>${isEnglish?'Your answer':'आपका उत्तर'}: ${esc(selectedText)} • ${isEnglish?'Correct answer':'सही उत्तर'}: ${esc(correctText)}</div>`;
     }).join('');
     const percent=Math.round(correct/list.length*100);
-    $('ppTestStage').innerHTML=`<div class="pp-test-result"><div>टेस्ट पूरा हुआ</div><div class="pp-test-score">${correct} / ${list.length}</div><b>${percent}% अंक</b><p>सही उत्तर: ${correct} • गलत उत्तर: ${list.length-correct}</p><p>⏱️ समय: ${$('ppTestTimer').textContent}</p><button type="button" class="pp-test-next" id="ppTestReview" style="padding:11px 18px;border:0;border-radius:10px;color:white;background:#0870df">उत्तर देखें</button><button type="button" class="pp-test-prev" id="ppTestAgain" style="padding:11px 18px;border-radius:10px;margin-left:8px">फिर से प्रयास करें</button></div><div id="ppTestReviewList" hidden>${review}</div>`;
+    $('ppTestStage').innerHTML=`<div class="pp-test-result"><div>${isEnglish?'Test completed':'टेस्ट पूरा हुआ'}</div><div class="pp-test-score">${correct} / ${list.length}</div><b>${percent}% ${isEnglish?'marks':'अंक'}</b><p>${isEnglish?'Correct':'सही उत्तर'}: ${correct} • ${isEnglish?'Incorrect':'गलत उत्तर'}: ${list.length-correct}</p><p>⏱️ ${isEnglish?'Time':'समय'}: ${$('ppTestTimer').textContent}</p><button type="button" class="pp-test-next" id="ppTestReview" style="padding:11px 18px;border:0;border-radius:10px;color:white;background:#0870df">${isEnglish?'Review answers':'उत्तर देखें'}</button><button type="button" class="pp-test-prev" id="ppTestAgain" style="padding:11px 18px;border-radius:10px;margin-left:8px">${isEnglish?'Try again':'फिर से प्रयास करें'}</button></div><div id="ppTestReviewList" hidden>${review}</div>`;
     $('ppTestReview').addEventListener('click',()=>{const el=$('ppTestReviewList');el.hidden=!el.hidden;});
     $('ppTestAgain').addEventListener('click',()=>{answers.clear();renderObjectiveTest(list);});
     $('ppTestPercent').textContent='100% पूर्ण';$('ppTestFill').style.width='100%';
