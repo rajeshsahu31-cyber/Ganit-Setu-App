@@ -15,14 +15,16 @@
   position:relative;padding:19px 17px 22px 27px;
   background:repeating-linear-gradient(to bottom,#fffef9 0,#fffef9 31px,#dce8f4 32px);
   border-left:4px solid #e7a0a0;
-  font-family:'Kalam','Noto Sans Devanagari',cursive;
-  color:#173b75;font-size:17px;line-height:1.9;
+  font-family:'Noto Sans Devanagari','Nirmala UI','Mangal',sans-serif;
+  font-style:normal;font-weight:500;
+  color:#173b75;font-size:16px;line-height:1.85;
+  letter-spacing:0;
 }
 .handwritten-paper:before{content:"";position:absolute;left:17px;top:0;bottom:0;width:1px;background:#efb5b5}
-.hw-question{font-weight:700;color:#173b75;margin:0 0 14px;padding-left:4px}
-.hw-section{margin:8px 0 3px;color:#b42335;font-weight:700;font-size:15px}
+.hw-question{font-style:normal;font-weight:700;color:#173b75;margin:0 0 14px;padding-left:4px}
+.hw-section{font-style:normal;margin:8px 0 3px;color:#b42335;font-weight:700;font-size:15px}
 .hw-text{white-space:pre-wrap;overflow-wrap:anywhere;padding-left:4px}
-.hw-answer{margin-top:12px;padding:7px 10px;border:1px dashed #2f855a;border-radius:8px;background:rgba(232,248,237,.72);color:#17633d;font-weight:700}
+.hw-answer{font-style:normal;margin-top:12px;padding:7px 10px;border:1px dashed #2f855a;border-radius:8px;background:rgba(232,248,237,.72);color:#17633d;font-weight:700}
 .hw-formula{white-space:pre-wrap;overflow-wrap:anywhere;color:#174b91}
 .hw-given{white-space:pre-wrap;overflow-wrap:anywhere}
 .hw-actions{display:flex;justify-content:flex-end;padding:10px 14px;background:#fff;border-top:1px solid #edf0f4}
