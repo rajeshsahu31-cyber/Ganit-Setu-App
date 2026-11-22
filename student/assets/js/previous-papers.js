@@ -661,7 +661,7 @@
       const setKey=canonicalPaperSet(selectedSet);
       const classLevel=Number(student.class_level);
       const objectiveSelect='id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,medium,exam_year,paper_set,maths_level,source_question,question_type,match_pairs_json';
-      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,diagram_url,table_data_json_hi,table_data_json_en,table_data_json,medium,exam_year,paper_set,maths_level,original_question_number,or_group_id,or_order';
+      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,diagram_url,table_data_json_hi,table_data_json_en,table_data_json,medium,exam_year,paper_set,maths_level,original_question_number,or_group_id,or_order';
       const [objRes,writeRes]=await Promise.all([
         supabaseClient.from('objective_questions').select(objectiveSelect).eq('class_level',classLevel).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('source_question'),
         supabaseClient.from('written_questions').select(writtenSelect).eq('class_level',classLevel).in('marks',[2,3,4]).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('question_id')
@@ -737,8 +737,21 @@
         const questionNo=group.number!==null?group.number:'';
         const items=group.rows.map((r,i)=>{
           const q=languageField(r,'question_text_hi','question_text_en');
+          const given=languageField(r,'given_data_hi','given_data_en');
+          const required=languageField(r,'required_to_find_hi','required_to_find_en');
+          const formula=languageField(r,'formula_theorem_hi','formula_theorem_en');
+          const solution=languageField(r,'solution_steps_hi','solution_steps_en');
+          const final=languageField(r,'final_answer_hi','final_answer_en');
           const label=questionNo?`${isEnglish?'Question':'प्रश्न'} ${questionNo}.`:`${isEnglish?'Question':'प्रश्न'}`;
-          return `<div class="fullpaper-written-option"><div class="fullpaper-qhead"><b>${label}</b><span>[${mark} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-text">${escapeText(q)}</div>${diagramHtml(r)}${writtenTableHtml(r)}</div>${i<group.rows.length-1?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:''}`;
+          const solutionParts=[
+            given?`<div class="fullpaper-solution-part"><b>${isEnglish?'Given':'दिया गया'}:</b><div>${escapeText(given)}</div></div>`:'',
+            required?`<div class="fullpaper-solution-part"><b>${isEnglish?'To find':'ज्ञात करना है'}:</b><div>${escapeText(required)}</div></div>`:'',
+            formula?`<div class="fullpaper-solution-part"><b>${isEnglish?'Formula / Theorem':'सूत्र / प्रमेय'}:</b><div>${escapeText(formula)}</div></div>`:'',
+            solution?`<div class="fullpaper-solution-part"><b>${isEnglish?'Step-by-step solution':'हल के चरण'}:</b><div>${escapeText(solution)}</div></div>`:'',
+            final?`<div class="fullpaper-final-answer"><b>${isEnglish?'Final Answer':'अंतिम उत्तर'}:</b> ${escapeText(final)}</div>`:''
+          ].filter(Boolean).join('');
+          const solutionHtml=solutionParts?`<div class="fullpaper-solution">${solutionParts}</div>`:'';
+          return `<div class="fullpaper-written-option"><div class="fullpaper-qhead"><b>${label}</b><span>[${mark} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-text">${escapeText(q)}</div>${diagramHtml(r)}${writtenTableHtml(r)}${solutionHtml}</div>${i<group.rows.length-1?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:''}`;
         }).join('');
         return `<article class="fullpaper-q">${items}</article>`;
       };
@@ -765,7 +778,8 @@
           page.push(block);
           pages.push(page);page=[];questionCount=0;
         }else{
-          if(questionCount>=4){pages.push(page);page=[];questionCount=0;}
+          // Solved written questions can be long; keep each question/OR group on its own page.
+          if(questionCount>=1){pages.push(page);page=[];questionCount=0;}
           page.push(block);questionCount++;
         }
       });
@@ -783,6 +797,10 @@
         .fullpaper-q{margin:0 0 12px;padding-bottom:9px;border-bottom:1px dotted #aaa;break-inside:avoid}
         .fullpaper-qhead{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
         .fullpaper-text{font-size:13px;line-height:1.65;white-space:pre-wrap;margin:4px 0 6px}
+        .fullpaper-solution{margin:8px 0 3px;padding:8px 10px;border:1px solid #b8b8b8;border-left:3px solid #555;background:#fafafa;font-size:11.5px;line-height:1.55;break-inside:avoid}
+        .fullpaper-solution-part{margin:0 0 6px;white-space:pre-wrap}
+        .fullpaper-solution-part:last-child{margin-bottom:0}
+        .fullpaper-final-answer{margin-top:7px;padding-top:6px;border-top:1px solid #999;font-weight:800;white-space:pre-wrap}
         .fullpaper-diagram{margin:7px 0 9px;text-align:center;break-inside:avoid}.fullpaper-diagram img{display:block;max-width:100%;max-height:230px;height:auto;width:auto;object-fit:contain;margin:0 auto}.fullpaper-page .written-table-wrap{margin:6px 0 9px}.fullpaper-page .written-question-table{font-size:11px;max-width:100%}.fullpaper-page .written-question-table th,.fullpaper-page .written-question-table td{padding:5px 8px}
         .fullpaper-subintro{font-size:12px;font-weight:700;margin:4px 0 6px}
         .fullpaper-subq{font-size:13px;line-height:1.65;margin:5px 0 8px;break-inside:avoid}
