@@ -27,6 +27,7 @@
 <p id="studentInfo" class="muted-note">आपकी कक्षा और माध्यम लोड हो रहे हैं...</p>
 <div class="filter-grid">
 <div><label for="yearFilter">सत्र चुनें</label><select id="yearFilter"><option value="">पहले सत्र चुनें</option></select></div>
+<div id="mathsLevelFilterWrap" class="hidden"><label for="mathsLevelFilter">गणित का स्तर चुनें</label><select id="mathsLevelFilter"><option value="">पहले स्तर चुनें</option><option value="Basic">Basic</option><option value="Standard">Standard</option></select></div>
 <div><label for="setFilter">पेपर सेट चुनें</label><select id="setFilter"><option value="">पहले सत्र चुनें</option></select></div>
 </div>
 <div class="paper-type-list" role="group" aria-label="प्रश्नों का प्रकार">
@@ -36,9 +37,9 @@
 <button class="type-btn" data-marks="4" disabled>4 अंक — प्रश्न और हल</button>
 </div>
 <button type="button" id="downloadFullQuestionPaper" class="full-paper-download" disabled>⬇ पूरा प्रश्नपत्र डाउनलोड करें (PDF)</button>
-<p class="muted-note">पहले सत्र चुनें, फिर पेपर सेट चुनें। इसके बाद टेस्ट का प्रकार चुनें। कक्षा और माध्यम आपकी विद्यार्थी प्रोफाइल से अपने आप लिए जाते हैं।</p>
+<p class="muted-note">2026 में पहले Basic या Standard चुनें, फिर पेपर सेट चुनें। अन्य वर्षों में केवल सत्र और सेट चुनें। इसके बाद टेस्ट का प्रकार चुनें। कक्षा और माध्यम आपकी विद्यार्थी प्रोफाइल से अपने आप लिए जाते हैं।</p>
 </section>
 <section class="paper-panel"><div id="status" class="muted-note">प्रश्न लोड हो रहे हैं...</div><div id="questions"></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script><script src="assets/js/previous-papers.js?v=full-four-section-exam-paper-20261122-1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script><script src="assets/js/previous-papers.js?v=2026-basic-standard-filter-20261122-1"></script>
 </body></html>
