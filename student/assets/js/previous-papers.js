@@ -270,27 +270,7 @@
   let objectiveOptionOrder = new Map();
   let writtenIndex=0;
   function shuffleTwo(){ return Math.random() < 0.5 ? ['A','B'] : ['B','A']; }
-  function objectiveType(r){
-    // Normalize legacy/imported objective type labels before grouping the full paper.
-    const raw=String(r?.question_type ?? '').trim().toUpperCase().replace(/[\s-]+/g,'_');
-    const aliases={
-      MCQ:'MCQ', MULTIPLE_CHOICE:'MCQ', MULTIPLE_CHOICE_QUESTION:'MCQ', OBJECTIVE:'MCQ',
-      FILL_BLANK:'FILL_BLANK', FILL_IN_THE_BLANK:'FILL_BLANK', FILL_IN_BLANKS:'FILL_BLANK',
-      TRUE_FALSE:'TRUE_FALSE', TRUE_OR_FALSE:'TRUE_FALSE', TF:'TRUE_FALSE',
-      MATCH:'MATCH', MATCHING:'MATCH', MATCH_THE_FOLLOWING:'MATCH', MATCH_COLUMN:'MATCH',
-      SHORT_ANSWER:'SHORT_ANSWER', VERY_SHORT_ANSWER:'SHORT_ANSWER', ONE_WORD:'SHORT_ANSWER',
-      ONE_WORD_ANSWER:'SHORT_ANSWER'
-    };
-    if(aliases[raw]) return aliases[raw];
-    // Some older imports did not populate question_type consistently.
-    // Their source_question values retain the original paper section (Q1..Q5).
-    const source=String(r?.source_question ?? '').trim().toUpperCase();
-    const m=source.match(/^Q\s*([1-5])(?:\s|\(|$)/);
-    if(m){
-      return ({1:'MCQ',2:'FILL_BLANK',3:'TRUE_FALSE',4:'MATCH',5:'SHORT_ANSWER'})[Number(m[1])];
-    }
-    return raw || 'MCQ';
-  }
+  function objectiveType(r){ return String(r.question_type || 'MCQ').trim().toUpperCase(); }
   function answerOptionText(r, letter){
     const suffix=letter.toLowerCase();
     return languageField(r, `answer_option_${suffix}_hi`, `answer_option_${suffix}_en`);
@@ -549,10 +529,7 @@
   function objectiveMatchLeftText(r){
     const raw=languageField(r,'question_text_hi','question_text_en');
     const colon=raw.indexOf(':');
-    const fromQuestion=(colon>=0?raw.slice(colon+1):raw).trim();
-    if(fromQuestion) return fromQuestion;
-    const pair=matchPairs(r)[0]||{};
-    return String(student.medium==='English'?(pair.column_a_en||pair.column_a_hi||''):(pair.column_a_hi||pair.column_a_en||'')).trim();
+    return (colon>=0?raw.slice(colon+1):raw).trim();
   }
 
   function objectiveSheetBlocks(list){
@@ -751,7 +728,7 @@
 
       const blocks=[];
       blocks.push({section:isEnglish?'Section A — Objective Questions (1 Mark)':'खंड अ — वस्तुनिष्ठ प्रश्न (1 अंक)'});
-      objectiveGroups.forEach((g,i)=>blocks.push({html:objectiveHtml(g,i+1),kind:'question'}));
+      objectiveGroups.forEach((g,i)=>blocks.push({html:objectiveHtml(g,i+1),kind:'question',objective:true}));
       [2,3,4].forEach((mark,index)=>{
         const groups=writtenGroupsByMark[mark];
         if(!groups.length)return;
@@ -759,12 +736,17 @@
         groups.forEach(g=>blocks.push({html:writtenHtml(g,mark),kind:'question'}));
       });
 
-      // Paginate by question blocks, never splitting an OR pair between pages.
+      // Keep each six-part objective group on its own page to prevent clipping.
+      // Written groups may share pages, while each OR pair stays together.
       const pages=[];let page=[],questionCount=0;
       blocks.forEach(block=>{
         if(block.section){
           if(page.length){pages.push(page);page=[];questionCount=0;}
           page.push(block);
+        }else if(block.objective){
+          if(questionCount>0){pages.push(page);page=[];questionCount=0;}
+          page.push(block);
+          pages.push(page);page=[];questionCount=0;
         }else{
           if(questionCount>=4){pages.push(page);page=[];questionCount=0;}
           page.push(block);questionCount++;
