@@ -134,7 +134,7 @@
     if(marks===1){
       q=supabaseClient.from('objective_questions').select('id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,correct_option,hint_hi,hint_en,explanation_hi,explanation_en,medium,exam_year,paper_set,maths_level,status,is_active,source_question,question_type,true_false_answer,fill_blank_answer_hi,fill_blank_answer_en,match_pairs_json,short_answer_hi,short_answer_en,answer_option_a_hi,answer_option_b_hi,answer_option_a_en,answer_option_b_en,answer_correct_option').eq('class_level',Number(student.class_level)).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('source_question');
     } else {
-      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,diagram_url,medium,exam_year,paper_set,maths_level,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
+      q=supabaseClient.from('written_questions').select('id,question_id,class_level,marks,question_text_hi,question_text_en,given_data_hi,given_data_en,required_to_find_hi,required_to_find_en,solution_steps_hi,solution_steps_en,formula_theorem_hi,formula_theorem_en,final_answer_hi,final_answer_en,diagram_url,table_data_json,medium,exam_year,paper_set,maths_level,status,is_active').eq('class_level',Number(student.class_level)).eq('marks',marks).eq('status','published').eq('is_active',true).order('exam_year',{ascending:false}).order('question_id');
     }
     const {data,error}=await q;
     if(error){
@@ -661,7 +661,7 @@
       const setKey=canonicalPaperSet(selectedSet);
       const classLevel=Number(student.class_level);
       const objectiveSelect='id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,medium,exam_year,paper_set,maths_level,source_question,question_type,match_pairs_json';
-      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,diagram_url,medium,exam_year,paper_set,maths_level,original_question_number,or_group_id,or_order';
+      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,diagram_url,table_data_json,medium,exam_year,paper_set,maths_level,original_question_number,or_group_id,or_order';
       const [objRes,writeRes]=await Promise.all([
         supabaseClient.from('objective_questions').select(objectiveSelect).eq('class_level',classLevel).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('source_question'),
         supabaseClient.from('written_questions').select(writtenSelect).eq('class_level',classLevel).in('marks',[2,3,4]).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('question_id')
@@ -738,7 +738,7 @@
         const items=group.rows.map((r,i)=>{
           const q=languageField(r,'question_text_hi','question_text_en');
           const label=questionNo?`${isEnglish?'Question':'प्रश्न'} ${questionNo}.`:`${isEnglish?'Question':'प्रश्न'}`;
-          return `<div class="fullpaper-written-option"><div class="fullpaper-qhead"><b>${label}</b><span>[${mark} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-text">${escapeText(q)}</div>${diagramHtml(r)}</div>${i<group.rows.length-1?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:''}`;
+          return `<div class="fullpaper-written-option"><div class="fullpaper-qhead"><b>${label}</b><span>[${mark} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-text">${escapeText(q)}</div>${diagramHtml(r)}${writtenTableHtml(r)}</div>${i<group.rows.length-1?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:''}`;
         }).join('');
         return `<article class="fullpaper-q">${items}</article>`;
       };
@@ -783,7 +783,7 @@
         .fullpaper-q{margin:0 0 12px;padding-bottom:9px;border-bottom:1px dotted #aaa;break-inside:avoid}
         .fullpaper-qhead{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
         .fullpaper-text{font-size:13px;line-height:1.65;white-space:pre-wrap;margin:4px 0 6px}
-        .fullpaper-diagram{margin:7px 0 9px;text-align:center;break-inside:avoid}.fullpaper-diagram img{display:block;max-width:100%;max-height:230px;height:auto;width:auto;object-fit:contain;margin:0 auto}
+        .fullpaper-diagram{margin:7px 0 9px;text-align:center;break-inside:avoid}.fullpaper-diagram img{display:block;max-width:100%;max-height:230px;height:auto;width:auto;object-fit:contain;margin:0 auto}.fullpaper-page .written-table-wrap{margin:6px 0 9px}.fullpaper-page .written-question-table{font-size:11px;max-width:100%}.fullpaper-page .written-question-table th,.fullpaper-page .written-question-table td{padding:5px 8px}
         .fullpaper-subintro{font-size:12px;font-weight:700;margin:4px 0 6px}
         .fullpaper-subq{font-size:13px;line-height:1.65;margin:5px 0 8px;break-inside:avoid}
         .pp-exam-options{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;padding-left:18px;margin-top:4px}
@@ -819,6 +819,18 @@
     });
   }
 
+  function writtenTableHtml(r){
+    let raw=r.table_data_json;
+    if(!raw)return '';
+    try{ if(typeof raw==='string') raw=JSON.parse(raw); }catch(e){ console.warn('[Previous Papers] Invalid table_data_json:',r.question_id,e); return ''; }
+    if(!raw || !Array.isArray(raw.headers) || !Array.isArray(raw.rows))return '';
+    const headers=raw.headers;
+    const rows=raw.rows;
+    if(!headers.length || !rows.length)return '';
+    const cell=v=>esc(v==null?'':String(v));
+    return `<div class="written-table-wrap"><table class="written-question-table"><thead><tr>${headers.map(h=>`<th>${cell(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${headers.map((_,i)=>`<td>${cell(Array.isArray(row)?row[i]:(row&&typeof row==='object'?row[Object.keys(row)[i]]:''))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  }
+
   function renderWrittenSlides(list){
     writtenIndex=0;
     const cards=list.map((r,i)=>{
@@ -834,9 +846,9 @@
         const formulaBlock=formula?`<div class="hw-section">${student.medium==='English'?'Formula / Theorem':'सूत्र / प्रमेय'}</div><div class="hw-formula">${esc(formula)}</div>`:'';
         const solutionBlock=solution?`<div class="hw-section">${student.medium==='English'?'Step-by-step solution':'हल के चरण'}</div><div class="hw-text">${esc(solution)}</div>`:'';
         const answerBlock=final?`<div class="hw-answer">${student.medium==='English'?'Final Answer:':'अंतिम उत्तर:'} ${esc(final)}</div>`:'';
-        return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper">${sessionLabel(r)}<div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div>${r.diagram_url?`<img class="written-question-diagram" src="${esc(r.diagram_url)}" alt="${student.medium==='English'?'Question diagram':'प्रश्न की आकृति'}" loading="lazy">`:''}<div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
+        return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="handwritten-card"><div class="handwritten-head"><span>${student.medium==='English'?'MATHEMATICS • SOLVED ANSWER':'गणित सेतु • हल सहित प्रश्न'} ${i+1}</span><span class="handwritten-mark">${marks} ${student.medium==='English'?'Marks':'अंक'}</span></div><div class="handwritten-paper">${sessionLabel(r)}<div class="hw-question">${student.medium==='English'?'Question':'प्रश्न'} ${i+1}. ${esc(question)}</div>${r.diagram_url?`<img class="written-question-diagram" src="${esc(r.diagram_url)}" alt="${student.medium==='English'?'Question diagram':'प्रश्न की आकृति'}" loading="lazy">`:''}${writtenTableHtml(r)}<div class="hw-solution-content" id="hw_solution_${i}">${givenBlock}${requiredBlock}${formulaBlock}${solutionBlock}${answerBlock}</div></div><div class="hw-actions"><button class="hw-toggle" type="button" data-target="hw_solution_${i}">${student.medium==='English'?'Hide solution':'हल छिपाएँ'}</button></div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
       }
-      return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${r.diagram_url?`<img class="written-question-diagram" src="${esc(r.diagram_url)}" alt="प्रश्न की आकृति" loading="lazy">`:''}${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
+      return `<div class="pp-written-slide" data-slide-index="${i}" ${i?'hidden':''}><article class="question-card">${sessionLabel(r)}<div class="question-title">प्रश्न ${i+1}. ${esc(question)}</div>${r.diagram_url?`<img class="written-question-diagram" src="${esc(r.diagram_url)}" alt="प्रश्न की आकृति" loading="lazy">`:''}${writtenTableHtml(r)}${given?`<p><b>${student.medium==='English'?'Given':'दिया गया'}:</b> ${esc(given)}</p>`:''}${required?`<p><b>${student.medium==='English'?'To find':'ज्ञात करना है'}:</b> ${esc(required)}</p>`:''}<p><b>${student.medium==='English'?'Solution':'हल'}:</b></p><div class="solution">${esc([formula,solution,final].filter(Boolean).join('\n\n'))}</div><div class="export-actions"><button type="button" class="export-btn" data-export-pdf>PDF</button><button type="button" class="export-btn secondary" data-export-png>इमेज</button><button type="button" class="export-btn" data-share-one>शेयर</button></div></article></div>`;
     }).join('');
     $('questions').innerHTML=`<div class="pp-written-viewer">${cards}<div class="pp-written-navigation"><button type="button" id="ppWrittenPrev" class="export-btn secondary">← पिछला प्रश्न</button><span id="ppWrittenCount">प्रश्न 1 / ${list.length}</span><button type="button" id="ppWrittenNext" class="export-btn">अगला प्रश्न →</button></div></div>`;
     const update=()=>{
