@@ -645,53 +645,137 @@
       const setKey=canonicalPaperSet(selectedSet);
       const classLevel=Number(student.class_level);
       const objectiveSelect='id,class_level,question_text_hi,question_text_en,option_a_hi,option_b_hi,option_c_hi,option_d_hi,option_a_en,option_b_en,option_c_en,option_d_en,medium,exam_year,paper_set,maths_level,source_question,question_type,match_pairs_json';
-      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,medium,exam_year,paper_set,maths_level';
+      const writtenSelect='id,question_id,class_level,marks,question_text_hi,question_text_en,medium,exam_year,paper_set,maths_level,original_question_number,or_group_id,or_order';
       const [objRes,writeRes]=await Promise.all([
         supabaseClient.from('objective_questions').select(objectiveSelect).eq('class_level',classLevel).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('source_question'),
         supabaseClient.from('written_questions').select(writtenSelect).eq('class_level',classLevel).in('marks',[2,3,4]).eq('status','published').eq('is_active',true).eq('exam_year',Number(year)).order('question_id')
       ]);
       if(objRes.error)throw new Error('1 अंक के प्रश्न लोड नहीं हुए: '+objRes.error.message);
       if(writeRes.error)throw new Error('2, 3, 4 अंक के प्रश्न लोड नहीं हुए: '+writeRes.error.message);
-      const mediumOK=r=>{const m=normalizeMedium(r.medium);return m===student.medium||m==='Both'||m==='';};
+      const mediumOK=r=>{const m=normalizeMedium(r.medium);return m===normalizeMedium(student.medium)||m==='Both'||m==='';};
       const setOK=r=>canonicalPaperSet(r.paper_set)===setKey && (!needsMathsLevel(year) || normalizeMathsLevel(r.maths_level)===mathsLevel);
       const objective=(objRes.data||[]).filter(r=>mediumOK(r)&&setOK(r));
       const written=(writeRes.data||[]).filter(r=>mediumOK(r)&&setOK(r));
       if(!objective.length&&!written.length)throw new Error('चुने हुए सत्र और सेट में कोई प्रश्न उपलब्ध नहीं है।');
+
       const isEnglish=student.medium==='English';
-      const blocks=[];
-      const section=(label,items,renderer)=>{
-        if(!items.length)return;
-        blocks.push({section:label});
-        items.forEach((r,i)=>blocks.push({html:renderer(r,i)}));
+      const roman=['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
+      const objectiveTypeOrder=['MCQ','FILL_BLANK','TRUE_FALSE','MATCH','SHORT_ANSWER'];
+      const typeLabels={
+        MCQ:isEnglish?'Choose the correct option and write it:':'सही विकल्प चुनकर लिखिए :',
+        FILL_BLANK:isEnglish?'Fill in the blanks:':'रिक्त स्थानों की पूर्ति कीजिए :',
+        TRUE_FALSE:isEnglish?'Write True / False:':'सत्य / असत्य लिखिए :',
+        MATCH:isEnglish?'Match the correct column:':'सही जोड़ी मिलाइए :',
+        SHORT_ANSWER:isEnglish?'Write the answer in one word / sentence:':'प्रत्येक का एक शब्द / वाक्य में उत्तर लिखिए :'
       };
-      section(isEnglish?'Section A — Objective Questions (1 Mark)':'खंड अ — वस्तुनिष्ठ प्रश्न (1 अंक)',objective,(r,i)=>{
-        const q=languageField(r,'question_text_hi','question_text_en');
-        return `<article class="fullpaper-q"><div class="fullpaper-qhead"><b>प्रश्न ${i+1}.</b><span>[1 अंक]</span></div><div class="fullpaper-text">${esc(q)}</div>${objectiveSheetOptions(r)}</article>`;
-      });
+      const objectiveGroups=objectiveTypeOrder.map(type=>({
+        type, rows:objective.filter(r=>objectiveType(r)===type)
+      })).filter(g=>g.rows.length);
+
+      const writtenGroupsByMark={2:[],3:[],4:[]};
       [2,3,4].forEach(mark=>{
         const list=written.filter(r=>Number(r.marks)===mark);
-        section(`${mark} अंक के प्रश्न`,list,(r,i)=>{
-          const q=languageField(r,'question_text_hi','question_text_en');
-          return `<article class="fullpaper-q"><div class="fullpaper-qhead"><b>प्रश्न ${i+1}.</b><span>[${mark} अंक]</span></div><div class="fullpaper-text">${esc(q).replace(/\n/g,'<br>')}</div></article>`;
+        const map=new Map();
+        list.forEach((r,index)=>{
+          const id=String(r.or_group_id||'').trim();
+          const key=id?`or:${id}`:`single:${r.id||r.question_id||index}`;
+          if(!map.has(key))map.set(key,[]);
+          map.get(key).push(r);
         });
+        const groups=[...map.values()].map(group=>{
+          group.sort((a,b)=>{
+            const ao=Number(a.or_order)||1, bo=Number(b.or_order)||1;
+            if(ao!==bo)return ao-bo;
+            return String(a.question_id||'').localeCompare(String(b.question_id||''));
+          });
+          const raw=String(group[0].original_question_number||'').trim();
+          const match=raw.match(/\d+/);
+          return {number:match?Number(match[0]):null, label:raw, rows:group};
+        });
+        groups.sort((a,b)=>{
+          if(a.number!==null&&b.number!==null)return a.number-b.number;
+          if(a.number!==null)return -1;
+          if(b.number!==null)return 1;
+          return String(a.label).localeCompare(String(b.label),'en',{numeric:true});
+        });
+        writtenGroupsByMark[mark]=groups;
       });
-      const pages=[]; let current=[]; let count=0;
-      blocks.forEach(b=>{
-        if(b.section){if(current.length){pages.push(current);current=[];count=0;}current.push(b);return;}
-        current.push(b);count++;if(count>=5){pages.push(current);current=[];count=0;}
+
+      const escapeText=v=>esc(v==null?'':String(v)).replace(/\n/g,'<br>');
+      const objectiveHtml=(group,mainNo)=>{
+        const rows=group.rows;
+        let body='';
+        if(group.type==='MATCH' && rows.length){
+          body=`<div class="fullpaper-subintro">${escapeText(typeLabels.MATCH)}</div>${objectiveMatchSheetHtml(rows,isEnglish)}`;
+        }else{
+          body=rows.map((r,i)=>{
+            const q=languageField(r,'question_text_hi','question_text_en');
+            const qText=group.type==='FILL_BLANK'?esc(q).replace(/_{3,}|…{2,}/g,'__________'):escapeText(q);
+            return `<div class="fullpaper-subq"><b>(${roman[i]||i+1})</b> ${qText}${objectiveSheetOptions(r)}</div>`;
+          }).join('');
+        }
+        return `<article class="fullpaper-q"><div class="fullpaper-qhead"><b>${isEnglish?'Question':'प्रश्न'} ${mainNo}.</b><span>[${rows.length} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-subintro">${escapeText(typeLabels[group.type])}</div>${body}</article>`;
+      };
+      const writtenHtml=(group,mark)=>{
+        const questionNo=group.number!==null?group.number:'';
+        const items=group.rows.map((r,i)=>{
+          const q=languageField(r,'question_text_hi','question_text_en');
+          const label=questionNo?`${isEnglish?'Question':'प्रश्न'} ${questionNo}.`:`${isEnglish?'Question':'प्रश्न'}`;
+          return `<div class="fullpaper-written-option"><div class="fullpaper-qhead"><b>${label}</b><span>[${mark} ${isEnglish?'Marks':'अंक'}]</span></div><div class="fullpaper-text">${escapeText(q)}</div></div>${i<group.rows.length-1?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:''}`;
+        }).join('');
+        return `<article class="fullpaper-q">${items}</article>`;
+      };
+
+      const blocks=[];
+      blocks.push({section:isEnglish?'Section A — Objective Questions (1 Mark)':'खंड अ — वस्तुनिष्ठ प्रश्न (1 अंक)'});
+      objectiveGroups.forEach((g,i)=>blocks.push({html:objectiveHtml(g,i+1),kind:'question'}));
+      [2,3,4].forEach((mark,index)=>{
+        const groups=writtenGroupsByMark[mark];
+        if(!groups.length)return;
+        blocks.push({section:isEnglish?`Section ${String.fromCharCode(66+index)} — ${mark} Mark Questions`:`खंड ${['ब','स','द'][index]} — ${mark} अंक के प्रश्न`});
+        groups.forEach(g=>blocks.push({html:writtenHtml(g,mark),kind:'question'}));
       });
-      if(current.length)pages.push(current);
-      const host=document.createElement('div');host.style.cssText='position:fixed;left:-10000px;top:0;z-index:-1';
+
+      // Paginate by question blocks, never splitting an OR pair between pages.
+      const pages=[];let page=[],questionCount=0;
+      blocks.forEach(block=>{
+        if(block.section){
+          if(page.length){pages.push(page);page=[];questionCount=0;}
+          page.push(block);
+        }else{
+          if(questionCount>=4){pages.push(page);page=[];questionCount=0;}
+          page.push(block);questionCount++;
+        }
+      });
+      if(page.length)pages.push(page);
+
+      const host=document.createElement('div');
+      host.style.cssText='position:fixed;left:-10000px;top:0;z-index:-1';
       host.innerHTML=`<style>
-        .fullpaper-page{box-sizing:border-box;width:794px;min-height:1123px;height:1123px;padding:48px 55px 58px;background:#fff;color:#111;font-family:'Noto Sans Devanagari',Arial,sans-serif;position:relative;overflow:hidden}
-        .fullpaper-head{text-align:center;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:15px;color:#111}
-        .fullpaper-head .board{font-size:16px;font-weight:800}.fullpaper-head h1{font-size:20px;margin:7px 0}.fullpaper-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin:6px 0}.fullpaper-roll{display:flex;justify-content:space-between;font-size:12px;margin:12px 0;border-bottom:1px solid #888;padding-bottom:9px}
-        .fullpaper-instructions{font-size:11px;line-height:1.6;border:1px solid #777;padding:9px;margin-bottom:15px}.fullpaper-section{font-size:15px;font-weight:800;border-bottom:1px solid #444;padding:9px 0;margin:8px 0 12px}.fullpaper-q{margin:0 0 15px;padding-bottom:10px;border-bottom:1px dotted #aaa;break-inside:avoid}.fullpaper-qhead{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.fullpaper-text{font-size:14px;line-height:1.75;white-space:pre-wrap;margin-bottom:7px}.pp-exam-options{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;padding-left:14px}.pp-exam-option{font-size:12px;line-height:1.55;white-space:pre-wrap}.pp-exam-option b{margin-right:4px}.fullpaper-footer{position:absolute;bottom:25px;left:55px;right:55px;border-top:1px solid #999;padding-top:7px;display:flex;justify-content:space-between;font-size:10px}
+        .fullpaper-page{box-sizing:border-box;width:794px;height:1123px;padding:42px 55px 58px;background:#fff;color:#111;font-family:'Noto Sans Devanagari',Arial,sans-serif;position:relative;overflow:hidden}
+        .fullpaper-head{text-align:center;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:12px;color:#111}
+        .fullpaper-head .board{font-size:16px;font-weight:800}.fullpaper-head h1{font-size:20px;margin:6px 0}.fullpaper-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;margin:6px 0}
+        .fullpaper-roll{display:flex;justify-content:space-between;font-size:12px;margin:10px 0;border-bottom:1px solid #888;padding-bottom:8px}
+        .fullpaper-instructions{font-size:11px;line-height:1.6;border:1px solid #777;padding:8px 9px;margin-bottom:12px}
+        .fullpaper-section{font-size:15px;font-weight:800;border-bottom:1px solid #444;padding:8px 0;margin:7px 0 10px}
+        .fullpaper-q{margin:0 0 12px;padding-bottom:9px;border-bottom:1px dotted #aaa;break-inside:avoid}
+        .fullpaper-qhead{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+        .fullpaper-text{font-size:13px;line-height:1.65;white-space:pre-wrap;margin:4px 0 6px}
+        .fullpaper-subintro{font-size:12px;font-weight:700;margin:4px 0 6px}
+        .fullpaper-subq{font-size:13px;line-height:1.65;margin:5px 0 8px;break-inside:avoid}
+        .pp-exam-options{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;padding-left:18px;margin-top:4px}
+        .pp-exam-option{font-size:12px;line-height:1.5;white-space:pre-wrap}
+        .pp-exam-options-inline{grid-template-columns:1fr 1fr}
+        .pp-exam-writing-lines{height:18px;border-bottom:1px dotted #aaa;margin:3px 0}
+        .pp-exam-match-wrap{margin:6px 0}.pp-exam-match-table{width:100%;border-collapse:collapse;font-size:12px}.pp-exam-match-table th,.pp-exam-match-table td{border:1px solid #777;padding:5px;text-align:left}
+        .fullpaper-or{text-align:center;font-weight:800;font-size:12px;margin:7px 0}
+        .fullpaper-footer{position:absolute;bottom:24px;left:55px;right:55px;border-top:1px solid #999;padding-top:7px;display:flex;justify-content:space-between;font-size:10px}
       </style>`;
       const pageHtml=pages.map((items,index)=>{
         const first=index===0;
         const content=items.map(b=>b.section?`<div class="fullpaper-section">${esc(b.section)}</div>`:b.html).join('');
-        return `<section class="fullpaper-page">${first?`<div class="fullpaper-head"><div class="board">हाई स्कूल परीक्षा / HIGH SCHOOL EXAMINATION</div><h1>गणित — प्रश्नपत्र / MATHEMATICS</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र / Year: ${esc(year)}</span><span>स्तर / Level: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट / Set: ${esc(selectedSet)}</span></div><div class="fullpaper-meta"><span>समय / Time: 3 घंटे</span><span>पूर्णांक / Maximum Marks: 75</span></div></div><div class="fullpaper-roll"><span>विद्यार्थी का नाम: __________________</span><span>अनुक्रमांक: ______________</span></div><div class="fullpaper-instructions"><b>निर्देश:</b> सभी प्रश्न अनिवार्य हैं। प्रत्येक प्रश्न के अंक उसके सामने दिए गए हैं। जहाँ विकल्प दिया गया है, वहाँ किसी एक का उत्तर दीजिए।</div>`:`<div class="fullpaper-head"><div class="board">GANIT SETU • MATHEMATICS</div><h1>प्रश्नपत्र (जारी)</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र: ${esc(year)}</span><span>स्तर: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट: ${esc(selectedSet)}</span></div></div>`}${content}<div class="fullpaper-footer"><span>GANIT SETU • गणित</span><span>पृष्ठ ${index+1} / ${pages.length}</span></div></section>`;
+        const header=first?`<div class="fullpaper-head"><div class="board">हाई स्कूल परीक्षा / HIGH SCHOOL EXAMINATION</div><h1>गणित — प्रश्नपत्र / MATHEMATICS</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र / Year: ${esc(year)}</span><span>स्तर / Level: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट / Set: ${esc(selectedSet)}</span></div><div class="fullpaper-meta"><span>समय / Time: 3 घंटे</span><span>पूर्णांक / Maximum Marks: 75</span></div></div><div class="fullpaper-roll"><span>विद्यार्थी का नाम: __________________</span><span>अनुक्रमांक: ______________</span></div><div class="fullpaper-instructions"><b>निर्देश:</b><br>(i) सभी प्रश्न अनिवार्य हैं।<br>(ii) प्रश्न क्रमांक 1 से 5 तक वस्तुनिष्ठ प्रकार के प्रश्न हैं।<br>(iii) प्रश्न क्रमांक 6 से 23 तक आंतरिक विकल्प दिए गए हैं।<br>(iv) जहाँ आवश्यक हो स्वच्छ एवं नामांकित आकृति बनाइए।</div>`:`<div class="fullpaper-head"><div class="board">GANIT SETU • MATHEMATICS</div><h1>प्रश्नपत्र (जारी)</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र: ${esc(year)}</span><span>स्तर: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट: ${esc(selectedSet)}</span></div></div>`;
+        return `<section class="fullpaper-page">${header}${content}<div class="fullpaper-footer"><span>GANIT SETU • गणित</span><span>पृष्ठ ${index+1} / ${pages.length}</span></div></section>`;
       }).join('');
       host.insertAdjacentHTML('beforeend',pageHtml);document.body.appendChild(host);
       try{
