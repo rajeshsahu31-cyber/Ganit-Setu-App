@@ -614,14 +614,17 @@
       return `<section class="pp-exam-page">${header}<div class="pp-exam-question-list"><article class="pp-exam-question"><div class="pp-exam-qline"><span class="pp-exam-qnumber">${isEnglish?'Question':'प्रश्न'} ${mainNo}.</span><span class="pp-exam-marks">[${group.rows.length} ${isEnglish?'Marks':'अंक'}]</span></div><div class="pp-exam-question-text">${labels[group.type]}</div>${body}</article></div><div class="pp-exam-page-footer">${isEnglish?'Ganit Setu • Objective Practice':'गणित सेतु • वस्तुनिष्ठ अभ्यास'} <span>${isEnglish?'Page':'पृष्ठ'} ${pageIndex+1} / ${totalPages}</span></div></section>`;
     }).join('');
     const answerRows=groups.map((group,index)=>{
-      let answerText='';
+      let subAnswers=[];
       if(group.type==='MATCH'){
-        const pairs=matchPairs(group.rows[0]||{});
-        answerText=pairs.map((pair,i)=>`(${roman[i]||i+1}) ${String(pair.correct_label||'—')}`).join('   ');
+        // Each MATCH database row stores one pair; collect all six rows in order.
+        subAnswers=group.rows.map((r,i)=>{
+          const pair=matchPairs(r)[0]||{};
+          return `(${roman[i]||i+1}) ${String(pair.correct_label||'—').trim()}`;
+        });
       }else{
-        answerText=group.rows.map((r,i)=>`(${roman[i]||i+1}) ${objectiveAnswerKey(r)}`).join('   ');
+        subAnswers=group.rows.map((r,i)=>`(${roman[i]||i+1}) ${objectiveAnswerKey(r)}`);
       }
-      return `<div class="pp-exam-key-item"><b>${index+1}.</b><span>${esc(answerText)}</span></div>`;
+      return `<div class="pp-exam-key-group"><div class="pp-exam-key-group-title">${isEnglish?'Question':'प्रश्न'} ${index+1}</div><div class="pp-exam-key-subgrid">${subAnswers.map(answer=>`<div class="pp-exam-key-subitem">${esc(answer)}</div>`).join('')}</div></div>`;
     }).join('');
     const answerPage=`<section class="pp-exam-page pp-exam-answer-page"><div class="pp-exam-brand">GANIT SETU • ${isEnglish?'MATHEMATICS':'गणित सेतु'}</div><h1 class="pp-exam-title">${isEnglish?'ANSWER KEY':'उत्तरमाला'}</h1><p class="pp-exam-key-note">${isEnglish?'Answers are arranged by the five main questions and their sub-questions.':'उत्तर पाँच मुख्य प्रश्नों और उनके उपप्रश्नों के क्रम में दिए गए हैं।'}</p><div class="pp-exam-key-grid">${answerRows}</div><div class="pp-exam-page-footer">${isEnglish?'Ganit Setu • Answer Key':'गणित सेतु • उत्तरमाला'} <span>${isEnglish?'Page':'पृष्ठ'} ${totalPages} / ${totalPages}</span></div></section>`;
     $('questions').innerHTML=`<style>
