@@ -862,7 +862,7 @@
       if(pages.length>1 && !current.content.childNodes.length){current.el.remove();pages.pop();}
       pages.forEach((p,i)=>{p.el.querySelector('.fullpaper-page-number').textContent=`पृष्ठ ${i+1} / ${pages.length}`;});
 
-      host.insertAdjacentHTML('beforeend',pageHtml);document.body.appendChild(host);
+      document.body.appendChild(host);
       try{
         if(!window.jspdf?.jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
         const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
