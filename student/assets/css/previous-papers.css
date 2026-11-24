@@ -55,7 +55,7 @@
 @media(max-width:480px){.pp-written-navigation{gap:6px;padding:8px}.pp-written-navigation button{font-size:12px;padding:8px 9px}.pp-written-navigation span{font-size:11px}}
 
 /* Diagrams attached to written questions */
-.written-question-diagram{display:block;max-width:100%;max-height:320px;width:auto;height:auto;object-fit:contain;margin:12px auto;padding:6px;background:#fff;border:1px solid #e2e8f0;border-radius:8px}
+.written-question-diagram{display:block;max-width:100%;max-height:320px;width:auto;height:auto;object-fit:contain;margin:12px auto;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
 
 
 /* Structured tables attached to written questions */
@@ -72,9 +72,11 @@
    Original diagram files and their Supabase URLs remain untouched. */
 .written-question-diagram,
 .fullpaper-diagram img{
-  filter: grayscale(1) sepia(.20) contrast(1.18) brightness(.98);
-  mix-blend-mode: multiply;
-  background: #fffef9;
-  border-color: #d8d3c7;
-  box-shadow: 0 1px 2px rgba(70,60,40,.08);
+  /* Transparent PNG: no filter, background, frame or shadow. */
+  filter: none;
+  mix-blend-mode: normal;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
