@@ -11,32 +11,72 @@ async function loadRows(){let {data,error}=await supabaseClient.from('textbook_s
 async function showChapters(){setCrumb([`${labels().class} ${cls}`]);message(hi()?'अध्याय लोड हो रहे हैं…':'Loading chapters…');try{await loadRows();let chapters=[...new Map(rows.map(r=>[r.chapter_number,r])).values()];if(!chapters.length){message(hi()?'इस माध्यम में अभी पाठ्यपुस्तक सामग्री उपलब्ध नहीं है।':'No textbook content is available in this medium yet.');return;}root.innerHTML=`<section class="bs-card"><h2>${labels().chapters}</h2><div class="bs-list">${chapters.map(c=>`<button class="bs-item" data-ch="${c.chapter_number}">${hi()?'अध्याय':'Chapter'} ${c.chapter_number} – ${esc(c.chapter_title)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>showExercises(+b.dataset.ch));}catch(e){message((hi()?'सामग्री लोड नहीं हुई: ':'Could not load content: ')+e.message);}}
 function showExercises(ch){chapterNo=ch;let chrow=rows.find(r=>r.chapter_number===ch);setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${ch}`]);let ex=[...new Set(rows.filter(r=>r.chapter_number===ch).map(r=>r.exercise_number))];if(!ex.length){message(hi()?'इस अध्याय में प्रश्नावली उपलब्ध नहीं है।':'No exercises in this chapter.');return;}root.innerHTML=`<section class="bs-card"><h2>${hi()?'अध्याय':'Chapter'} ${ch} – ${esc(chrow.chapter_title)}</h2><div class="bs-list">${ex.map(e=>`<button class="bs-item" data-ex="${esc(e)}">${labels().ex} ${esc(e)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>showQuestions(b.dataset.ex));}
 function formatSolutionSteps(html){
- // Safe step formatting: preserve complete equations; only break at clear
- // semantic boundaries, never in the middle of a calculation.
- let out=String(html||'').replace(/<\s*br\s*\/?\s*>/gi,'<br>');
- out=out.replace(/<\/(?:p|div|li)>/gi,'<br>')
-        .replace(/<(?:p|div|li)(?:\s[^>]*)?>/gi,'');
- out=out.replace(/(?:<br>\s*){2,}/gi,'<br>');
-
- // A danda immediately after a numeric result looks like digit 1 in this font.
- // Remove it from math lines; prose sentence punctuation is retained elsewhere.
- out=out.replace(/([0-9०-९])\s*।(?=\s*(?:<br>|$|[A-Za-zअ-ह]))/g,'$1');
-
- // Break only where a new named step clearly begins.
- out=out.replace(/\s+(?=(?:H\.?\s*C\.?\s*F\.?|L\.?\s*C\.?\s*M\.?)\s*=)/gi,'<br>');
- out=out.replace(/\s*(?=जाँच\s*[:：])/g,'<br>');
- out=out.replace(/\s+(?=(?:पहली संख्या|दूसरी संख्या)\s*=)/g,'<br>');
- out=out.replace(/\s+(?=\((?:i{1,3}|iv|v|vi{0,3}|ix|x)\)\s)/gi,'<br>');
-
- // Split comma-separated independent equations, e.g. "26 = ..., 91 = ...".
- out=out.replace(/,\s*(?=(?:\d{1,6}|[०-९]{1,6})\s*=\s*(?:\d|[०-९]))/g,'<br>');
-
- // Put explanatory conclusion sentences on a fresh line without splitting equations.
- out=out.replace(/\s+(?=(?:अतः|इसलिए|फलतः)\s*)/g,'<br>');
- out=out.replace(/(?:<br>\s*){2,}/gi,'<br>');
- return out;
+ // General-purpose formatter for present and future textbook solutions.
+ // It respects authored paragraphs/BRs, detects semantic step boundaries,
+ // and NEVER inserts a break at an equals sign or inside a numeric expression.
+ const source=String(html||'');
+ if(!source.trim()) return '';
+ let parsed;
+ try{ parsed=new DOMParser().parseFromString(`<div id="__bs_steps">${source}</div>`,'text/html'); }
+ catch(_){ return source; }
+ const container=parsed.getElementById('__bs_steps');
+ if(!container) return source;
+ const blockTags=new Set(['P','DIV','LI','SECTION','BLOCKQUOTE']);
+ const boundaryRe=/(?:^|\s+)(?=(?:H\.?\s*C\.?\s*F\.?\s*=|(?<!× )L\.?\s*C\.?\s*M\.?\s*=|जाँच\s*[:：]?|Check\s*[:：]?|पहली\s+संख्या\s*=|दूसरी\s+संख्या\s*=|Given\s*[:：]|To\s+find\s*[:：]|Formula\s*[:：]|Therefore\b|Hence\b|अतः\b|इसलिए\b|फलतः\b|\((?:i{1,3}|iv|v|vi{0,3}|ix|x)\)\s*))/i;
+ function splitPlainText(raw){
+   let text=raw.replace(/[\t\u00a0]+/g,' ').replace(/ {2,}/g,' ').trim();
+   if(!text) return [];
+   // Split at clear semantic labels and new sub-question markers.
+   let chunks=text.split(boundaryRe).map(s=>s.trim()).filter(Boolean);
+   const out=[];
+   for(let chunk of chunks){
+     // A comma followed by a fresh numbered equation means a new step.
+     const equations=chunk.split(/,\s*(?=(?:\d{1,8}|[०-९]{1,8})\s*=\s*(?:\d|[०-९]))/);
+     for(let part of equations){
+       part=part.trim(); if(!part) continue;
+       // Sentence end is a safe boundary. Keep prose danda, but remove it
+       // from a mathematical line where it resembles digit 1 in handwriting.
+       const sentences=part.split(/(?<=।)\s+(?=[\p{L}(0-9०-९])/u);
+       for(let line of sentences){
+         line=line.trim(); if(!line) continue;
+         if(/(?:=|×|\*|÷|\/|\+|−|\-)/.test(line) && /[0-9०-९]\s*।$/.test(line)) line=line.replace(/।$/,'').trim();
+         if(/^(?:H\.?\s*C\.?\s*F\.?|L\.?\s*C\.?\s*M\.?)\s*=/.test(line)) line=line.replace(/[,،]$/,'').trim();
+         if(/^H\.?\s*C\.?\s*F\.?\s*=/.test(line)) line=line.replace(/\s+और$/,'').trim();
+         // A prose explanation beginning immediately after a completed
+         // numerical result (e.g. "1014 यह 13 से विभाज्य है") starts separately.
+         line=line.replace(/\s+(?=(?:यह\s+(?:संख्या|13|5|\d|[०-९])|This\s+is\b))/u,'\n');
+         line.split(/\n+/).map(x=>x.trim()).filter(Boolean).forEach(x=>out.push(x));
+       }
+     }
+   }
+   return out;
+ }
+ function processTextNode(node){
+   const pieces=splitPlainText(node.nodeValue||'');
+   if(pieces.length<=1){ if(pieces.length===1) node.nodeValue=pieces[0]; return; }
+   const frag=parsed.createDocumentFragment();
+   pieces.forEach((piece,i)=>{ if(i) frag.appendChild(parsed.createElement('br')); frag.appendChild(parsed.createTextNode(piece)); });
+   node.parentNode.replaceChild(frag,node);
+ }
+ function walk(node){
+   // Existing block structure is authoritative: retain it and format text inside.
+   if(node.nodeType===Node.TEXT_NODE){ processTextNode(node); return; }
+   if(node.nodeType!==Node.ELEMENT_NODE && node.nodeType!==Node.DOCUMENT_FRAGMENT_NODE) return;
+   if(node.nodeType===Node.ELEMENT_NODE && ['SCRIPT','STYLE'].includes(node.tagName)) return;
+   [...node.childNodes].forEach(child=>walk(child));
+ }
+ walk(container);
+ // Remove redundant empty breaks and normalize math punctuation at line ends.
+ container.querySelectorAll('br + br').forEach(br=>br.remove());
+ container.querySelectorAll('p,li').forEach(el=>el.classList.add('bs-auto-step'));
+ return container.innerHTML;
 }
-
+function installStepFormatterStyles(){
+ if(document.getElementById('bsAutoStepStyles')) return;
+ const style=document.createElement('style');style.id='bsAutoStepStyles';
+ style.textContent=`.bs-hand-solution{white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.9}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}`;
+ document.head.appendChild(style);
+}
 function questionCard(q,i,total){const L=labels();let qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';let si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';let qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';let st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';return `<article class="bs-hand-card" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution}</div><div class="bs-hand-solution">${safe(formatSolutionSteps(q.solution_html))}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;}
 function fixHindiPunctuation(scope){
 // Keep handwriting for the text, but render Hindi danda marks in a clear
@@ -52,7 +92,7 @@ for(const node of nodes){const parts=node.nodeValue.split(/([।॥])/);const fr
  node.parentNode.replaceChild(frag,node);
  }
 }
-function showQuestions(ex){exerciseNo=ex;setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);let qs=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number));if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${qs.length}</b><small>${hi()?'प्रत्येक प्रश्न और हल कॉपी-स्टाइल में':'Each question and solution in notebook style'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${qs.map((q,i)=>questionCard(q,i,qs.length)).join('')}</div>`;root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));$('bsAllPdf').onclick=()=>exportAll(qs.length,$('bsAllPdf'));}
+function showQuestions(ex){installStepFormatterStyles();exerciseNo=ex;setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);let qs=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number));if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${qs.length}</b><small>${hi()?'प्रत्येक प्रश्न और हल कॉपी-स्टाइल में':'Each question and solution in notebook style'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${qs.map((q,i)=>questionCard(q,i,qs.length)).join('')}</div>`;root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));$('bsAllPdf').onclick=()=>exportAll(qs.length,$('bsAllPdf'));}
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
 async function captureCard(card){if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');if(document.fonts?.ready)await document.fonts.ready;return window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#fffef9',logging:false,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});}
 function addCanvasPages(pdf,canvas,firstPage){
