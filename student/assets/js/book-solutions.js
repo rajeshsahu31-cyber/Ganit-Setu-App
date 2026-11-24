@@ -11,35 +11,32 @@ async function loadRows(){let {data,error}=await supabaseClient.from('textbook_s
 async function showChapters(){setCrumb([`${labels().class} ${cls}`]);message(hi()?'अध्याय लोड हो रहे हैं…':'Loading chapters…');try{await loadRows();let chapters=[...new Map(rows.map(r=>[r.chapter_number,r])).values()];if(!chapters.length){message(hi()?'इस माध्यम में अभी पाठ्यपुस्तक सामग्री उपलब्ध नहीं है।':'No textbook content is available in this medium yet.');return;}root.innerHTML=`<section class="bs-card"><h2>${labels().chapters}</h2><div class="bs-list">${chapters.map(c=>`<button class="bs-item" data-ch="${c.chapter_number}">${hi()?'अध्याय':'Chapter'} ${c.chapter_number} – ${esc(c.chapter_title)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>showExercises(+b.dataset.ch));}catch(e){message((hi()?'सामग्री लोड नहीं हुई: ':'Could not load content: ')+e.message);}}
 function showExercises(ch){chapterNo=ch;let chrow=rows.find(r=>r.chapter_number===ch);setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${ch}`]);let ex=[...new Set(rows.filter(r=>r.chapter_number===ch).map(r=>r.exercise_number))];if(!ex.length){message(hi()?'इस अध्याय में प्रश्नावली उपलब्ध नहीं है।':'No exercises in this chapter.');return;}root.innerHTML=`<section class="bs-card"><h2>${hi()?'अध्याय':'Chapter'} ${ch} – ${esc(chrow.chapter_title)}</h2><div class="bs-list">${ex.map(e=>`<button class="bs-item" data-ex="${esc(e)}">${labels().ex} ${esc(e)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>showQuestions(b.dataset.ex));}
 function formatSolutionSteps(html){
- // Arrange solution content as clear notebook-style steps.
- // Never append Hindi danda to a mathematical expression; prose may retain it.
+ // Safe step formatting: preserve complete equations; only break at clear
+ // semantic boundaries, never in the middle of a calculation.
  let out=String(html||'').replace(/<\s*br\s*\/?\s*>/gi,'<br>');
- out=out.replace(/([0-9०-९)\]])\s*।(?=\s|<|$)/g,'$1');
-
- // Keep existing paragraph/list boundaries and normalize whitespace.
  out=out.replace(/<\/(?:p|div|li)>/gi,'<br>')
-        .replace(/<(?:p|div|li)(?:\s[^>]*)?>/gi,'')
-        .replace(/(?:<br>\s*){2,}/gi,'<br>');
+        .replace(/<(?:p|div|li)(?:\s[^>]*)?>/gi,'');
+ out=out.replace(/(?:<br>\s*){2,}/gi,'<br>');
 
- // Give each named mathematical result its own line, even when the source
- // content placed it immediately after the preceding factorisation.
- out=out.replace(/\s*(?=(?:H\.?\s*C\.?\s*F\.?|L\.?\s*C\.?\s*M\.?)\s*=)/gi,'<br>');
+ // A danda immediately after a numeric result looks like digit 1 in this font.
+ // Remove it from math lines; prose sentence punctuation is retained elsewhere.
+ out=out.replace(/([0-9०-९])\s*।(?=\s*(?:<br>|$|[A-Za-zअ-ह]))/g,'$1');
+
+ // Break only where a new named step clearly begins.
+ out=out.replace(/\s+(?=(?:H\.?\s*C\.?\s*F\.?|L\.?\s*C\.?\s*M\.?)\s*=)/gi,'<br>');
  out=out.replace(/\s*(?=जाँच\s*[:：])/g,'<br>');
- out=out.replace(/\s*(?=(?:पहली संख्या|दूसरी संख्या)\s*=)/g,'<br>');
-
- // Separate successive numbered sub-parts and independent number equations.
+ out=out.replace(/\s+(?=(?:पहली संख्या|दूसरी संख्या)\s*=)/g,'<br>');
  out=out.replace(/\s+(?=\((?:i{1,3}|iv|v|vi{0,3}|ix|x)\)\s)/gi,'<br>');
- out=out.replace(/([^\s>])\s+(?=(?:\d{1,6}|[०-९]{1,6})\s*=\s*(?:\d|[०-९]))/g,'$1<br>');
 
- // Put explanatory conclusions on their own lines.
- out=out.replace(/\s*(?=(?:अतः|इसलिए|फलतः)\s*)/g,'<br>');
- out=out.replace(/\s+(?=यह\s+(?:\d|[०-९]))/g,'<br>');
+ // Split comma-separated independent equations, e.g. "26 = ..., 91 = ...".
+ out=out.replace(/,\s*(?=(?:\d{1,6}|[०-९]{1,6})\s*=\s*(?:\d|[०-९]))/g,'<br>');
 
- // Split common verification statements away from the preceding LCM result.
- out=out.replace(/\s*(?=जाँच\s*[:：])/g,'<br>');
+ // Put explanatory conclusion sentences on a fresh line without splitting equations.
+ out=out.replace(/\s+(?=(?:अतः|इसलिए|फलतः)\s*)/g,'<br>');
  out=out.replace(/(?:<br>\s*){2,}/gi,'<br>');
  return out;
 }
+
 function questionCard(q,i,total){const L=labels();let qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';let si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';let qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';let st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';return `<article class="bs-hand-card" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution}</div><div class="bs-hand-solution">${safe(formatSolutionSteps(q.solution_html))}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;}
 function fixHindiPunctuation(scope){
 // Keep handwriting for the text, but render Hindi danda marks in a clear
