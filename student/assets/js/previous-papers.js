@@ -763,17 +763,47 @@
         const groups=writtenGroupsByMark[mark];
         if(!groups.length)return;
         blocks.push({section:isEnglish?`Section ${String.fromCharCode(66+index)} — ${mark} Mark Questions`:`खंड ${['ब','स','द'][index]} — ${mark} अंक के प्रश्न`});
-        groups.forEach(g=>blocks.push({
-          html:writtenHtml(g,mark),kind:'question',mark,group:g,
-          hasOr:g.rows.length>1,
-          orParts:g.rows.map((row,i)=>(i>0?`<div class="fullpaper-or">${isEnglish?'OR':'अथवा'}</div>`:'')+writtenHtml({...g,rows:[row]},mark))
-        }));
+        groups.forEach(g=>{
+          // An OR pair is kept as two complete alternatives. Give each alternative
+          // its own page so a long solution cannot run into the footer or be clipped.
+          if(g.rows.length>1){
+            g.rows.forEach((row,i)=>{
+              const single={...g,rows:[row]};
+              blocks.push({
+                html:(i>0?`<div class="fullpaper-or">${isEnglish?'OR (Alternative question)':'अथवा (वैकल्पिक प्रश्न)'}</div>`:'')+writtenHtml(single,mark),
+                kind:'question',
+                orAlternative:true
+              });
+            });
+          }else{
+            blocks.push({html:writtenHtml(g,mark),kind:'question'});
+          }
+        });
       });
+
+      // Keep each six-part objective group on its own page to prevent clipping.
+      // Written groups may share pages, while each OR pair stays together.
+      const pages=[];let page=[],questionCount=0;
+      blocks.forEach(block=>{
+        if(block.section){
+          if(page.length){pages.push(page);page=[];questionCount=0;}
+          page.push(block);
+        }else if(block.objective){
+          if(questionCount>0){pages.push(page);page=[];questionCount=0;}
+          page.push(block);
+          pages.push(page);page=[];questionCount=0;
+        }else{
+          // Solved written questions can be long; keep each question/OR group on its own page.
+          if(questionCount>=1){pages.push(page);page=[];questionCount=0;}
+          page.push(block);questionCount++;
+        }
+      });
+      if(page.length)pages.push(page);
 
       const host=document.createElement('div');
       host.style.cssText='position:fixed;left:-10000px;top:0;z-index:-1';
       host.innerHTML=`<style>
-        .fullpaper-page{box-sizing:border-box;width:794px;height:1123px;padding:42px 55px 58px;background:#fff;color:#111;font-family:'Noto Sans Devanagari',Arial,sans-serif;position:relative;overflow:hidden}.fullpaper-content{display:block;max-height:1023px;overflow:hidden}
+        .fullpaper-page{box-sizing:border-box;width:794px;height:1123px;padding:42px 55px 58px;background:#fff;color:#111;font-family:'Noto Sans Devanagari',Arial,sans-serif;position:relative;overflow:hidden}
         .fullpaper-head{text-align:center;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:12px;color:#111}
         .fullpaper-head .board{font-size:16px;font-weight:800}.fullpaper-head h1{font-size:20px;margin:6px 0}.fullpaper-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;margin:6px 0}
         .fullpaper-roll{display:flex;justify-content:space-between;font-size:12px;margin:10px 0;border-bottom:1px solid #888;padding-bottom:8px}
@@ -797,72 +827,13 @@
         .fullpaper-or{text-align:center;font-weight:800;font-size:12px;margin:7px 0}
         .fullpaper-footer{position:absolute;bottom:24px;left:55px;right:55px;border-top:1px solid #999;padding-top:7px;display:flex;justify-content:space-between;font-size:10px}
       </style>`;
-      const makeHeader=first=>first?`<div class="fullpaper-head"><div class="board">हाई स्कूल परीक्षा / HIGH SCHOOL EXAMINATION</div><h1>गणित — प्रश्नपत्र / MATHEMATICS</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र / Year: ${esc(year)}</span><span>स्तर / Level: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट / Set: ${esc(selectedSet)}</span></div><div class="fullpaper-meta"><span>समय / Time: 3 घंटे</span><span>पूर्णांक / Maximum Marks: 75</span></div></div><div class="fullpaper-roll"><span>विद्यार्थी का नाम: __________________</span><span>अनुक्रमांक: ______________</span></div><div class="fullpaper-instructions"><b>निर्देश:</b><br>(i) सभी प्रश्न अनिवार्य हैं।<br>(ii) प्रश्न क्रमांक 1 से 5 तक वस्तुनिष्ठ प्रकार के प्रश्न हैं।<br>(iii) प्रश्न क्रमांक 6 से 23 तक आंतरिक विकल्प दिए गए हैं।<br>(iv) जहाँ आवश्यक हो स्वच्छ एवं नामांकित आकृति बनाइए।</div>`:`<div class="fullpaper-head"><div class="board">GANIT SETU • MATHEMATICS</div><h1>प्रश्नपत्र (जारी)</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र: ${esc(year)}</span><span>स्तर: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट: ${esc(selectedSet)}</span></div></div>`;
-      const pages=[];
-      const makePage=()=>{
-        const first=pages.length===0;
-        const section=document.createElement('section');
-        section.className='fullpaper-page';
-        section.innerHTML=`<div class="fullpaper-content">${makeHeader(first)}</div><div class="fullpaper-footer"><span>GANIT SETU • गणित</span><span class="fullpaper-page-number"></span></div>`;
-        host.appendChild(section);
-        const page={el:section,content:section.querySelector('.fullpaper-content'),hasQuestion:false};
-        pages.push(page);
-        return page;
-      };
-      const availableHeight=1023;
-      let current=makePage();
-      const fits=()=>current.content.scrollHeight<=availableHeight;
-      const appendHtml=(html)=>{
-        const holder=document.createElement('div');holder.innerHTML=html;
-        const nodes=[...holder.childNodes];
-        nodes.forEach(n=>current.content.appendChild(n));
-        return nodes;
-      };
-      const startFresh=()=>{current=makePage();};
-      for(const block of blocks){
-        if(block.section){
-          if(current.content.childNodes.length)startFresh();
-          appendHtml(`<div class="fullpaper-section">${esc(block.section)}</div>`);
-          continue;
-        }
-        if(block.objective){
-          if(current.content.childNodes.length)startFresh();
-          appendHtml(block.html);
-          if(!fits()){ /* objective group intentionally remains together */ }
-          startFresh();
-          continue;
-        }
-        const before=current.content.innerHTML;
-        appendHtml(block.html);
-        if(fits()){current.hasQuestion=true;continue;}
-        current.content.innerHTML=before;
-        if(current.content.childNodes.length)startFresh();
-        appendHtml(block.html);
-        if(fits()){current.hasQuestion=true;continue;}
-        // Only if an entire OR pair cannot fit even on a fresh page, split its
-        // alternatives. Ordinary questions remain intact.
-        current.content.innerHTML='';
-        if(block.hasOr){
-          for(const part of block.orParts){
-            const prior=current.content.innerHTML;
-            appendHtml(part);
-            if(!fits()){
-              current.content.innerHTML=prior;
-              if(current.content.childNodes.length)startFresh();
-              appendHtml(part);
-            }
-            current.hasQuestion=true;
-          }
-        }else{
-          appendHtml(block.html);
-          current.hasQuestion=true;
-        }
-      }
-      // Remove a trailing empty page created after an objective group or section.
-      if(pages.length>1 && !current.content.childNodes.length){current.el.remove();pages.pop();}
-      pages.forEach((p,i)=>{p.el.querySelector('.fullpaper-page-number').textContent=`पृष्ठ ${i+1} / ${pages.length}`;});
-
-      document.body.appendChild(host);
+      const pageHtml=pages.map((items,index)=>{
+        const first=index===0;
+        const content=items.map(b=>b.section?`<div class="fullpaper-section">${esc(b.section)}</div>`:b.html).join('');
+        const header=first?`<div class="fullpaper-head"><div class="board">हाई स्कूल परीक्षा / HIGH SCHOOL EXAMINATION</div><h1>गणित — प्रश्नपत्र / MATHEMATICS</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र / Year: ${esc(year)}</span><span>स्तर / Level: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट / Set: ${esc(selectedSet)}</span></div><div class="fullpaper-meta"><span>समय / Time: 3 घंटे</span><span>पूर्णांक / Maximum Marks: 75</span></div></div><div class="fullpaper-roll"><span>विद्यार्थी का नाम: __________________</span><span>अनुक्रमांक: ______________</span></div><div class="fullpaper-instructions"><b>निर्देश:</b><br>(i) सभी प्रश्न अनिवार्य हैं।<br>(ii) प्रश्न क्रमांक 1 से 5 तक वस्तुनिष्ठ प्रकार के प्रश्न हैं।<br>(iii) प्रश्न क्रमांक 6 से 23 तक आंतरिक विकल्प दिए गए हैं।<br>(iv) जहाँ आवश्यक हो स्वच्छ एवं नामांकित आकृति बनाइए।</div>`:`<div class="fullpaper-head"><div class="board">GANIT SETU • MATHEMATICS</div><h1>प्रश्नपत्र (जारी)</h1><div class="fullpaper-meta"><span>कक्षा: ${esc(student.class_level)}</span><span>सत्र: ${esc(year)}</span><span>स्तर: ${needsMathsLevel(year)?esc(mathsLevel):'—'}</span><span>सेट: ${esc(selectedSet)}</span></div></div>`;
+        return `<section class="fullpaper-page">${header}${content}<div class="fullpaper-footer"><span>GANIT SETU • गणित</span><span>पृष्ठ ${index+1} / ${pages.length}</span></div></section>`;
+      }).join('');
+      host.insertAdjacentHTML('beforeend',pageHtml);document.body.appendChild(host);
       try{
         if(!window.jspdf?.jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
         const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
