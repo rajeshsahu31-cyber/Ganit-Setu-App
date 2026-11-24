@@ -51,20 +51,62 @@ for(const node of nodes){const parts=node.nodeValue.split(/([।॥])/);const fr
 }
 function showQuestions(ex){installStepFormatterStyles();exerciseNo=ex;setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);let qs=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number));if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${qs.length}</b><small>${hi()?'प्रत्येक प्रश्न और हल कॉपी-स्टाइल में':'Each question and solution in notebook style'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${qs.map((q,i)=>questionCard(q,i,qs.length)).join('')}</div>`;root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));$('bsAllPdf').onclick=()=>exportAll(qs.length,$('bsAllPdf'));}
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
-async function captureCard(card){if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');if(document.fonts?.ready)await document.fonts.ready;return window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#fffef9',logging:false,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});}
+// Mobile WebView memory-safe capture: avoid the previous 2x bitmap size.
+async function captureCard(card){
+ if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
+ if(document.fonts?.ready)await document.fonts.ready;
+ return window.html2canvas(card,{scale:1,useCORS:true,backgroundColor:'#fffef9',logging:false,
+  removeContainer:true,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});
+}
+function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
 function addCanvasPages(pdf,canvas,firstPage){
-const pageW=190,pageH=277,scale=pageW/canvas.width,maxSlice=Math.max(1,Math.floor(pageH/scale));
-let y=0,page=0;while(y<canvas.height){const h=Math.min(maxSlice,canvas.height-y);const slice=document.createElement('canvas');slice.width=canvas.width;slice.height=h;const ctx=slice.getContext('2d');ctx.fillStyle='#fffef9';ctx.fillRect(0,0,slice.width,slice.height);ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);if(!firstPage||page>0||y>0)pdf.addPage();const mmH=h*scale;pdf.addImage(slice.toDataURL('image/png'),'PNG',10,10,pageW,mmH,undefined,'FAST');y+=h;page++;}
+ const pageW=190,pageH=277,scale=pageW/canvas.width,maxSlice=Math.max(1,Math.floor(pageH/scale));
+ let y=0,page=0;
+ while(y<canvas.height){
+  const h=Math.min(maxSlice,canvas.height-y),slice=document.createElement('canvas');
+  slice.width=canvas.width;slice.height=h;
+  try{
+   const ctx=slice.getContext('2d');if(!ctx)throw new Error('PDF पेज तैयार नहीं हो सका।');
+   ctx.fillStyle='#fffef9';ctx.fillRect(0,0,slice.width,slice.height);
+   ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);
+   if(!firstPage||page>0||y>0)pdf.addPage();
+   pdf.addImage(slice.toDataURL('image/jpeg',0.82),'JPEG',10,10,pageW,h*scale,undefined,'FAST');
+  }finally{releaseCanvas(slice);}
+  y+=h;page++;
+ }
 }
-function saveBlob(blob,filename){
- if(!(blob instanceof Blob)||!blob.size)throw new Error(hi()?'डाउनलोड फाइल खाली बनी है।':'The download file is empty.');
- const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();
- // Keep the object URL alive long enough for Android WebView download handling.
- setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},60000);
+const pauseForMemory=()=>new Promise(resolve=>setTimeout(resolve,40));
+async function withBusy(btn,fn){const old=btn.textContent;btn.disabled=true;btn.textContent=hi()?'तैयार हो रहा है…':'Preparing…';try{await fn();}catch(e){console.error(e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}finally{btn.disabled=false;btn.textContent=old;}}
+async function exportOne(index,kind,btn){
+ const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;
+ await withBusy(btn,async()=>{
+  let canvas;
+  try{
+   canvas=await captureCard(card);
+   const q=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number))[index];
+   const name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}_${medium}`);
+   if(kind==='png'){
+    const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=name+'.png';a.click();
+   }else{
+    const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasPages(pdf,canvas,true);pdf.save(name+'.pdf');
+   }
+  }finally{releaseCanvas(canvas);}
+ });
 }
-function canvasToBlob(canvas,type='image/png',quality){return new Promise((resolve,reject)=>{try{canvas.toBlob(blob=>blob?resolve(blob):reject(new Error(hi()?'इमेज फाइल तैयार नहीं हो सकी।':'Could not create image file.')),type,quality);}catch(e){reject(e);}});}
-async function withBusy(btn,fn){const old=btn.textContent;btn.disabled=true;btn.textContent=hi()?'तैयार हो रहा है…':'Preparing…';try{await fn();}catch(e){console.error('GANIT SETU download error:',e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}finally{btn.disabled=false;btn.textContent=old;}}
-async function exportOne(index,kind,btn){const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;await withBusy(btn,async()=>{const canvas=await captureCard(card),q=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number))[index],name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}_${medium}`);if(kind==='png'){const blob=await canvasToBlob(canvas,'image/png');saveBlob(blob,name+'.png');}else{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasPages(pdf,canvas,true);const blob=pdf.output('blob');saveBlob(blob,name+'.pdf');}canvas.width=1;canvas.height=1;});}
-async function exportAll(count,btn){const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;await withBusy(btn,async()=>{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasPages(pdf,canvas,i===0);canvas.width=1;canvas.height=1;}const blob=pdf.output('blob');saveBlob(blob,safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');});}
+async function exportAll(count,btn){
+ const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;
+ await withBusy(btn,async()=>{
+  const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
+  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  for(let i=0;i<cards.length;i++){
+   let canvas;
+   try{canvas=await captureCard(cards[i]);addCanvasPages(pdf,canvas,i===0);}
+   finally{releaseCanvas(canvas);}
+   await pauseForMemory();
+  }
+  pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');
+ });
+}
 document.addEventListener('DOMContentLoaded',()=>{$('bsLoad').onclick=()=>{cls=+$('bsStudentClass').value;medium=$('bsStudentMedium').value;showChapters();};});
 })();
