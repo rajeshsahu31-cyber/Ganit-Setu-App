@@ -763,7 +763,22 @@
         const groups=writtenGroupsByMark[mark];
         if(!groups.length)return;
         blocks.push({section:isEnglish?`Section ${String.fromCharCode(66+index)} — ${mark} Mark Questions`:`खंड ${['ब','स','द'][index]} — ${mark} अंक के प्रश्न`});
-        groups.forEach(g=>blocks.push({html:writtenHtml(g,mark),kind:'question'}));
+        groups.forEach(g=>{
+          // An OR pair is kept as two complete alternatives. Give each alternative
+          // its own page so a long solution cannot run into the footer or be clipped.
+          if(g.rows.length>1){
+            g.rows.forEach((row,i)=>{
+              const single={...g,rows:[row]};
+              blocks.push({
+                html:(i>0?`<div class="fullpaper-or">${isEnglish?'OR (Alternative question)':'अथवा (वैकल्पिक प्रश्न)'}</div>`:'')+writtenHtml(single,mark),
+                kind:'question',
+                orAlternative:true
+              });
+            });
+          }else{
+            blocks.push({html:writtenHtml(g,mark),kind:'question'});
+          }
+        });
       });
 
       // Keep each six-part objective group on its own page to prevent clipping.
