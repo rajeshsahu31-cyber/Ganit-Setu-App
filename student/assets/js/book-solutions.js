@@ -66,30 +66,25 @@ function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
 function wrapCanvasText(ctx,text,maxWidth){const words=String(text||'').split(/\s+/);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);return lines;}
 function makeFacebookPages(content,q,name){
  const W=1080,H=1350,PAD=42,HEADER=190,FOOT=35,usable=H-HEADER-FOOT-PAD;
- const ratio=(W-PAD*2)/content.width;
- const scaledHeight=Math.ceil(content.height*ratio);
- const pageCount=Math.max(1,Math.ceil(scaledHeight/usable));
+ // Fit the complete question + solution into exactly one Facebook portrait image.
+ // Scale is constrained by both available width and available height; no page splitting.
+ const ratio=Math.min((W-PAD*2)/content.width,usable/content.height);
+ const scaledW=Math.floor(content.width*ratio),scaledH=Math.floor(content.height*ratio);
  const titleCanvas=document.createElement('canvas');titleCanvas.width=W;titleCanvas.height=HEADER;
  const t=titleCanvas.getContext('2d');t.fillStyle='#fffef9';t.fillRect(0,0,W,HEADER);t.fillStyle='#9f1d2d';t.fillRect(0,0,W,12);
  t.textAlign='center';t.fillStyle='#172554';t.font='bold 42px "Nirmala UI", "Mangal", sans-serif';
- const head=`कक्षा ${cls} – गणित`;
- t.fillText(head,W/2,65);
+ t.fillText(`कक्षा ${cls} – गणित`,W/2,65);
  t.font='bold 31px "Nirmala UI", "Mangal", sans-serif';
  const ch=rows.find(r=>r.chapter_number===chapterNo)?.chapter_title||`अध्याय ${chapterNo}`;
  const exLine=`अध्याय ${chapterNo} : ${ch}  |  प्रश्नावली ${exerciseNo}`;
  const exLines=wrapCanvasText(t,exLine,W-PAD*2);let yy=108;exLines.slice(0,2).forEach(line=>{t.fillText(line,W/2,yy);yy+=38;});
  t.fillStyle='#b42335';t.font='bold 30px "Nirmala UI", "Mangal", sans-serif';t.fillText(`प्रश्न क्रमांक ${q?.question_number??''}`,W/2,HEADER-14);
- const outputs=[];
- for(let page=0;page<pageCount;page++){
-  const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');c.fillStyle='#fffef9';c.fillRect(0,0,W,H);
-  c.drawImage(titleCanvas,0,0);
-  const sourceY=Math.floor(page*usable/ratio),sourceH=Math.min(content.height-sourceY,Math.ceil(usable/ratio));
-  if(sourceH>0)c.drawImage(content,0,sourceY,content.width,sourceH,PAD,HEADER, W-PAD*2,sourceH*ratio);
-  c.fillStyle='#9f1d2d';c.fillRect(PAD,H-22,W-PAD*2,3);
-  if(pageCount>1){c.fillStyle='#64748b';c.font='22px sans-serif';c.textAlign='right';c.fillText(`${page+1}/${pageCount}`,W-PAD,H-34);}
-  outputs.push({canvas:out,filename:`${name}_Facebook_${page+1}-${pageCount}_1080x1350.png`});
- }
- return outputs;
+ const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');
+ c.fillStyle='#fffef9';c.fillRect(0,0,W,H);c.drawImage(titleCanvas,0,0);
+ const x=Math.round((W-scaledW)/2),y=HEADER+Math.max(0,Math.floor((usable-scaledH)/2));
+ c.drawImage(content,0,0,content.width,content.height,x,y,scaledW,scaledH);
+ c.fillStyle='#9f1d2d';c.fillRect(PAD,H-22,W-PAD*2,3);
+ return [{canvas:out,filename:`${name}_Facebook_1080x1350.png`}];
 }
 async function downloadFacebookPages(pages){
  for(let i=0;i<pages.length;i++){
