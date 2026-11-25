@@ -57,6 +57,7 @@ async function captureFacebookCard(card){
  await Promise.all([...card.querySelectorAll('img')].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;})));
  return window.html2canvas(card,{scale:1,useCORS:true,backgroundColor:'#fffef9',logging:false,windowWidth:1100,onclone:doc=>{
   doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());
+  // Move the original small card header into the Facebook image's top banner.
   doc.querySelectorAll('.bs-hand-head').forEach(x=>x.remove());
   const target=doc.querySelector(`[data-question-card="${card.dataset.questionCard}"]`);
   if(target){target.style.width='1000px';target.style.maxWidth='1000px';target.style.margin='0';target.style.boxSizing='border-box';target.style.fontSize='30px';}
@@ -66,21 +67,26 @@ async function captureFacebookCard(card){
 function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
 function wrapCanvasText(ctx,text,maxWidth){const words=String(text||'').split(/\s+/);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);return lines;}
 function makeFacebookPages(content,q,name){
- const W=1080,H=1350,PAD=42,HEADER=205,FOOT=35,usable=H-HEADER-FOOT-PAD;
- // The exact notebook header is the primary, enlarged Facebook header.
+ const W=1080,H=1350,PAD=42,HEADER=245,FOOT=35,usable=H-HEADER-FOOT-PAD;
+ // Keep the existing Facebook layout; only move the original card header to the top
+ // and enlarge its type slightly. The remaining title and question layout is unchanged.
  const ratio=Math.min((W-PAD*2)/content.width,usable/content.height);
  const scaledW=Math.floor(content.width*ratio),scaledH=Math.floor(content.height*ratio);
  const titleCanvas=document.createElement('canvas');titleCanvas.width=W;titleCanvas.height=HEADER;
- const t=titleCanvas.getContext('2d');t.fillStyle='#fffef9';t.fillRect(0,0,W,HEADER);t.fillStyle='#9f1d2d';t.fillRect(0,0,W,14);
- t.textAlign='center';t.fillStyle='#172554';
- const leftText=`गणित सेतु • पाठ्यपुस्तक हल · ${exerciseNo}`;
- const rightText=`प्रश्न ${q?.question_number??''} · ${q?.marks??''} अंक`;
- // Put the Ganit Setu textbook/exercise identity first, then the question and marks.
- t.font='bold 43px "Nirmala UI", "Mangal", sans-serif';
- const leftLines=wrapCanvasText(t,leftText,W-PAD*2);
- if(leftLines.length===1){t.fillText(leftText,W/2,83);}else{t.font='bold 37px "Nirmala UI", "Mangal", sans-serif';t.fillText(leftLines[0],W/2,68);t.fillText(leftLines.slice(1).join(' '),W/2,111);}
- t.fillStyle='#b42335';t.font='bold 38px "Nirmala UI", "Mangal", sans-serif';
- t.fillText(rightText,W/2,164);
+ const t=titleCanvas.getContext('2d');t.fillStyle='#fffef9';t.fillRect(0,0,W,HEADER);t.fillStyle='#9f1d2d';t.fillRect(0,0,W,12);
+ // Original header text: left = Ganit Setu textbook/exercise; right = question/marks.
+ t.fillStyle='#f3f5f9';t.fillRect(PAD,20,W-PAD*2,48);
+ t.strokeStyle='#d9dee8';t.lineWidth=1;t.strokeRect(PAD,20,W-PAD*2,48);
+ t.fillStyle='#334155';t.font='bold 25px "Nirmala UI", "Mangal", sans-serif';
+ t.textAlign='left';t.fillText(`${labels().page} · ${q?.exercise_number??exerciseNo}`,PAD+14,52);
+ t.textAlign='right';t.fillText(`${labels().question} ${q?.question_number??''}${q?.marks?` · ${q.marks} ${hi()?'अंक':'marks'}`:''}`,W-PAD-14,52);
+ t.textAlign='center';t.fillStyle='#172554';t.font='bold 42px "Nirmala UI", "Mangal", sans-serif';
+ t.fillText(`कक्षा ${cls} – गणित`,W/2,125);
+ t.font='bold 31px "Nirmala UI", "Mangal", sans-serif';
+ const ch=rows.find(r=>r.chapter_number===chapterNo)?.chapter_title||`अध्याय ${chapterNo}`;
+ const exLine=`अध्याय ${chapterNo} : ${ch}  |  प्रश्नावली ${exerciseNo}`;
+ const exLines=wrapCanvasText(t,exLine,W-PAD*2);let yy=168;exLines.slice(0,2).forEach(line=>{t.fillText(line,W/2,yy);yy+=38;});
+ t.fillStyle='#b42335';t.font='bold 30px "Nirmala UI", "Mangal", sans-serif';t.fillText(`प्रश्न क्रमांक ${q?.question_number??''}`,W/2,HEADER-14);
  const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');
  c.fillStyle='#fffef9';c.fillRect(0,0,W,H);c.drawImage(titleCanvas,0,0);
  const x=Math.round((W-scaledW)/2),y=HEADER+Math.max(0,Math.floor((usable-scaledH)/2));
