@@ -61,20 +61,11 @@ async function captureFacebookCard(card){
   doc.querySelectorAll('.bs-hand-head').forEach(x=>x.remove());
   const target=doc.querySelector(`[data-question-card="${card.dataset.questionCard}"]`);
   if(target){target.style.width='1000px';target.style.maxWidth='1000px';target.style.margin='0';target.style.boxSizing='border-box';target.style.fontSize='30px';}
-  doc.querySelectorAll('.bs-hand-paper').forEach(x=>{
-   x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';
-   x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';
-   // Use one continuous grey background for the entire question-and-solution paper.
-   x.style.background='#efefec';x.style.backgroundColor='#efefec';x.style.backgroundImage='none';
-  });
-  // Remove any inline white backgrounds from question HTML descendants.
-  doc.querySelectorAll('.bs-hand-paper *').forEach(x=>{
-   x.style.background='transparent';x.style.backgroundColor='transparent';
-   x.style.backgroundImage='none';x.style.boxShadow='none';
-  });
-  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-question').forEach(x=>{
-   x.style.display='block';x.style.width='100%';x.style.maxWidth='100%';x.style.boxSizing='border-box';
-  });
+  doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';});
+  // Remove the white strip behind the question label as well as the question body.
+  // Both areas should reveal the same grey notebook-paper background.
+  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-qtitle *, .bs-hand-question,.bs-hand-question *').forEach(x=>{x.style.background='transparent';x.style.backgroundColor='transparent';x.style.backgroundImage='none';x.style.boxShadow='none';});
+  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-question').forEach(x=>{x.style.display='block';x.style.width='100%';x.style.maxWidth='100%';x.style.boxSizing='border-box';});
  }});
 }
 function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
@@ -85,24 +76,27 @@ function makeFacebookPages(content,q,name){
  // and enlarge its type slightly. The remaining title and question layout is unchanged.
  const ratio=Math.min((W-PAD*2)/content.width,usable/content.height);
  const scaledW=Math.floor(content.width*ratio),scaledH=Math.floor(content.height*ratio);
+ const x=Math.round((W-scaledW)/2),y=HEADER+Math.max(0,Math.floor((usable-scaledH)/2));
  const titleCanvas=document.createElement('canvas');titleCanvas.width=W;titleCanvas.height=HEADER;
  const t=titleCanvas.getContext('2d');t.fillStyle='#fffef9';t.fillRect(0,0,W,HEADER);t.fillStyle='#9f1d2d';t.fillRect(0,0,W,12);
- // Original header text: left = Ganit Setu textbook/exercise; right = question/marks.
+ // Keep the original Ganit Setu banner fixed at the top.
  t.fillStyle='#f3f5f9';t.fillRect(PAD,20,W-PAD*2,48);
  t.strokeStyle='#d9dee8';t.lineWidth=1;t.strokeRect(PAD,20,W-PAD*2,48);
  t.fillStyle='#334155';t.font='bold 25px "Nirmala UI", "Mangal", sans-serif';
  t.textAlign='left';t.fillText(`${labels().page} · ${q?.exercise_number??exerciseNo}`,PAD+14,52);
  t.textAlign='right';t.fillText(`${labels().question} ${q?.question_number??''}${q?.marks?` · ${q.marks} ${hi()?'अंक':'marks'}`:''}`,W-PAD-14,52);
- t.textAlign='center';t.fillStyle='#172554';t.font='bold 42px "Nirmala UI", "Mangal", sans-serif';
- t.fillText(`कक्षा ${cls} – गणित`,W/2,125);
- t.font='bold 31px "Nirmala UI", "Mangal", sans-serif';
- const ch=rows.find(r=>r.chapter_number===chapterNo)?.chapter_title||`अध्याय ${chapterNo}`;
- const exLine=`अध्याय ${chapterNo} : ${ch}  |  प्रश्नावली ${exerciseNo}`;
- const exLines=wrapCanvasText(t,exLine,W-PAD*2);let yy=168;exLines.slice(0,2).forEach(line=>{t.fillText(line,W/2,yy);yy+=38;});
- t.fillStyle='#b42335';t.font='bold 30px "Nirmala UI", "Mangal", sans-serif';t.fillText(`प्रश्न क्रमांक ${q?.question_number??''}`,W/2,HEADER-14);
  const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');
  c.fillStyle='#fffef9';c.fillRect(0,0,W,H);c.drawImage(titleCanvas,0,0);
- const x=Math.round((W-scaledW)/2),y=HEADER+Math.max(0,Math.floor((usable-scaledH)/2));
+ // Leave the question image in its existing centered position. Move only the
+ // class/chapter/question-number heading group down to sit just above it.
+ const qBase=Math.max(231,y-22),chapterBase=qBase-43,classBase=chapterBase-43;
+ c.textAlign='center';c.fillStyle='#172554';c.font='bold 42px "Nirmala UI", "Mangal", sans-serif';
+ c.fillText(`कक्षा ${cls} – गणित`,W/2,Math.max(125,classBase));
+ c.font='bold 31px "Nirmala UI", "Mangal", sans-serif';
+ const ch=rows.find(r=>r.chapter_number===chapterNo)?.chapter_title||`अध्याय ${chapterNo}`;
+ const exLine=`अध्याय ${chapterNo} : ${ch}  |  प्रश्नावली ${exerciseNo}`;
+ const exLines=wrapCanvasText(c,exLine,W-PAD*2);let yy=Math.max(168,chapterBase);exLines.slice(0,2).forEach(line=>{c.fillText(line,W/2,yy);yy+=38;});
+ c.fillStyle='#b42335';c.font='bold 30px "Nirmala UI", "Mangal", sans-serif';c.fillText(`प्रश्न क्रमांक ${q?.question_number??''}`,W/2,qBase);
  c.drawImage(content,0,0,content.width,content.height,x,y,scaledW,scaledH);
  c.fillStyle='#9f1d2d';c.fillRect(PAD,H-22,W-PAD*2,3);
  return [{canvas:out,filename:`${name}_Facebook_1080x1350.png`}];
