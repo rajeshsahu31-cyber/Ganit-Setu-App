@@ -62,6 +62,9 @@ async function captureFacebookCard(card){
   const target=doc.querySelector(`[data-question-card="${card.dataset.questionCard}"]`);
   if(target){target.style.width='1000px';target.style.maxWidth='1000px';target.style.margin='0';target.style.boxSizing='border-box';target.style.fontSize='30px';}
   doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';});
+  // Keep the entire question area uniformly transparent so the notebook paper's grey background shows through.
+  doc.querySelectorAll('.bs-hand-question,.bs-hand-question *').forEach(x=>{x.style.background='transparent';x.style.backgroundColor='transparent';x.style.backgroundImage='none';x.style.boxShadow='none';});
+  doc.querySelectorAll('.bs-hand-question').forEach(x=>{x.style.display='block';x.style.width='100%';x.style.maxWidth='100%';x.style.boxSizing='border-box';});
  }});
 }
 function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
