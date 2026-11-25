@@ -33,7 +33,7 @@ function solutionMarkup(q){
 function installStepFormatterStyles(){
  if(document.getElementById('bsAutoStepStyles')) return;
  const style=document.createElement('style');style.id='bsAutoStepStyles';
- style.textContent=`.bs-hand-solution{font-family:'Kalam','Noto Sans Devanagari','Nirmala UI','Mangal',cursive;white-space:normal;word-break:normal;overflow-wrap:break-word;line-height:1.95;letter-spacing:.05px}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}.bs-structured-steps{display:flex;flex-direction:column;gap:9px}.bs-step{display:block;line-height:1.95;break-inside:avoid;margin-bottom:3px}.bs-step-label{font-family:"Kalam","Nirmala UI","Mangal",cursive;color:#b42335;font-weight:700;margin:4px 0 1px}.bs-step-content{white-space:normal}.bs-step-content p{margin:0 0 4px}.bs-step-equation .bs-step-content,.bs-step-calculation .bs-step-content{padding-left:22px}.bs-step-conclusion .bs-step-content{color:#b42335;font-weight:700}`;
+ style.textContent=`.bs-hand-solution{white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.9}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}.bs-structured-steps{display:flex;flex-direction:column;gap:9px}.bs-step{display:block;line-height:1.85;break-inside:avoid}.bs-step-label{font-family:"Kalam","Nirmala UI","Mangal",cursive;color:#b42335;font-weight:700;margin:4px 0 1px}.bs-step-content{white-space:normal}.bs-step-content p{margin:0 0 4px}.bs-step-equation .bs-step-content,.bs-step-calculation .bs-step-content{padding-left:2px}.bs-step-conclusion .bs-step-content{color:#b42335;font-weight:700}`;
  document.head.appendChild(style);
 }
 function questionCard(q,i,total){const L=labels();let qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';let si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';let qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';let st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';return `<article class="bs-hand-card" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution}</div><div class="bs-hand-solution">${solutionMarkup(q)}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;}
@@ -51,62 +51,68 @@ for(const node of nodes){const parts=node.nodeValue.split(/([।॥])/);const fr
 }
 function showQuestions(ex){installStepFormatterStyles();exerciseNo=ex;setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);let qs=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number));if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${qs.length}</b><small>${hi()?'प्रत्येक प्रश्न और हल कॉपी-स्टाइल में':'Each question and solution in notebook style'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${qs.map((q,i)=>questionCard(q,i,qs.length)).join('')}</div>`;root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));$('bsAllPdf').onclick=()=>exportAll(qs.length,$('bsAllPdf'));}
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
-// Mobile WebView memory-safe capture: avoid the previous 2x bitmap size.
-async function captureCard(card){
+async function captureFacebookCard(card){
  if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
  if(document.fonts?.ready)await document.fonts.ready;
- return window.html2canvas(card,{scale:1,useCORS:true,backgroundColor:'#fffef9',logging:false,
-  removeContainer:true,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});
+ await Promise.all([...card.querySelectorAll('img')].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;})));
+ return window.html2canvas(card,{scale:1,useCORS:true,backgroundColor:'#fffef9',logging:false,windowWidth:1100,onclone:doc=>{
+  doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());
+  const target=doc.querySelector(`[data-question-card="${card.dataset.questionCard}"]`);
+  if(target){target.style.width='1000px';target.style.maxWidth='1000px';target.style.margin='0';target.style.boxSizing='border-box';target.style.fontSize='30px';}
+  doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';});
+ }});
 }
 function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
-function addCanvasPages(pdf,canvas,firstPage){
- const pageW=190,pageH=277,scale=pageW/canvas.width,maxSlice=Math.max(1,Math.floor(pageH/scale));
- let y=0,page=0;
- while(y<canvas.height){
-  const h=Math.min(maxSlice,canvas.height-y),slice=document.createElement('canvas');
-  slice.width=canvas.width;slice.height=h;
-  try{
-   const ctx=slice.getContext('2d');if(!ctx)throw new Error('PDF पेज तैयार नहीं हो सका।');
-   ctx.fillStyle='#fffef9';ctx.fillRect(0,0,slice.width,slice.height);
-   ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);
-   if(!firstPage||page>0||y>0)pdf.addPage();
-   pdf.addImage(slice.toDataURL('image/jpeg',0.82),'JPEG',10,10,pageW,h*scale,undefined,'FAST');
-  }finally{releaseCanvas(slice);}
-  y+=h;page++;
+function wrapCanvasText(ctx,text,maxWidth){const words=String(text||'').split(/\s+/);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);return lines;}
+function makeFacebookPages(content,q,name){
+ const W=1080,H=1350,PAD=42,HEADER=190,FOOT=35,usable=H-HEADER-FOOT-PAD;
+ const ratio=(W-PAD*2)/content.width;
+ const scaledHeight=Math.ceil(content.height*ratio);
+ const pageCount=Math.max(1,Math.ceil(scaledHeight/usable));
+ const titleCanvas=document.createElement('canvas');titleCanvas.width=W;titleCanvas.height=HEADER;
+ const t=titleCanvas.getContext('2d');t.fillStyle='#fffef9';t.fillRect(0,0,W,HEADER);t.fillStyle='#9f1d2d';t.fillRect(0,0,W,12);
+ t.textAlign='center';t.fillStyle='#172554';t.font='bold 42px "Nirmala UI", "Mangal", sans-serif';
+ const head=`कक्षा ${cls} – गणित`;
+ t.fillText(head,W/2,65);
+ t.font='bold 31px "Nirmala UI", "Mangal", sans-serif';
+ const ch=rows.find(r=>r.chapter_number===chapterNo)?.chapter_title||`अध्याय ${chapterNo}`;
+ const exLine=`अध्याय ${chapterNo} : ${ch}  |  प्रश्नावली ${exerciseNo}`;
+ const exLines=wrapCanvasText(t,exLine,W-PAD*2);let yy=108;exLines.slice(0,2).forEach(line=>{t.fillText(line,W/2,yy);yy+=38;});
+ t.fillStyle='#b42335';t.font='bold 30px "Nirmala UI", "Mangal", sans-serif';t.fillText(`प्रश्न क्रमांक ${q?.question_number??''}`,W/2,HEADER-14);
+ const outputs=[];
+ for(let page=0;page<pageCount;page++){
+  const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');c.fillStyle='#fffef9';c.fillRect(0,0,W,H);
+  c.drawImage(titleCanvas,0,0);
+  const sourceY=Math.floor(page*usable/ratio),sourceH=Math.min(content.height-sourceY,Math.ceil(usable/ratio));
+  if(sourceH>0)c.drawImage(content,0,sourceY,content.width,sourceH,PAD,HEADER, W-PAD*2,sourceH*ratio);
+  c.fillStyle='#9f1d2d';c.fillRect(PAD,H-22,W-PAD*2,3);
+  if(pageCount>1){c.fillStyle='#64748b';c.font='22px sans-serif';c.textAlign='right';c.fillText(`${page+1}/${pageCount}`,W-PAD,H-34);}
+  outputs.push({canvas:out,filename:`${name}_Facebook_${page+1}-${pageCount}_1080x1350.png`});
+ }
+ return outputs;
+}
+async function downloadFacebookPages(pages){
+ for(let i=0;i<pages.length;i++){
+  const a=document.createElement('a');a.href=pages[i].canvas.toDataURL('image/png');a.download=pages[i].filename;a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+  releaseCanvas(pages[i].canvas);
+  if(i<pages.length-1)await new Promise(resolve=>setTimeout(resolve,700));
  }
 }
-const pauseForMemory=()=>new Promise(resolve=>setTimeout(resolve,40));
+function addCanvasPages(pdf,canvas,firstPage){
+const pageW=190,pageH=277,scale=pageW/canvas.width,maxSlice=Math.max(1,Math.floor(pageH/scale));
+let y=0,page=0;while(y<canvas.height){const h=Math.min(maxSlice,canvas.height-y);const slice=document.createElement('canvas');slice.width=canvas.width;slice.height=h;const ctx=slice.getContext('2d');ctx.fillStyle='#fffef9';ctx.fillRect(0,0,slice.width,slice.height);ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);if(!firstPage||page>0||y>0)pdf.addPage();const mmH=h*scale;pdf.addImage(slice.toDataURL('image/png'),'PNG',10,10,pageW,mmH,undefined,'FAST');y+=h;page++;}
+}
 async function withBusy(btn,fn){const old=btn.textContent;btn.disabled=true;btn.textContent=hi()?'तैयार हो रहा है…':'Preparing…';try{await fn();}catch(e){console.error(e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}finally{btn.disabled=false;btn.textContent=old;}}
-async function exportOne(index,kind,btn){
- const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;
- await withBusy(btn,async()=>{
-  let canvas;
-  try{
-   canvas=await captureCard(card);
-   const q=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number))[index];
-   const name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}_${medium}`);
-   if(kind==='png'){
-    const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=name+'.png';a.click();
-   }else{
-    const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasPages(pdf,canvas,true);pdf.save(name+'.pdf');
-   }
-  }finally{releaseCanvas(canvas);}
- });
-}
-async function exportAll(count,btn){
- const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;
- await withBusy(btn,async()=>{
-  const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
-  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  for(let i=0;i<cards.length;i++){
-   let canvas;
-   try{canvas=await captureCard(cards[i]);addCanvasPages(pdf,canvas,i===0);}
-   finally{releaseCanvas(canvas);}
-   await pauseForMemory();
-  }
-  pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');
- });
-}
+async function captureCard(card){if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');if(document.fonts?.ready)await document.fonts.ready;return window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#fffef9',logging:false,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});}
+async function exportOne(index,kind,btn){const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;await withBusy(btn,async()=>{
+ const q=rows.filter(r=>r.chapter_number===chapterNo&&r.exercise_number===exerciseNo).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number))[index];
+ const name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}_${medium}`);
+ if(kind==='png'){
+  let content;try{content=await captureFacebookCard(card);const pages=makeFacebookPages(content,q,name);releaseCanvas(content);await downloadFacebookPages(pages);}finally{releaseCanvas(content);}
+ }else{
+  const canvas=await captureCard(card);try{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasPages(pdf,canvas,true);pdf.save(name+'.pdf');}finally{releaseCanvas(canvas);}
+ }
+});}
+async function exportAll(count,btn){const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;await withBusy(btn,async()=>{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasPages(pdf,canvas,i===0);}pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');});}
 document.addEventListener('DOMContentLoaded',()=>{$('bsLoad').onclick=()=>{cls=+$('bsStudentClass').value;medium=$('bsStudentMedium').value;showChapters();};});
 })();
