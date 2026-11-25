@@ -61,11 +61,20 @@ async function captureFacebookCard(card){
   doc.querySelectorAll('.bs-hand-head').forEach(x=>x.remove());
   const target=doc.querySelector(`[data-question-card="${card.dataset.questionCard}"]`);
   if(target){target.style.width='1000px';target.style.maxWidth='1000px';target.style.margin='0';target.style.boxSizing='border-box';target.style.fontSize='30px';}
-  doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';});
-  // Remove the white strip behind the question label as well as the question body.
-  // Both areas should reveal the same grey notebook-paper background.
-  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-qtitle *, .bs-hand-question,.bs-hand-question *').forEach(x=>{x.style.background='transparent';x.style.backgroundColor='transparent';x.style.backgroundImage='none';x.style.boxShadow='none';});
-  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-question').forEach(x=>{x.style.display='block';x.style.width='100%';x.style.maxWidth='100%';x.style.boxSizing='border-box';});
+  doc.querySelectorAll('.bs-hand-paper').forEach(x=>{
+   x.style.overflow='visible';x.style.width='100%';x.style.boxSizing='border-box';
+   x.style.padding='36px';x.style.fontSize='30px';x.style.lineHeight='1.75';
+   // Use one continuous grey background for the entire question-and-solution paper.
+   x.style.background='#efefec';x.style.backgroundColor='#efefec';x.style.backgroundImage='none';
+  });
+  // Remove any inline white backgrounds from question HTML descendants.
+  doc.querySelectorAll('.bs-hand-paper *').forEach(x=>{
+   x.style.background='transparent';x.style.backgroundColor='transparent';
+   x.style.backgroundImage='none';x.style.boxShadow='none';
+  });
+  doc.querySelectorAll('.bs-hand-qtitle,.bs-hand-question').forEach(x=>{
+   x.style.display='block';x.style.width='100%';x.style.maxWidth='100%';x.style.boxSizing='border-box';
+  });
  }});
 }
 function releaseCanvas(canvas){if(canvas){canvas.width=1;canvas.height=1;}}
