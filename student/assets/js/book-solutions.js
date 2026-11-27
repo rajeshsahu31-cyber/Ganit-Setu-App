@@ -18,22 +18,28 @@ function formatSolutionSteps(html){
 }
 function renderStructuredSteps(steps){
  if(!Array.isArray(steps)||!steps.length) return '';
- return `<div class="bs-structured-steps">${steps.map(step=>{
-   const type=String(step?.type||'equation').toLowerCase();
-   const content=safe(step?.html??step?.content??'');
+ const rendered=steps.map((step,index)=>{
+   // Older CSVs may store solution_steps_json as an array of plain strings;
+   // newer files may store typed objects. Support both formats.
+   const isText=typeof step==='string';
+   const type=isText?'equation':String(step?.type||'equation').toLowerCase();
+   const raw=isText?step:(step?.html??step?.content??step?.text??'');
+   const content=safe(raw);
    const cls=['given','find','formula','equation','calculation','hcf','lcm','verification','conclusion','prose','heading'].includes(type)?type:'equation';
    if(!content.trim()) return '';
    return `<div class="bs-step bs-step-${cls}" data-step="${esc(type)}"><div class="bs-step-content">${content}</div></div>`;
- }).join('')}</div>`;
+ }).filter(Boolean);
+ return rendered.length?`<div class="bs-structured-steps">${rendered.join('')}</div>`:'';
 }
 function solutionMarkup(q){
  const structured=renderStructuredSteps(q.solution_steps);
- return structured||formatSolutionSteps(q.solution_html);
+ const legacy=formatSolutionSteps(q.solution_html);
+ return structured||legacy||((q.solution_image_url||q.solution_table_html)?'':'<p class="bs-solution-missing">इस प्रश्न का हल अभी उपलब्ध नहीं है।</p>');
 }
 function installStepFormatterStyles(){
  if(document.getElementById('bsAutoStepStyles')) return;
  const style=document.createElement('style');style.id='bsAutoStepStyles';
- style.textContent=`.bs-hand-solution{white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.9}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}.bs-structured-steps{display:flex;flex-direction:column;gap:9px}.bs-step{display:block;line-height:1.85;break-inside:avoid}.bs-step-label{font-family:"Kalam","Nirmala UI","Mangal",cursive;color:#b42335;font-weight:700;margin:4px 0 1px}.bs-step-content{white-space:normal}.bs-step-content p{margin:0 0 4px}.bs-step-equation .bs-step-content,.bs-step-calculation .bs-step-content{padding-left:2px}.bs-step-conclusion .bs-step-content{color:#b42335;font-weight:700}`;
+ style.textContent=`.bs-hand-solution{white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.9}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}.bs-structured-steps{display:flex;flex-direction:column;gap:9px}.bs-step{display:block;line-height:1.85;break-inside:avoid}.bs-step-label{font-family:"Kalam","Nirmala UI","Mangal",cursive;color:#b42335;font-weight:700;margin:4px 0 1px}.bs-step-content{white-space:normal}.bs-step-content p{margin:0 0 4px}.bs-step-equation .bs-step-content,.bs-step-calculation .bs-step-content{padding-left:2px}.bs-step-conclusion .bs-step-content{color:#b42335;font-weight:700}.bs-solution-missing{color:#9f1d2d;font-weight:600}`;
  document.head.appendChild(style);
 }
 function questionCard(q,i,total){const L=labels();let qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';let si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';let qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';let st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';return `<article class="bs-hand-card" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution}</div><div class="bs-hand-solution">${solutionMarkup(q)}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;}
