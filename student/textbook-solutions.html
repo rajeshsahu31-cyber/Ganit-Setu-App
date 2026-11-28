@@ -14,37 +14,37 @@ body{background:#f4f7fb;color:#172033;font-family:Arial,"Nirmala UI","Mangal",sa
 .bs-export-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;padding:10px 14px;background:#fff;border-top:1px solid #edf0f4}.bs-export-btn{border:1px solid #1d4f91;background:#1d4f91;color:#fff;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer}.bs-export-btn:disabled{opacity:.6;cursor:wait}.bs-export-btn.secondary{background:#fff;color:#1d4f91}.bs-all-btn{white-space:normal}
 @media(max-width:600px){.bs-hand-paper{font-size:20px;padding:16px 13px 22px 27px;line-height:1.95}.bs-hand-head{padding:10px 12px}.bs-ex-toolbar{align-items:stretch}.bs-all-btn{width:100%}}
 
-/* FINAL readable textbook question + solution presentation */
-.bs-hand-card{border-radius:16px}
-.bs-hand-head{font-size:14px;background:#edf3fb;color:#243b5a}
-.bs-hand-paper{font-size:21px;line-height:2.0;padding:22px 20px 28px 34px}
-.bs-hand-qtitle{display:inline-block;background:#fff1f1;border-left:4px solid #b42335;border-radius:5px;padding:4px 12px;text-decoration:none;font-size:22px;margin-bottom:13px}
-.bs-hand-question{color:#173b75;font-size:1.02em;line-height:2.05;padding:3px 0 12px;border-bottom:1px dashed #b9c9dc}
-.bs-hand-question p{margin:0 0 11px}
-.bs-hand-s-title{display:flex;align-items:center;gap:9px;margin:18px 0 10px;padding:9px 13px;border:1px solid #f0c5c5;border-left:5px solid #b42335;border-radius:8px;background:#fff5f5;font-size:21px}
-.bs-hand-solution{color:#183b72;font-size:1em;line-height:2.05;padding:4px 2px 2px}
-.bs-hand-solution p{margin:0 0 10px}
-.bs-hand-solution .bs-step{padding:3px 0}
-.bs-hand-solution .bs-step-equation .bs-step-content,
-.bs-hand-solution .bs-step-calculation .bs-step-content{padding:4px 10px 4px 18px;border-left:2px solid #d8e4f2;margin:3px 0}
-.bs-hand-solution .bs-step-conclusion .bs-step-content{display:block;background:#fff8e8;border-left:4px solid #d69b22;border-radius:6px;padding:8px 12px;color:#805600}
-.bs-hand-paper .answer,.bs-hand-paper .final-answer,.bs-hand-solution .answer,.bs-hand-solution .final-answer,.bs-hand-solution .final-result{
- display:block;width:fit-content;max-width:100%;box-sizing:border-box;margin:14px 0 8px;padding:9px 15px;border:2px solid #218653;border-radius:9px;background:#effaf2;color:#17633b;font-weight:700
-}
-.bs-hand-paper .MathJax,.bs-hand-paper mjx-container,.bs-hand-paper .katex{max-width:100%;overflow-x:auto;overflow-y:hidden}
-.bs-hand-paper .MathJax_Display,.bs-hand-paper mjx-container[display="true"]{display:block!important;margin:10px 0!important;text-align:left!important}
-.bs-hand-paper img{max-width:100%;height:auto}
-.bs-hand-paper table{display:block;max-width:100%;overflow-x:auto}
-@media(max-width:600px){
- .bs-wrap{padding-left:9px;padding-right:9px}
- .bs-hand-paper{font-size:18px;line-height:1.95;padding:17px 11px 22px 25px}
- .bs-hand-qtitle{font-size:19px;padding:4px 9px}
- .bs-hand-s-title{font-size:19px;padding:8px 10px}
- .bs-hand-question,.bs-hand-solution{line-height:1.95}
- .bs-hand-solution .bs-step-equation .bs-step-content,.bs-hand-solution .bs-step-calculation .bs-step-content{padding-left:9px}
- .bs-hand-paper .MathJax_Display,.bs-hand-paper mjx-container[display="true"]{overflow-x:auto}
- .bs-export-actions{justify-content:stretch}
- .bs-export-actions .bs-export-btn{flex:1}
+/* GANIT SETU – uniform textbook question/solution display */
+.bs-question-list{display:flex;flex-direction:column;gap:24px;max-width:100%;}
+.bs-hand-card{display:block;width:100%;max-width:900px;margin:0 auto;overflow:visible;border:1px solid #d8dce4;border-radius:12px;background:#fffef9;box-shadow:0 4px 16px rgba(25,45,75,.07);}
+.bs-hand-paper{box-sizing:border-box;width:100%;min-width:0;padding:24px 26px 30px 38px;font-size:20px;line-height:1.85;overflow-wrap:anywhere;word-break:normal;}
+.bs-hand-qtitle,.bs-hand-s-title{display:block;width:100%;font-size:22px;line-height:1.5;}
+.bs-hand-qtitle{margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid #e7c4c8;}
+.bs-hand-question,.bs-hand-solution{display:block;width:100%;max-width:100%;font-size:inherit;line-height:1.85;overflow-wrap:anywhere;}
+.bs-hand-question p,.bs-hand-solution p{margin:0 0 10px;}
+.bs-hand-s-title{margin:22px 0 10px;padding:10px 0 7px;border-top:2px dashed #c7d3e0;border-bottom:1px solid #e8d4d7;color:#b42335;font-weight:700;}
+.bs-hand-paper .bs-structured-steps{display:flex;flex-direction:column;gap:10px;}
+.bs-hand-paper .bs-step{display:block;line-height:1.85;break-inside:avoid;page-break-inside:avoid;}
+.bs-hand-paper .bs-step-content{display:block;white-space:normal;overflow-wrap:anywhere;}
+.bs-hand-paper sup,.bs-hand-paper sub{line-height:0;}
+.bs-hand-paper img{max-width:100%;height:auto;object-fit:contain;}
+.bs-hand-paper .bs-custom-table{max-width:100%;overflow-x:auto;}
+.bs-hand-paper .answer,.bs-hand-paper .final-answer,.bs-hand-paper .final-result{display:block;max-width:100%;box-sizing:border-box;border:2px solid #26945b;border-radius:9px;background:#eef8f0;color:#17633b;padding:10px 14px;margin:14px 0;font-weight:700;}
+.bs-export-actions{break-inside:avoid;}
+@media(max-width:700px){.bs-wrap{padding:8px 10px 50px}.bs-hand-card{border-radius:9px}.bs-hand-paper{padding:18px 14px 22px 25px;font-size:18px;line-height:1.8}.bs-hand-qtitle,.bs-hand-s-title{font-size:20px}.bs-hand-head{font-size:12px}}
+@media print{
+ @page{size:A4 portrait;margin:10mm;}
+ body{background:#fff!important;color:#111!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+ .bs-wrap{max-width:none!important;margin:0!important;padding:0!important;}
+ .bs-top,.bs-card,.bs-crumb,.bs-ex-toolbar,.bs-export-actions{display:none!important;}
+ .bs-question-list{display:block!important;}
+ .bs-hand-card{width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;break-after:page;page-break-after:always;break-inside:avoid;page-break-inside:avoid;}
+ .bs-hand-card:last-child{break-after:auto;page-break-after:auto;}
+ .bs-hand-head{display:flex!important;background:#f2f4f7!important;padding:7px 10px!important;font-size:11pt!important;}
+ .bs-hand-paper{width:100%!important;padding:10mm 8mm!important;font-size:13pt!important;line-height:1.65!important;background:#fff!important;border-left:2px solid #d98b8b!important;}
+ .bs-hand-qtitle,.bs-hand-s-title{font-size:15pt!important;}
+ .bs-hand-question,.bs-hand-solution{font-size:13pt!important;line-height:1.65!important;}
+ .bs-hand-paper img{max-height:90mm!important;}
 }
 
 </style></head><body><main class="bs-wrap"><div class="bs-top"><a class="bs-back" href="home.html">← होम पेज पर वापस जाएँ</a><b>📘 पाठ्यपुस्तक हल सहित</b></div><section class="bs-card"><label for="bsStudentClass"><b>कक्षा चुनें</b></label><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><select class="bs-class" id="bsStudentClass"><option value="9">कक्षा 9</option><option value="10" selected>कक्षा 10</option></select><select class="bs-class" id="bsStudentMedium"><option value="hi">हिंदी माध्यम</option><option value="en">English Medium</option></select><button id="bsLoad" class="bs-primary">अध्याय दिखाएँ</button></div></section><nav id="bsBreadcrumb" class="bs-crumb"></nav><div id="bsMain"><div class="bs-empty">कक्षा चुनकर अध्याय देखें।</div></div></main><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase.js"></script><script src="assets/js/book-solutions.js"></script></body></html>
