@@ -1,7 +1,7 @@
 
 (()=>{'use strict';
 const $=id=>document.getElementById(id),root=$('bsMain'),crumb=$('bsBreadcrumb');
-let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null;
+let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null,displayPages=[];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=s=>window.DOMPurify?DOMPurify.sanitize(String(s||''),{USE_PROFILES:{html:true}}):String(s||'').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/\son\w+\s*=\s*(['"]).*?\1/gi,'');
 const hi=()=>medium==='hi';
@@ -42,7 +42,48 @@ function installStepFormatterStyles(){
  style.textContent=`.bs-hand-solution{white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.9}.bs-hand-solution .bs-auto-step{display:block;margin:0 0 .42em}.bs-hand-solution br{display:block;content:"";margin-bottom:.28em}.bs-hand-solution sup,.bs-hand-solution sub{line-height:0}.bs-hand-solution .bs-punct{font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;font-style:normal;display:inline-block;margin-left:.04em}.bs-structured-steps{display:flex;flex-direction:column;gap:9px}.bs-step{display:block;line-height:1.85;break-inside:avoid}.bs-step-label{font-family:"Kalam","Nirmala UI","Mangal",cursive;color:#b42335;font-weight:700;margin:4px 0 1px}.bs-step-content{white-space:normal}.bs-step-content p{margin:0 0 4px}.bs-step-equation .bs-step-content,.bs-step-calculation .bs-step-content{padding-left:2px}.bs-step-conclusion .bs-step-content{color:#b42335;font-weight:700}.bs-solution-missing{color:#9f1d2d;font-weight:600}`;
  document.head.appendChild(style);
 }
-function questionCard(q,i,total){const L=labels();let qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';let si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';let qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';let st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';return `<article class="bs-hand-card" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution} — ${L.question} ${esc(q.question_number)}</div><div class="bs-hand-solution">${solutionMarkup(q)}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;}
+function normalizePartLabel(value){
+ const s=String(value??'').trim().toLowerCase().replace(/[()（）\s]/g,'');
+ const map={'1':'i','2':'ii','3':'iii','4':'iv','5':'v','6':'vi','7':'vii','8':'viii','9':'ix','10':'x'};
+ return map[s]||s.replace(/^हल/,'').replace(/^part/,'');
+}
+function partSolutionEntries(q){
+ // New CSV contract: solution_steps_json is an array with one object per textbook subpart.
+ // Supported object examples:
+ // {subquestion:"i", html:"..."} or {part:"(i)", steps:[...]}.
+ let raw=q.solution_steps;
+ if(typeof raw==='string'){try{raw=JSON.parse(raw)}catch(_){raw=null}}
+ if(Array.isArray(raw)){
+  const entries=raw.map(item=>{
+   if(typeof item==='string')return null;
+   const label=item?.subquestion??item?.part??item?.label??item?.question_part;
+   const content=item?.html??item?.solution_html??item?.content;
+   const steps=item?.steps;
+   if(label==null||(!content&&!(Array.isArray(steps)&&steps.length)))return null;
+   const body=Array.isArray(steps)?renderStructuredSteps(steps):safe(content);
+   return {label:normalizePartLabel(label),html:body};
+  }).filter(x=>x&&x.label&&x.html);
+  if(entries.length)return entries;
+ }
+ // Also accept explicit data-subquestion blocks in solution_html for migrated/legacy CSVs.
+ const html=String(q.solution_html||'');
+ if(html){
+  const doc=new DOMParser().parseFromString(`<div>${html}</div>`,'text/html');
+  const marked=[...doc.body.querySelectorAll('[data-subquestion],[data-part]')];
+  if(marked.length)return marked.map(el=>({label:normalizePartLabel(el.getAttribute('data-subquestion')||el.getAttribute('data-part')),html:safe(el.innerHTML)})).filter(x=>x.label&&x.html);
+ }
+ return [];
+}
+function questionCard(q,i,total,page){
+ const L=labels();
+ const qi=q.question_image_url?`<img src="${esc(q.question_image_url)}" alt="Question image" loading="lazy">`:'';
+ const si=q.solution_image_url?`<img src="${esc(q.solution_image_url)}" alt="Solution image" loading="lazy">`:'';
+ const qt=q.question_table_html?`<div class="bs-custom-table">${safe(q.question_table_html)}</div>`:'';
+ const st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';
+ const part=page?.partLabel?`<span class="bs-part-label">${hi()?'उपप्रश्न':'Part'} (${esc(page.partLabel)})</span>`:'';
+ const solution=page?.solutionHtml??solutionMarkup(q);
+ return `<article class="bs-hand-card bs-single-question-page" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution} — ${L.question} ${esc(q.question_number)} ${part}</div><div class="bs-hand-solution">${solution}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;
+}
 function fixHindiPunctuation(scope){
 const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,{acceptNode(node){
  if(!node.nodeValue||!/[।॥]/.test(node.nodeValue))return NodeFilter.FILTER_REJECT;
@@ -55,7 +96,29 @@ for(const node of nodes){const parts=node.nodeValue.split(/([।॥])/);const fr
  node.parentNode.replaceChild(frag,node);
  }
 }
-function showQuestions(ex){installStepFormatterStyles();exerciseNo=ex;setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);let qs=rows.filter(r=>String(r.chapter_number)===String(chapterNo)&&String(r.exercise_number)===String(exerciseNo)).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number));if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${qs.length}</b><small>${hi()?'प्रत्येक प्रश्न और हल कॉपी-स्टाइल में':'Each question and solution in notebook style'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${qs.map((q,i)=>questionCard(q,i,qs.length)).join('')}</div>`;root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));$('bsAllPdf').onclick=()=>exportAll(qs.length,$('bsAllPdf'));}
+function showQuestions(ex){
+ installStepFormatterStyles();exerciseNo=ex;
+ setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${chapterNo}`,`${labels().ex} ${ex}`]);
+ const qs=rows.filter(r=>String(r.chapter_number)===String(chapterNo)&&String(r.exercise_number)===String(exerciseNo))
+  .sort((a,b)=>(Number(a.sort_order)||0)-(Number(b.sort_order)||0)||(Number(a.question_number)||0)-(Number(b.question_number)||0));
+ if(!qs.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}
+ // One display page per explicitly identified subquestion solution.
+ // The complete original question is repeated on each page; question_number never changes.
+ displayPages=[];
+ qs.forEach(q=>{
+  const parts=partSolutionEntries(q);
+  if(parts.length){
+   parts.forEach(part=>displayPages.push({q,partLabel:part.label,solutionHtml:part.html}));
+  }else{
+   displayPages.push({q,partLabel:null,solutionHtml:solutionMarkup(q)});
+  }
+ });
+ root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${displayPages.length}</b><small>${hi()?'हर उपप्रश्न का हल अलग पेज पर; मूल प्रश्न क्रमांक वही रहेगा':'One page per subpart; original question number is retained'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${displayPages.map((page,i)=>questionCard(page.q,i,displayPages.length,page)).join('')}</div>`;
+ root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);
+ root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));
+ root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));
+ $('bsAllPdf').onclick=()=>exportAll(displayPages.length,$('bsAllPdf'));
+}
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
 async function captureFacebookCard(card){
  if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');
@@ -121,25 +184,38 @@ async function downloadFacebookPages(pages){
  }
 }
 function addCanvasPages(pdf,canvas,firstPage){
- // One original textbook question (question + complete solution) is kept on one A4 page.
- const pageW=190,pageH=277;
- const scale=Math.min(pageW/canvas.width,pageH/canvas.height);
- const w=canvas.width*scale,h=canvas.height*scale;
- const x=(210-w)/2,y=(297-h)/2;
- if(!firstPage)pdf.addPage();
- pdf.addImage(canvas.toDataURL('image/png'),'PNG',x,y,w,h,undefined,'FAST');
+const pageW=190,pageH=277,scale=pageW/canvas.width,maxSlice=Math.max(1,Math.floor(pageH/scale));
+let y=0,page=0;while(y<canvas.height){const h=Math.min(maxSlice,canvas.height-y);const slice=document.createElement('canvas');slice.width=canvas.width;slice.height=h;const ctx=slice.getContext('2d');ctx.fillStyle='#fffef9';ctx.fillRect(0,0,slice.width,slice.height);ctx.drawImage(canvas,0,y,canvas.width,h,0,0,canvas.width,h);if(!firstPage||page>0||y>0)pdf.addPage();const mmH=h*scale;pdf.addImage(slice.toDataURL('image/png'),'PNG',10,10,pageW,mmH,undefined,'FAST');y+=h;page++;}
 }
 async function withBusy(btn,fn){const old=btn.textContent;btn.disabled=true;btn.textContent=hi()?'तैयार हो रहा है…':'Preparing…';try{await fn();}catch(e){console.error(e);alert(e.message||'फाइल तैयार नहीं हो सकी।');}finally{btn.disabled=false;btn.textContent=old;}}
 async function captureCard(card){if(!window.html2canvas)throw new Error('इमेज सुविधा लोड नहीं हुई। इंटरनेट कनेक्शन जाँचें।');if(document.fonts?.ready)await document.fonts.ready;return window.html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#fffef9',logging:false,onclone:doc=>{doc.querySelectorAll('.bs-export-actions').forEach(x=>x.remove());doc.querySelectorAll('.bs-hand-paper').forEach(x=>{x.style.overflow='visible';});}});}
-async function exportOne(index,kind,btn){const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;await withBusy(btn,async()=>{
- const q=rows.filter(r=>String(r.chapter_number)===String(chapterNo)&&String(r.exercise_number)===String(exerciseNo)).sort((a,b)=>(a.sort_order-b.sort_order)||(a.question_number-b.question_number))[index];
- const name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}_${medium}`);
- if(kind==='png'){
-  let content;try{content=await captureFacebookCard(card);const pages=makeFacebookPages(content,q,name);releaseCanvas(content);await downloadFacebookPages(pages);}finally{releaseCanvas(content);}
- }else{
-  const canvas=await captureCard(card);try{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasPages(pdf,canvas,true);pdf.save(name+'.pdf');}finally{releaseCanvas(canvas);}
- }
-});}
-async function exportAll(count,btn){const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;await withBusy(btn,async()=>{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasPages(pdf,canvas,i===0);}pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');});}
+function addCanvasSinglePage(pdf,canvas,firstPage){
+ const maxW=190,maxH=277,ratio=Math.min(maxW/canvas.width,maxH/canvas.height);
+ const w=canvas.width*ratio,h=canvas.height*ratio,x=(210-w)/2,y=(297-h)/2;
+ if(!firstPage)pdf.addPage();
+ pdf.addImage(canvas.toDataURL('image/png'),'PNG',x,y,w,h,undefined,'FAST');
+}
+async function exportOne(index,kind,btn){
+ const card=root.querySelector(`[data-question-card="${index}"]`);if(!card)return;
+ await withBusy(btn,async()=>{
+  const page=displayPages[index],q=page?.q;
+  const partSuffix=page?.partLabel?`_Part_${page.partLabel}`:'';
+  const name=safeName(`GanitSetu_Class${cls}_Ch${chapterNo}_Ex${exerciseNo}_Q${q?.question_number}${partSuffix}_${medium}`);
+  if(kind==='png'){
+   let content;try{content=await captureFacebookCard(card);const pages=makeFacebookPages(content,q,name);releaseCanvas(content);await downloadFacebookPages(pages);}finally{releaseCanvas(content);}
+  }else{
+   const canvas=await captureCard(card);try{const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});addCanvasSinglePage(pdf,canvas,true);pdf.save(name+'.pdf');}finally{releaseCanvas(canvas);}
+  }
+ });
+}
+async function exportAll(count,btn){
+ const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;
+ await withBusy(btn,async()=>{
+  const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
+  const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasSinglePage(pdf,canvas,i===0);releaseCanvas(canvas);}
+  pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');
+ });
+}
 document.addEventListener('DOMContentLoaded',()=>{$('bsLoad').onclick=()=>{cls=+$('bsStudentClass').value;medium=$('bsStudentMedium').value;showChapters();};});
 })();
