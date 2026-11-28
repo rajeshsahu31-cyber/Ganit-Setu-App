@@ -9,8 +9,32 @@ const labels=()=>hi()?{class:'कक्षा',chapters:'अध्याय च�
 function message(t){root.innerHTML=`<div class="bs-empty">${esc(t)}</div>`;}
 function setCrumb(parts){crumb.innerHTML=parts.map((p,i)=>`${i?' › ':''}<button data-i="${i}">${esc(p)}</button>`).join('');crumb.querySelectorAll('button').forEach(b=>b.onclick=()=>{let i=+b.dataset.i;if(i===0)showChapters();else if(i===1)showExercises(chapterNo);});}
 async function loadRows(){let {data,error}=await supabaseClient.from('textbook_solutions').select('id,class_level,medium,chapter_number,chapter_title,exercise_number,question_number,question_type,question_html,solution_html,solution_steps,question_image_url,solution_image_url,question_table_html,solution_table_html,marks,sort_order').eq('class_level',cls).eq('medium',medium).eq('is_published',true).order('chapter_number').order('sort_order').order('question_number');if(error)throw error;rows=data||[];}
-async function showChapters(){setCrumb([`${labels().class} ${cls}`]);message(hi()?'अध्याय लोड हो रहे हैं…':'Loading chapters…');try{await loadRows();let chapters=[...new Map(rows.map(r=>[r.chapter_number,r])).values()];if(!chapters.length){message(hi()?'इस माध्यम में अभी पाठ्यपुस्तक सामग्री उपलब्ध नहीं है।':'No textbook content is available in this medium yet.');return;}root.innerHTML=`<section class="bs-card"><h2>${labels().chapters}</h2><div class="bs-list">${chapters.map(c=>`<button class="bs-item" data-ch="${c.chapter_number}">${hi()?'अध्याय':'Chapter'} ${c.chapter_number} – ${esc(c.chapter_title)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>showExercises(+b.dataset.ch));}catch(e){message((hi()?'सामग्री लोड नहीं हुई: ':'Could not load content: ')+e.message);}}
-function showExercises(ch){chapterNo=ch;let chrow=rows.find(r=>String(r.chapter_number)===String(ch));setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${ch}`]);let ex=[...new Set(rows.filter(r=>String(r.chapter_number)===String(ch)).map(r=>r.exercise_number))];if(!ex.length){message(hi()?'इस अध्याय में प्रश्नावली उपलब्ध नहीं है।':'No exercises in this chapter.');return;}root.innerHTML=`<section class="bs-card"><h2>${hi()?'अध्याय':'Chapter'} ${ch} – ${esc(chrow.chapter_title)}</h2><div class="bs-list">${ex.map(e=>`<button class="bs-item" data-ex="${esc(e)}">${labels().ex} ${esc(e)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>showQuestions(b.dataset.ex));}
+async function showChapters(){setCrumb([`${labels().class} ${cls}`]);message(hi()?'अध्याय लोड हो रहे हैं…':'Loading chapters…');try{await loadRows();let chapters=[...new Map(rows.map(r=>[r.chapter_number,r])).values()].sort((a,b)=>Number(a.chapter_number)-Number(b.chapter_number));if(!chapters.length){message(hi()?'इस माध्यम में अभी पाठ्यपुस्तक सामग्री उपलब्ध नहीं है।':'No textbook content is available in this medium yet.');return;}root.innerHTML=`<section class="bs-card"><h2>${labels().chapters}</h2><div class="bs-list">${chapters.map(c=>`<button class="bs-item" data-ch="${c.chapter_number}">${hi()?'अध्याय':'Chapter'} ${c.chapter_number} – ${esc(c.chapter_title)}</button>`).join('')}</div></section>`;root.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>showExercises(+b.dataset.ch));}catch(e){message((hi()?'सामग्री लोड नहीं हुई: ':'Could not load content: ')+e.message);}}
+function compareExerciseNumbers(a,b){
+ const parts=value=>String(value??'').trim().match(/\d+|\D+/g)||[];
+ const aa=parts(a),bb=parts(b),n=Math.max(aa.length,bb.length);
+ for(let i=0;i<n;i++){
+  if(aa[i]===undefined)return -1;
+  if(bb[i]===undefined)return 1;
+  const an=Number(aa[i]),bn=Number(bb[i]);
+  if(Number.isFinite(an)&&Number.isFinite(bn)&&/^\d+$/.test(aa[i])&&/^\d+$/.test(bb[i])){
+   if(an!==bn)return an-bn;
+  }else{
+   const c=aa[i].localeCompare(bb[i],'en',{numeric:true,sensitivity:'base'});
+   if(c)return c;
+  }
+ }
+ return 0;
+}
+function showExercises(ch){
+ chapterNo=ch;
+ const chrow=rows.find(r=>String(r.chapter_number)===String(ch));
+ setCrumb([`${labels().class} ${cls}`,`${hi()?'अध्याय':'Chapter'} ${ch}`]);
+ const ex=[...new Set(rows.filter(r=>String(r.chapter_number)===String(ch)).map(r=>String(r.exercise_number)))].sort(compareExerciseNumbers);
+ if(!ex.length){message(hi()?'इस अध्याय में प्रश्नावली उपलब्ध नहीं है।':'No exercises in this chapter.');return;}
+ root.innerHTML=`<section class="bs-card"><h2>${hi()?'अध्याय':'Chapter'} ${ch} – ${esc(chrow.chapter_title)}</h2><div class="bs-list">${ex.map(e=>`<button class="bs-item" data-ex="${esc(e)}">${labels().ex} ${esc(e)}</button>`).join('')}</div></section>`;
+ root.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>showQuestions(b.dataset.ex));
+}
 function formatSolutionSteps(html){
  // Legacy content: preserve author-supplied paragraph/line boundaries.
  // Do not guess step boundaries inside mathematical text.
