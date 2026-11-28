@@ -1,7 +1,7 @@
 
 (()=>{'use strict';
 const $=id=>document.getElementById(id),root=$('bsMain'),crumb=$('bsBreadcrumb');
-let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null,displayPages=[],currentDisplayPage=0;
+let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null,displayPages=[],activeDisplayPage=0;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=s=>window.DOMPurify?DOMPurify.sanitize(String(s||''),{USE_PROFILES:{html:true}}):String(s||'').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/\son\w+\s*=\s*(['"]).*?\1/gi,'');
 const hi=()=>medium==='hi';
@@ -106,7 +106,8 @@ function questionCard(q,i,total,page){
  const st=q.solution_table_html?`<div class="bs-custom-table">${safe(q.solution_table_html)}</div>`:'';
  const part=page?.partLabel?`<span class="bs-part-label">${hi()?'उपप्रश्न':'Part'} (${esc(page.partLabel)})</span>`:'';
  const solution=page?.solutionHtml??solutionMarkup(q);
- return `<article class="bs-hand-card bs-single-question-page" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}<div class="bs-hand-s-title">${L.solution} — ${L.question} ${esc(q.question_number)} ${part}</div><div class="bs-hand-solution">${solution}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;
+ const solutionTitle=page?.partLabel?'':`<div class="bs-hand-s-title">${L.solution} — ${L.question} ${esc(q.question_number)} ${part}</div>`;
+ return `<article class="bs-hand-card bs-single-question-page" data-question-card="${i}"><div class="bs-hand-head"><span>${esc(L.page)} · ${esc(q.exercise_number)}</span><span>${L.question} ${esc(q.question_number)}${q.marks?` · ${esc(q.marks)} ${hi()?'अंक':'marks'}`:''}</span></div><div class="bs-hand-paper"><div class="bs-hand-qtitle">${L.question} ${esc(q.question_number)}.</div><div class="bs-hand-question">${safe(q.question_html)}</div>${qi}${qt}${solutionTitle}<div class="bs-hand-solution">${solution}</div>${si}${st}</div><div class="bs-export-actions"><button type="button" class="bs-export-btn" data-one-image="${i}">⬇ ${L.image}</button><button type="button" class="bs-export-btn" data-one-pdf="${i}">⬇ ${L.pdf}</button></div></article>`;
 }
 function fixHindiPunctuation(scope){
 const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,{acceptNode(node){
@@ -137,20 +138,26 @@ function showQuestions(ex){
    displayPages.push({q,partLabel:null,solutionHtml:solutionMarkup(q)});
   }
  });
- currentDisplayPage=0;
- renderDisplayPage();
-}
-function renderDisplayPage(){
- if(!displayPages.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}
- currentDisplayPage=Math.max(0,Math.min(currentDisplayPage,displayPages.length-1));
- const page=displayPages[currentDisplayPage];
- root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${displayPages.length}</b><small>${hi()?'हर उपप्रश्न अब अलग पेज पर दिखेगा':'Each subquestion is shown on its own page'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${questionCard(page.q,currentDisplayPage,displayPages.length,page)}</div><nav class="bs-page-nav" aria-label="Question page navigation"><button type="button" id="bsPrevPage" class="bs-export-btn secondary" ${currentDisplayPage===0?'disabled':''}>← ${hi()?'पिछला प्रश्न':'Previous'}</button><span class="bs-page-count">${hi()?'पेज':'Page'} ${currentDisplayPage+1} / ${displayPages.length}</span><button type="button" id="bsNextPage" class="bs-export-btn" ${currentDisplayPage===displayPages.length-1?'disabled':''}>${hi()?'अगला प्रश्न':'Next'} →</button></nav>`;
+ activeDisplayPage=0;
+ root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${displayPages.length}</b><small>${hi()?'हर उपप्रश्न अलग पेज पर दिखेगा; मूल प्रश्न क्रमांक वही रहेगा':'Each sub-question appears on its own page; original question number is retained'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${displayPages.map((page,i)=>questionCard(page.q,i,displayPages.length,page)).join('')}</div><nav class="bs-subpage-nav" aria-label="Question page navigation"><button type="button" id="bsPrevSubpage" class="bs-subpage-btn secondary">← ${hi()?'पिछला उप-प्रश्न':'Previous part'}</button><strong id="bsSubpageCount" aria-live="polite"></strong><button type="button" id="bsNextSubpage" class="bs-subpage-btn">${hi()?'अगला उप-प्रश्न':'Next part'} →</button></nav>`;
  root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);
  root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));
  root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));
- $('bsPrevPage').onclick=()=>{if(currentDisplayPage>0){currentDisplayPage--;renderDisplayPage();root.scrollIntoView({behavior:'smooth',block:'start'});}};
- $('bsNextPage').onclick=()=>{if(currentDisplayPage<displayPages.length-1){currentDisplayPage++;renderDisplayPage();root.scrollIntoView({behavior:'smooth',block:'start'});}};
  $('bsAllPdf').onclick=()=>exportAll(displayPages.length,$('bsAllPdf'));
+ $('bsPrevSubpage').onclick=()=>showDisplayPage(activeDisplayPage-1);
+ $('bsNextSubpage').onclick=()=>showDisplayPage(activeDisplayPage+1);
+ showDisplayPage(0);
+}
+function showDisplayPage(index){
+ if(!displayPages.length)return;
+ activeDisplayPage=Math.max(0,Math.min(displayPages.length-1,index));
+ const cards=[...root.querySelectorAll('[data-question-card]')];
+ cards.forEach((card,i)=>{card.hidden=i!==activeDisplayPage;});
+ const count=$('bsSubpageCount');if(count)count.textContent=`${activeDisplayPage+1} / ${displayPages.length}`;
+ const prev=$('bsPrevSubpage'),next=$('bsNextSubpage');
+ if(prev){prev.disabled=activeDisplayPage===0;prev.setAttribute('aria-label',hi()?'पिछला उप-प्रश्न':'Previous part');}
+ if(next){next.disabled=activeDisplayPage===displayPages.length-1;next.setAttribute('aria-label',hi()?'अगला उप-प्रश्न':'Next part');}
+ const current=cards[activeDisplayPage];if(current)current.scrollIntoView({block:'start',behavior:'auto'});
 }
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
 async function captureFacebookCard(card){
@@ -242,20 +249,15 @@ async function exportOne(index,kind,btn){
  });
 }
 async function exportAll(count,btn){
- if(!displayPages.length)return;
+ const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;
+ const restoreIndex=activeDisplayPage;
  await withBusy(btn,async()=>{
   const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
   const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const holder=document.createElement('div');
-  holder.style.cssText='position:fixed;left:-12000px;top:0;width:900px;background:#fffef9;z-index:-1;';
-  holder.innerHTML=displayPages.map((page,i)=>questionCard(page.q,i,displayPages.length,page)).join('');
-  document.body.appendChild(holder);
-  try{
-   const cards=[...holder.querySelectorAll('[data-question-card]')];
-   for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasSinglePage(pdf,canvas,i===0);releaseCanvas(canvas);}
-  }finally{holder.remove();}
+  for(let i=0;i<cards.length;i++){cards.forEach((card,j)=>{card.hidden=j!==i;});const canvas=await captureCard(cards[i]);try{addCanvasSinglePage(pdf,canvas,i===0);}finally{releaseCanvas(canvas);}}
   pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');
  });
+ showDisplayPage(restoreIndex);
 }
 document.addEventListener('DOMContentLoaded',()=>{$('bsLoad').onclick=()=>{cls=+$('bsStudentClass').value;medium=$('bsStudentMedium').value;showChapters();};});
 })();
