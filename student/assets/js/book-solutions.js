@@ -1,7 +1,7 @@
 
 (()=>{'use strict';
 const $=id=>document.getElementById(id),root=$('bsMain'),crumb=$('bsBreadcrumb');
-let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null,displayPages=[];
+let cls=10,medium='hi',rows=[],chapterNo=null,exerciseNo=null,displayPages=[],currentDisplayPage=0;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safe=s=>window.DOMPurify?DOMPurify.sanitize(String(s||''),{USE_PROFILES:{html:true}}):String(s||'').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/\son\w+\s*=\s*(['"]).*?\1/gi,'');
 const hi=()=>medium==='hi';
@@ -137,10 +137,19 @@ function showQuestions(ex){
    displayPages.push({q,partLabel:null,solutionHtml:solutionMarkup(q)});
   }
  });
- root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${displayPages.length}</b><small>${hi()?'हर उपप्रश्न का हल अलग पेज पर; मूल प्रश्न क्रमांक वही रहेगा':'One page per subpart; original question number is retained'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${displayPages.map((page,i)=>questionCard(page.q,i,displayPages.length,page)).join('')}</div>`;
+ currentDisplayPage=0;
+ renderDisplayPage();
+}
+function renderDisplayPage(){
+ if(!displayPages.length){message(hi()?'प्रश्न उपलब्ध नहीं हैं।':'No questions available.');return;}
+ currentDisplayPage=Math.max(0,Math.min(currentDisplayPage,displayPages.length-1));
+ const page=displayPages[currentDisplayPage];
+ root.innerHTML=`<section class="bs-ex-toolbar"><div><b>${labels().list} · ${displayPages.length}</b><small>${hi()?'हर उपप्रश्न अब अलग पेज पर दिखेगा':'Each subquestion is shown on its own page'}</small></div><button id="bsAllPdf" class="bs-export-btn bs-all-btn">⬇ ${labels().downloadAll}</button></section><div class="bs-question-list">${questionCard(page.q,currentDisplayPage,displayPages.length,page)}</div><nav class="bs-page-nav" aria-label="Question page navigation"><button type="button" id="bsPrevPage" class="bs-export-btn secondary" ${currentDisplayPage===0?'disabled':''}>← ${hi()?'पिछला प्रश्न':'Previous'}</button><span class="bs-page-count">${hi()?'पेज':'Page'} ${currentDisplayPage+1} / ${displayPages.length}</span><button type="button" id="bsNextPage" class="bs-export-btn" ${currentDisplayPage===displayPages.length-1?'disabled':''}>${hi()?'अगला प्रश्न':'Next'} →</button></nav>`;
  root.querySelectorAll('.bs-hand-paper').forEach(fixHindiPunctuation);
  root.querySelectorAll('[data-one-image]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.oneImage,'png',b));
  root.querySelectorAll('[data-one-pdf]').forEach(b=>b.onclick=()=>exportOne(+b.dataset.onePdf,'pdf',b));
+ $('bsPrevPage').onclick=()=>{if(currentDisplayPage>0){currentDisplayPage--;renderDisplayPage();root.scrollIntoView({behavior:'smooth',block:'start'});}};
+ $('bsNextPage').onclick=()=>{if(currentDisplayPage<displayPages.length-1){currentDisplayPage++;renderDisplayPage();root.scrollIntoView({behavior:'smooth',block:'start'});}};
  $('bsAllPdf').onclick=()=>exportAll(displayPages.length,$('bsAllPdf'));
 }
 function safeName(s){return String(s||'Ganit_Setu').replace(/[^\w\-]+/g,'_').slice(0,70);}
@@ -233,11 +242,18 @@ async function exportOne(index,kind,btn){
  });
 }
 async function exportAll(count,btn){
- const cards=[...root.querySelectorAll('[data-question-card]')];if(!cards.length)return;
+ if(!displayPages.length)return;
  await withBusy(btn,async()=>{
   const {jsPDF}=window.jspdf||{};if(!jsPDF)throw new Error('PDF सुविधा लोड नहीं हुई।');
   const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasSinglePage(pdf,canvas,i===0);releaseCanvas(canvas);}
+  const holder=document.createElement('div');
+  holder.style.cssText='position:fixed;left:-12000px;top:0;width:900px;background:#fffef9;z-index:-1;';
+  holder.innerHTML=displayPages.map((page,i)=>questionCard(page.q,i,displayPages.length,page)).join('');
+  document.body.appendChild(holder);
+  try{
+   const cards=[...holder.querySelectorAll('[data-question-card]')];
+   for(let i=0;i<cards.length;i++){const canvas=await captureCard(cards[i]);addCanvasSinglePage(pdf,canvas,i===0);releaseCanvas(canvas);}
+  }finally{holder.remove();}
   pdf.save(safeName(`GanitSetu_Class${cls}_Chapter${chapterNo}_Exercise${exerciseNo}_${medium}_Complete_Solutions`)+'.pdf');
  });
 }
